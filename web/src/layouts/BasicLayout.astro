@@ -2,8 +2,6 @@
 import { NavigationItem } from "../components/navigation/NavigationItem";
 import { AvatarItem } from "../components/navigation/AvatarItem";
 
-const { pathname } = Astro.url;
-
 const navLinks = [
   {
     href: "/",
@@ -62,11 +60,7 @@ const navLinks = [
             navLinks.map((link) => (
               <>
                 <li class="nav-item">
-                  <NavigationItem
-                    client:only
-                    {...link}
-                    isActive={link.href === pathname}
-                  />
+                  <NavigationItem client:only {...link} />
                 </li>
               </>
             ))

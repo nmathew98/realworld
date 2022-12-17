@@ -14,11 +14,13 @@ export const NavigationItem = (props) => {
     return true;
   };
 
+  const isActive = window.location.pathname === props.href;
+
   return (
     <>
       <Show when={isVisible()}>
         <a
-          class={props.isActive ? activeLinkClasses : inactiveLinkClasses}
+          class={isActive ? activeLinkClasses : inactiveLinkClasses}
           href={props.href}
         >
           {!!props.icon && (

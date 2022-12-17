@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@astrojs/solid-js": "^1.2.3",
+    "@astrojs/vercel": "^2.3.6",
     "astro": "^1.7.1",
     "solid-js": "^1.4.3"
   }
