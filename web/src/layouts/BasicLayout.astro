@@ -1,4 +1,6 @@
 ---
+import { NavigationItem } from "../components/navigation/NavigationItem";
+
 const { pathname } = Astro.url;
 
 const navLinks = [
@@ -10,26 +12,25 @@ const navLinks = [
     href: "/editor",
     title: "New Article",
     icon: "ion-compose",
+    requiresAuth: true,
   },
   {
     href: "/settings",
     title: "Settings",
     icon: "ion-gear-a",
+    requiresAuth: true,
   },
   {
     href: "/login",
     title: "Sign in",
+    hideIfAuthenticated: true,
   },
   {
     href: "/register",
     title: "Sign up",
+    hideIfAuthenticated: true,
   },
 ];
-
-const activeLinkClasses = "active nav-link";
-const inactiveLinkClasses = "nav-link";
-
-const isActive = (link) => pathname === link.href;
 ---
 
 <!DOCTYPE html>
@@ -60,20 +61,11 @@ const isActive = (link) => pathname === link.href;
             navLinks.map((link) => (
               <>
                 <li class="nav-item">
-                  <a
-                    class={
-                      isActive(link) ? activeLinkClasses : inactiveLinkClasses
-                    }
-                    href={link.href}
-                  >
-                    {!!link.icon && (
-                      <>
-                        <i class={link.icon} />
-                        &nbsp;
-                      </>
-                    )}
-                    {link.title}
-                  </a>
+                  <NavigationItem
+                    client:only
+                    {...link}
+                    isActive={link.href === pathname}
+                  />
                 </li>
               </>
             ))

@@ -1,5 +1,6 @@
 ---
 import BasicLayout from "../layouts/BasicLayout.astro";
+import { FormLogin } from "../components/forms/FormLogin";
 ---
 
 <BasicLayout>
@@ -12,25 +13,7 @@ import BasicLayout from "../layouts/BasicLayout.astro";
             <a href="/register">Need an account?</a>
           </p>
 
-          <form>
-            <fieldset class="form-group">
-              <input
-                class="form-control form-control-lg"
-                type="text"
-                placeholder="Email"
-              />
-            </fieldset>
-            <fieldset class="form-group">
-              <input
-                class="form-control form-control-lg"
-                type="password"
-                placeholder="Password"
-              />
-            </fieldset>
-            <button class="btn btn-lg btn-primary pull-xs-right">
-              Sign in
-            </button>
-          </form>
+          <FormLogin client:load />
         </div>
       </div>
     </div>
