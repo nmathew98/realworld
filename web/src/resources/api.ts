@@ -1,4 +1,4 @@
-import { AUTH_TOKEN_KEY } from "../utilities/constants";
+import { STORAGE_KEYS } from "../utilities/constants";
 
 const API_BASE = import.meta.env.API ?? "https://api.realworld.io/api";
 
@@ -12,7 +12,7 @@ const createApi = () => {
       params?: Record<string, any>
     ) =>
     async (body?: any) => {
-      const token = window.localStorage.getItem(AUTH_TOKEN_KEY);
+      const token = window.localStorage.getItem(STORAGE_KEYS.Token);
 
       const _params = { ...params };
       Object.keys(_params).forEach((key) => {
@@ -35,7 +35,8 @@ const createApi = () => {
 
       const result = await response.json();
 
-      return unwrap ? unwrap(result) : result;
+      if (response.status === 200) return unwrap ? unwrap(result) : result;
+      else return result;
     };
 
   const unwrapAuthResult = (result: Record<string, any>) =>

@@ -22,8 +22,14 @@ export const FormLogin = (props) => {
       },
     });
 
-    if (!result) {
-      setErrors(["Unexpected error occurred"]);
+    if (result.errors) {
+      const combinedErrors = Object.keys(result.errors).map(
+        (key) => `${key}: ${result.errors[key]}`
+      );
+
+      setErrors(combinedErrors);
+
+      return;
     }
 
     if (result) {
@@ -36,6 +42,11 @@ export const FormLogin = (props) => {
       window.location.pathname = "/";
     }
   };
+
+  const onChangeEmail = (event: any) =>
+    setLoginDetails("email", event.target.value);
+  const onChangePassword = (event: any) =>
+    setLoginDetails("password", event.target.value);
 
   return (
     <>
@@ -50,9 +61,7 @@ export const FormLogin = (props) => {
             type="text"
             placeholder="Email"
             value={loginDetails.email}
-            onChange={(event: any) =>
-              setLoginDetails("email", event.target.value)
-            }
+            onChange={onChangeEmail}
           />
         </fieldset>
         <fieldset class="form-group">
@@ -61,9 +70,7 @@ export const FormLogin = (props) => {
             type="password"
             placeholder="Password"
             value={loginDetails.password}
-            onChange={(event: any) =>
-              setLoginDetails("password", event.target.value)
-            }
+            onChange={onChangePassword}
           />
         </fieldset>
         <button

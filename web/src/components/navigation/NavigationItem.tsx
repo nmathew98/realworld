@@ -17,10 +17,8 @@ export const NavigationItem = (props) => {
   };
 
   onMount(() => {
-    if (window) {
-      setIsActive(window?.location.pathname === props.href);
-      setHasToken(!!window?.localStorage.getItem(STORAGE_KEYS.Token));
-    }
+    setIsActive(window.location.pathname === props.href);
+    setHasToken(!!window.localStorage.getItem(STORAGE_KEYS.Token));
   });
 
   return (

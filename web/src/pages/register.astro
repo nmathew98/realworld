@@ -1,5 +1,6 @@
 ---
 import BasicLayout from "../layouts/BasicLayout.astro";
+import { FormRegister } from "../components/form/FormRegister";
 ---
 
 <BasicLayout>
@@ -12,35 +13,7 @@ import BasicLayout from "../layouts/BasicLayout.astro";
             <a href="">Have an account?</a>
           </p>
 
-          <ul class="error-messages">
-            <li>That email is already taken</li>
-          </ul>
-
-          <form>
-            <fieldset class="form-group">
-              <input
-                class="form-control form-control-lg"
-                type="text"
-                placeholder="Your Name"
-              />
-            </fieldset>
-            <fieldset class="form-group">
-              <input
-                class="form-control form-control-lg"
-                type="text"
-                placeholder="Email"
-              />
-            </fieldset>
-            <fieldset class="form-group">
-              <input
-                class="form-control form-control-lg"
-                type="password"
-                placeholder="Password"
-              />
-            </fieldset>
-            <button class="btn btn-lg btn-primary pull-xs-right">Sign up</button
-            >
-          </form>
+          <FormRegister client:load />
         </div>
       </div>
     </div>

@@ -14,17 +14,15 @@ export const AvatarItem = (props) => {
   const [profileHref, setProfileHref] = createSignal("");
 
   onMount(() => {
-    if (window) {
-      const _userInformation = JSON.parse(
-        window.localStorage.getItem(STORAGE_KEYS.User) ?? "{}"
-      );
-      const _profileHref = `/@${_userInformation.username}`;
+    const _userInformation = JSON.parse(
+      window.localStorage.getItem(STORAGE_KEYS.User) ?? "{}"
+    );
+    const _profileHref = `/@${_userInformation.username}`;
 
-      setHasToken(!!window?.localStorage.getItem(STORAGE_KEYS.Token));
-      setUserInformation(_userInformation);
-      setIsActive(window?.location.pathname === _profileHref);
-      setProfileHref(_profileHref);
-    }
+    setHasToken(!!window.localStorage.getItem(STORAGE_KEYS.Token));
+    setUserInformation(_userInformation);
+    setIsActive(window.location.pathname === _profileHref);
+    setProfileHref(_profileHref);
   });
 
   return (
