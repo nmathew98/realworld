@@ -3,8 +3,7 @@ import { AUTH_TOKEN_KEY } from "../utilities/constants";
 const API_BASE = import.meta.env.API ?? "https://api.realworld.io/api";
 
 // Docs: https://api.realworld.io/api-docs/#/
-// https://www.solidjs.com/docs/latest/api#createresource
-export const createApi = () => {
+const createApi = () => {
   const _fetch =
     (
       url: string,
@@ -115,3 +114,5 @@ export const createApi = () => {
     },
   });
 };
+
+export const Resources = createApi();
