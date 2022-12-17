@@ -54,19 +54,19 @@ const navLinks = [
   <body>
     <nav class="navbar navbar-light">
       <div class="container">
-        <a class="navbar-brand" href="index.html">conduit</a>
+        <a class="navbar-brand" href="/">conduit</a>
         <ul class="nav navbar-nav pull-xs-right">
           {
             navLinks.map((link) => (
               <>
                 <li class="nav-item">
-                  <NavigationItem client:only {...link} />
+                  <NavigationItem client:load {...link} />
                 </li>
               </>
             ))
           }
           <li class="nav-item">
-            <AvatarItem client:only />
+            <AvatarItem client:load />
           </li>
         </ul>
       </div>
