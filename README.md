@@ -4,6 +4,8 @@ Implementations of [realworld](https://github.com/gothinkster/realworld) built t
 
 This frontend is a web frontend built with Astro and Solid
 
+See it live [here](https://realworld-six.vercel.app)
+
 ## Branches
 
 - **frontend-web**: built with Astro/Solid
