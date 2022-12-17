@@ -1,5 +1,6 @@
 ---
 import { NavigationItem } from "../components/navigation/NavigationItem";
+import { AvatarItem } from "../components/navigation/AvatarItem";
 
 const { pathname } = Astro.url;
 
@@ -70,6 +71,9 @@ const navLinks = [
               </>
             ))
           }
+          <li class="nav-item">
+            <AvatarItem client:only />
+          </li>
         </ul>
       </div>
     </nav>

@@ -2,7 +2,7 @@ import { createSignal, For } from "solid-js";
 import { createStore } from "solid-js/store";
 
 import { Resources } from "../../resources/api";
-import { AUTH_TOKEN_KEY } from "../../utilities/constants";
+import { STORAGE_KEYS } from "../../utilities/constants";
 
 export const FormLogin = (props) => {
   const [loginDetails, setLoginDetails] = createStore({
@@ -31,7 +31,7 @@ export const FormLogin = (props) => {
         "conduit-user",
         JSON.stringify(result, null, 2)
       );
-      window.localStorage.setItem(AUTH_TOKEN_KEY, result.token);
+      window.localStorage.setItem(STORAGE_KEYS.Token, result.token);
 
       window.location.pathname = "/";
     }

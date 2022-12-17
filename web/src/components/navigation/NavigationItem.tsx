@@ -1,10 +1,11 @@
 import { Show } from "solid-js";
-import { AUTH_TOKEN_KEY } from "../../utilities/constants";
+
+import { STORAGE_KEYS } from "../../utilities/constants";
 
 export const NavigationItem = (props) => {
   const activeLinkClasses = "active nav-link";
   const inactiveLinkClasses = "nav-link";
-  const hasToken = window.localStorage.getItem(AUTH_TOKEN_KEY);
+  const hasToken = window.localStorage.getItem(STORAGE_KEYS.Token);
 
   const isVisible = () => {
     if (props.requiresAuth && !hasToken) return false;
