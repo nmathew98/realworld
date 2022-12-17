@@ -2,7 +2,7 @@
 
 Implementations of [realworld](https://github.com/gothinkster/realworld) built to the following [specs](https://github.com/gothinkster/realworld-api-action/blob/main/postman-collection.json).
 
-This frontend is a web frontend built with Astro
+This frontend is a web frontend built with Astro and Solid
 
 ## Branches
 
