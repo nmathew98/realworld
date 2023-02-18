@@ -1,4 +1,5 @@
 import { STORAGE_KEYS } from "../utilities/constants";
+import { HTTPError } from "./errors";
 
 const API_BASE = import.meta.env.API ?? "https://api.realworld.io/api";
 
@@ -31,14 +32,7 @@ const _fetch =
 			headers,
 		});
 
-		if (!response.ok || response.status !== 200) {
-			const errorContents = [`Status: ${response.status}`];
-
-			if (response.statusText)
-				errorContents.push(`Message: ${response.statusText}`);
-
-			throw new AggregateError([errorContents]);
-		}
+		if (!response.ok || response.status !== 200) throw new HTTPError(response);
 
 		const result = await response.json();
 
