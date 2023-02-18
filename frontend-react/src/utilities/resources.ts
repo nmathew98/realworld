@@ -31,7 +31,22 @@ const _fetch =
 			headers,
 		});
 
-		return response.json();
+		if (!response.ok || response.status !== 200) {
+			const errorContents = [`Status: ${response.status}`];
+
+			if (response.statusText)
+				errorContents.push(`Message: ${response.statusText}`);
+
+			throw new AggregateError([errorContents]);
+		}
+
+		const result = await response.json();
+
+		if (result.errors) throw new AggregateError(Object.entries(result.errors));
+
+		const unwrapped = unwrap ? unwrap(result) : result;
+
+		return unwrapped;
 	};
 
 const unwrapAuthResult = (result: Record<string, any>) => result?.user ?? null;
