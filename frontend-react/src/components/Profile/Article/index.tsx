@@ -1,6 +1,9 @@
 import { format } from "date-fns";
 
+import { ButtonAction } from "../../Button/Action";
+
 export const ProfileArticle = ({
+	onClickFavourite,
 	profileLink,
 	profileImage,
 	author,
@@ -22,9 +25,9 @@ export const ProfileArticle = ({
 				</a>
 				<span className="date">{formatDate(createdAt)}</span>
 			</div>
-			<button className="btn btn-outline-primary btn-sm pull-xs-right">
-				<i className="ion-heart"></i>&nbsp;{favouriteCount}
-			</button>
+			<ButtonAction onClick={onClickFavourite} icon="ion-heart">
+				{favouriteCount}
+			</ButtonAction>
 		</div>
 		<a href={articleLink} className="preview-link">
 			<h1>{title}</h1>
@@ -43,4 +46,4 @@ export const ProfileArticle = ({
 	</div>
 );
 
-export const formatDate = (date: Date) => format(date, "LLLL wo");
+const formatDate = (date: Date) => format(date, "LLLL wo");
