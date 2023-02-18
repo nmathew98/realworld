@@ -2,7 +2,7 @@ import { format } from "date-fns";
 
 import { ButtonAction } from "../../Button/Action";
 import { TagContainer } from "../../Tag/Container";
-import { Tag } from "../../Tag";
+import { TagOutline } from "../../Tag/Outline";
 
 export const ProfileArticle = ({
 	onClickFavourite,
@@ -38,7 +38,7 @@ export const ProfileArticle = ({
 			{!!tags && (
 				<TagContainer>
 					{tags?.map(tag => (
-						<Tag key={tag}>{tag}</Tag>
+						<TagOutline key={tag}>{tag}</TagOutline>
 					))}
 				</TagContainer>
 			)}
