@@ -7,6 +7,7 @@ module.exports = {
 		"plugin:@typescript-eslint/recommended",
 		"prettier",
 		"plugin:react/recommended",
+		"./.eslintrc-auto-import.json",
 	],
 	rules: {
 		"prettier/prettier": ["error", { usePrettierrc: true }],
