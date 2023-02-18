@@ -4,5 +4,13 @@ import AutoImport from "unplugin-auto-import/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [react(), AutoImport({ imports: ["react"] })],
+	plugins: [
+		react(),
+		AutoImport({
+			imports: ["react"],
+			eslintrc: {
+				enabled: true,
+			},
+		}),
+	],
 });
