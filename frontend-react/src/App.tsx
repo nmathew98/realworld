@@ -5,16 +5,14 @@ import { HeadProvider } from "react-head";
 import { router } from "./router";
 import { Context } from "./context";
 
-export const App = () => {
-	const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
-	return (
-		<QueryClientProvider client={queryClient}>
-			<HeadProvider>
-				<Context>
-					<RouterProvider router={router} />
-				</Context>
-			</HeadProvider>
-		</QueryClientProvider>
-	);
-};
+export const App = () => (
+	<QueryClientProvider client={queryClient}>
+		<HeadProvider>
+			<Context>
+				<RouterProvider router={router} />
+			</Context>
+		</HeadProvider>
+	</QueryClientProvider>
+);
