@@ -37,7 +37,9 @@ export const ProfileArticle = ({
 			<span>Read more...</span>
 			{!!tags && (
 				<TagContainer>
-					<Tag>{tag}</Tag>
+					{tags.map(tag => (
+						<Tag key={tag}>{tag}</Tag>
+					))}
 				</TagContainer>
 			)}
 		</a>

@@ -1,5 +1,5 @@
 import { Markdown } from "../../Markdown";
-import { TagContainer } from "../../TagContainer";
+import { TagContainer } from "../../Tag/Container";
 import { Tag } from "../../Tag";
 
 export const ArticleContent = ({ text, tags }) => (

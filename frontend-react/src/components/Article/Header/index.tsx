@@ -24,10 +24,10 @@ export const ArticleHeader = ({
 				</a>
 				<span className="date">{formatDate(createdAt)}</span>
 			</div>
-			<ButtonAction icon="ion-plus-round" onPress={onPressFollowAuthor}>
+			<ButtonAction icon="ion-plus-round" onClick={onPressFollowAuthor}>
 				Follow {author}
 			</ButtonAction>
-			<ButtonAction icon="ion-heart" onPress={onPressFavourite}>
+			<ButtonAction icon="ion-heart" onClick={onPressFavourite}>
 				Favorite Post <span className="counter">({favoriteCount})</span>
 			</ButtonAction>
 		</div>
