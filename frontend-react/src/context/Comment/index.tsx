@@ -1,6 +1,6 @@
 import React from "react";
 
-import { User } from "../User";
+import type { User } from "../User";
 
 export interface Comment {
 	id: number;

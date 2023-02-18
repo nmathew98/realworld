@@ -14,9 +14,9 @@ export const UserContext = React.createContext(Object.create(null));
 
 export const UserProvider = ({ children }) => {
 	const queryClient = useQueryClient();
-	const { status } = useContext(AuthContext);
+	const { logout, isAuthenticated } = useContext(AuthContext);
 
-	const getProfile = Resources.User.read.current;
+	const getProfile = () => Resources.User.read.current({ body: null });
 
 	const updateProfile = useMutation(Resources.User.update.profile, {
 		onSuccess: () => {
@@ -32,22 +32,20 @@ export const UserProvider = ({ children }) => {
 	const deleteArticle = Resources.Articles.delete.article;
 	const unfavoriteArticle = Resources.Articles.delete.favorite;
 
-	const {
-		data: profile,
-		error: getProfileError,
-		isFetching: isFetchingProfile,
-		refetch: refetchProfile,
-	} = useQuery(QUERY_KEYS.CurrentUser, () => getProfile({ body: null }), {
-		enabled: status === AUTHENTICATION_STATUS.Authenticated,
-	});
+	const { data: profile, refetch: refetchProfile } = useQuery(
+		QUERY_KEYS.CurrentUser,
+		getProfile,
+		{
+			onError: logout,
+			enabled: isAuthenticated,
+		},
+	);
 
 	return (
 		<UserContext.Provider
 			value={{
 				profile,
 				refetchProfile,
-				isFetchingProfile,
-				getProfileError,
 				updateProfile,
 				createArticle,
 				updateArticle,
