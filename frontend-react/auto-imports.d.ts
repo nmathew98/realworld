@@ -6,6 +6,7 @@ export {}
 declare global {
 	const AUTHENTICATION_STATUS: typeof import("./src/utilities/constants")["AUTHENTICATION_STATUS"];
 	const HTTPError: typeof import("./src/utilities/errors")["HTTPError"];
+	const QUERY_KEYS: typeof import("./src/utilities/constants")["QUERY_KEYS"];
 	const Resources: typeof import("./src/utilities/resources")["Resources"];
 	const STORAGE_KEYS: typeof import("./src/utilities/constants")["STORAGE_KEYS"];
 	const createRef: typeof import("react")["createRef"];

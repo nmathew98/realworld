@@ -2,6 +2,7 @@
 	"globals": {
 		"AUTHENTICATION_STATUS": true,
 		"HTTPError": true,
+		"QUERY_KEYS": true,
 		"Resources": true,
 		"STORAGE_KEYS": true,
 		"createRef": true,
