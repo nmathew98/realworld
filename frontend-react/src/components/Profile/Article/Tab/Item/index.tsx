@@ -1,5 +1,3 @@
-import { joinClasses } from "../../../../utilities/joinClasses";
-
 export const ProfileArticleTabItem = ({ isActive, onClick, children }) => (
 	<li className="nav-item">
 		<a

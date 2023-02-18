@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 
 import { ProfileArticleTabContainer } from ".";
-import { ProfileArticleTabItem } from "../TabItem";
+import { ProfileArticleTabItem } from "../Item";
 
 describe("<ProfileArticleTabContainer />", () => {
 	afterEach(() => {
