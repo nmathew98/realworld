@@ -1,9 +1,9 @@
 import React from "react";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 
-import { FormButtonSubmit } from ".";
+import { Button } from ".";
 
-describe("<FormButtonSubmit />", () => {
+describe("<Button />", () => {
 	afterEach(() => {
 		cleanup();
 	});
@@ -11,7 +11,7 @@ describe("<FormButtonSubmit />", () => {
 	it("is clickable", () => {
 		const onClick = vi.fn();
 
-		render(<FormButtonSubmit onClick={onClick}>Submit</FormButtonSubmit>);
+		render(<Button onClick={onClick}>Submit</Button>);
 
 		const cancelButton = screen.getByText("Submit");
 
