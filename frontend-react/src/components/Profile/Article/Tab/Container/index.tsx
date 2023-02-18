@@ -7,12 +7,12 @@ export const ProfileArticleTabContainer = ({ children }) => {
 		<div className="articles-toggle">
 			<ul className="nav nav-pills outline-active">
 				{React.Children.map(children, (child, index) => {
-					if (typeof child.type === "string") return child;
-
 					const onClick = useCallback(
 						() => setActiveTabIdx(index),
-						[setActiveTabIdx],
+						[index, setActiveTabIdx],
 					);
+
+					if (typeof child.type === "string") return child;
 
 					return React.cloneElement(child, {
 						...child.props,

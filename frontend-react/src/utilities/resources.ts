@@ -44,7 +44,7 @@ const _fetch =
 
 		if (result.errors) throw new AggregateError(Object.entries(result.errors));
 
-		const unwrapped = unwrap ? unwrap(result) : result;
+		const unwrapped = unwrap?.(result) ?? result;
 
 		return unwrapped;
 	};

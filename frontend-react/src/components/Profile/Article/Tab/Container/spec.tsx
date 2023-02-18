@@ -43,4 +43,16 @@ describe("<ProfileArticleTabContainer />", () => {
 			expect(secondTabItemFinal.className).toContain("active");
 		}
 	});
+
+	it("renders native dom elements correctly", () => {
+		render(
+			<ProfileArticleTabContainer>
+				<ProfileArticleTabItem>Hello world</ProfileArticleTabItem>
+				<ProfileArticleTabItem>!!!</ProfileArticleTabItem>
+				<span>AHHH!!!</span>
+			</ProfileArticleTabContainer>,
+		);
+
+		expect(screen.getByText("AHHH!!!")).toBeTruthy();
+	});
 });
