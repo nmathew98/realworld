@@ -7,40 +7,38 @@ export const AuthProvider = ({ children }) => {
 	const [status, setStatus] = useState(AUTHENTICATION_STATUS.Unauthenticated);
 	const [token, setToken] = useState<string | null>(null);
 
-	const logout = () => {
+	const onAuthenticationSuccess = useCallback(
+		result => {
+			setToken(result?.token);
+			setStatus(AUTHENTICATION_STATUS.Authenticated);
+		},
+		[setToken, setStatus],
+	);
+	const onAuthenticationError = useCallback(() => {
 		setToken(null);
 		setStatus(AUTHENTICATION_STATUS.Unauthenticated);
-	};
+	}, [setToken, setStatus]);
+
 	const register = useMutation(Resources.User.create, {
-		onSuccess: result => {
-			setToken(result.token);
-			setStatus(AUTHENTICATION_STATUS.Authenticated);
-		},
-		onError: logout,
+		onSuccess: onAuthenticationSuccess,
+		onError: onAuthenticationError,
 	});
 	const authenticate = useMutation(Resources.User.read.login, {
-		onSuccess: result => {
-			setToken(result.token);
-			setStatus(AUTHENTICATION_STATUS.Authenticated);
-		},
-		onError: logout,
+		onSuccess: onAuthenticationSuccess,
+		onError: onAuthenticationError,
 	});
 
 	const verify = () => {
 		if (!import.meta.env.API) {
 			const token = window.localStorage.getItem(STORAGE_KEYS.Token);
 
-			if (token) {
-				setToken(token);
-				setStatus(AUTHENTICATION_STATUS.Authenticated);
-			} else {
-				logout();
-			}
+			if (token) onAuthenticationSuccess({ token });
+			else onAuthenticationError();
 		} else {
 			Resources.Auth.read
 				.verify({ body: null })
-				.then(() => setStatus(AUTHENTICATION_STATUS.Authenticated))
-				.catch(logout);
+				.then(onAuthenticationSuccess)
+				.catch(onAuthenticationError);
 		}
 	};
 
@@ -53,11 +51,11 @@ export const AuthProvider = ({ children }) => {
 					register,
 					authenticate,
 					verify,
-					logout,
+					onAuthenticationError,
 					isAuthenticated:
 						!!token || status === AUTHENTICATION_STATUS.Authenticated,
 				}),
-				[register, authenticate, verify, logout],
+				[register, authenticate, verify, onAuthenticationError, token, status],
 			)}>
 			{children}
 		</AuthContext.Provider>

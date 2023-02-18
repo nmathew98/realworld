@@ -14,9 +14,12 @@ export const UserContext = React.createContext(Object.create(null));
 
 export const UserProvider = ({ children }) => {
 	const queryClient = useQueryClient();
-	const { logout, isAuthenticated } = useContext(AuthContext);
+	const { onAuthenticationError, isAuthenticated } = useContext(AuthContext);
 
-	const getProfile = () => Resources.User.read.current({ body: null });
+	const getProfile = useCallback(
+		() => Resources.User.read.current({ body: null }),
+		[],
+	);
 
 	const updateProfile = useMutation(Resources.User.update.profile, {
 		onSuccess: () => {
@@ -36,7 +39,7 @@ export const UserProvider = ({ children }) => {
 		QUERY_KEYS.CurrentUser,
 		getProfile,
 		{
-			onError: logout,
+			onError: onAuthenticationError,
 			enabled: isAuthenticated,
 		},
 	);
