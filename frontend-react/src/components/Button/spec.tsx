@@ -13,9 +13,9 @@ describe("<Button />", () => {
 
 		render(<Button onClick={onClick}>Submit</Button>);
 
-		const cancelButton = screen.getByText("Submit");
+		const button = screen.getByText("Submit");
 
-		fireEvent.click(cancelButton);
+		fireEvent.click(button);
 
 		expect(onClick).toBeCalledTimes(1);
 	});
