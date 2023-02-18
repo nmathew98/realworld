@@ -18,5 +18,6 @@
 		"noImplicitAny": false
 	},
 	"include": ["src", "*.d.ts"],
+	"exclude": ["**/spec.*"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }
