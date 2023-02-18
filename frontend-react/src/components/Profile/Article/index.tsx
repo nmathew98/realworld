@@ -1,6 +1,8 @@
 import { format } from "date-fns";
 
 import { ButtonAction } from "../../Button/Action";
+import { TagContainer } from "../../Tag/Container";
+import { Tag } from "../../Tag";
 
 export const ProfileArticle = ({
 	onClickFavourite,
@@ -34,13 +36,9 @@ export const ProfileArticle = ({
 			<p>{description}</p>
 			<span>Read more...</span>
 			{!!tags && (
-				<ul className="tag-list">
-					{tags?.map(tag => (
-						<li key={tag} className="tag-default tag-pill tag-outline">
-							{tag}
-						</li>
-					))}
-				</ul>
+				<TagContainer>
+					<Tag>{tag}</Tag>
+				</TagContainer>
 			)}
 		</a>
 	</div>
