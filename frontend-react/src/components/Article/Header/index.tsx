@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { ButtonAction } from "../../Button/Action";
 
 export const ArticleHeader = ({
-	onPressFavourite,
+	onPressFavorite,
 	onPressFollowAuthor,
 	title,
 	profileImage,
@@ -27,7 +27,7 @@ export const ArticleHeader = ({
 			<ButtonAction icon="ion-plus-round" onClick={onPressFollowAuthor}>
 				Follow {author}
 			</ButtonAction>
-			<ButtonAction icon="ion-heart" onClick={onPressFavourite}>
+			<ButtonAction icon="ion-heart" onClick={onPressFavorite}>
 				Favorite Post <span className="counter">({favoriteCount})</span>
 			</ButtonAction>
 		</div>

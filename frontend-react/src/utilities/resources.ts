@@ -54,6 +54,11 @@ const unwrapTagsResult = (result: Record<string, any>) => result?.tags ?? null;
 
 // Docs: https://api.realworld.io/api-docs/#/
 export const Resources = Object.freeze({
+	Auth: {
+		read: {
+			verify: _fetch("/auth", "GET"),
+		},
+	},
 	User: {
 		create: _fetch("/users", "POST", unwrapAuthResult),
 		read: {
@@ -94,12 +99,12 @@ export const Resources = Object.freeze({
 		update: {
 			article: ({ slug }) =>
 				_fetch(`/articles/${slug}`, "PUT", unwrapArticlesResult),
-			favourite: ({ slug }) =>
-				_fetch(`/articles/${slug}/favourite`, "POST", unwrapArticlesResult),
+			favorite: ({ slug }) =>
+				_fetch(`/articles/${slug}/favorite`, "POST", unwrapArticlesResult),
 		},
 		delete: {
 			article: ({ slug }) => _fetch(`/articles/${slug}`, "DELETE"),
-			favourite: ({ slug }) =>
+			favorite: ({ slug }) =>
 				_fetch(`/articles/${slug}/favorite`, "DELETE", unwrapArticlesResult),
 		},
 	},

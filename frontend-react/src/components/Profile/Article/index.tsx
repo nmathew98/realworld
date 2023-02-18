@@ -5,12 +5,12 @@ import { TagContainer } from "../../Tag/Container";
 import { TagOutline } from "../../Tag/Outline";
 
 export const ProfileArticle = ({
-	onClickFavourite,
+	onClickFavorite,
 	profileLink,
 	profileImage,
 	author,
 	createdAt,
-	favouriteCount,
+	favoriteCount,
 	articleLink,
 	title,
 	description,
@@ -27,8 +27,8 @@ export const ProfileArticle = ({
 				</a>
 				<span className="date">{formatDate(createdAt)}</span>
 			</div>
-			<ButtonAction onClick={onClickFavourite} icon="ion-heart">
-				{favouriteCount}
+			<ButtonAction onClick={onClickFavorite} icon="ion-heart">
+				{favoriteCount}
 			</ButtonAction>
 		</div>
 		<a href={articleLink} className="preview-link">
