@@ -1,4 +1,6 @@
-export const CommentContext = createContext(Object.create(null));
+import React from "react";
+
+export const CommentContext = React.createContext(Object.create(null));
 
 export const CommentProvider = ({ children }) => {
 	return (
