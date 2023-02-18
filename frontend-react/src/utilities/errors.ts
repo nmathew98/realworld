@@ -1,6 +1,6 @@
 export class HTTPError extends Error {
 	public statusText: string;
-	public status: string;
+	public status: number;
 	public response: Response;
 
 	constructor(response: Response) {
