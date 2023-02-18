@@ -1,4 +1,6 @@
-export const UserContext = createContext(Object.create(null));
+import React from "react";
+
+export const UserContext = React.createContext(Object.create(null));
 
 export const UserProvider = ({ children }) => {
 	return (

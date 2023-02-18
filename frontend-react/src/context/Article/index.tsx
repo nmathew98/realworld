@@ -1,4 +1,6 @@
-export const ArticleContext = createContext(Object.create(null));
+import React from "react";
+
+export const ArticleContext = React.createContext(Object.create(null));
 
 export const ArticleProvider = ({ children }) => {
 	return (

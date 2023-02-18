@@ -1,4 +1,6 @@
-export const AuthContext = createContext(Object.create(null));
+import React from "react";
+
+export const AuthContext = React.createContext(Object.create(null));
 
 export const AuthProvider = ({ children }) => {
 	return (
