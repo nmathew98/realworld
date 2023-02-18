@@ -5,10 +5,7 @@ export const Button = ({
 	children,
 	...rest
 }) => (
-	<button
-		{...rest}
-		onClick={onClick}
-		className={`btn btn-${size} btn-${type}`}>
+	<button {...rest} onClick={onClick} className={`btn btn-${size} btn-${type}`}>
 		{children}
 	</button>
 );
