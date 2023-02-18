@@ -13,6 +13,7 @@
 		"test.watch": "vitest --watch"
 	},
 	"dependencies": {
+		"date-fns": "^2.29.3",
 		"immutable": "^4.2.4",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
