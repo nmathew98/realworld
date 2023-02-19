@@ -66,7 +66,7 @@ export const useNavigation = () => {
 			setAllowedRoutes(authenticatedRoutes);
 			setArticleTabs(authenticatedArticleTabs);
 		}
-	});
+	}, [isAuthenticated]);
 
 	return {
 		articleTabs,
