@@ -10,6 +10,7 @@ declare global {
   const ArticleProvider: typeof import('./src/context/Article/index')['ArticleProvider']
   const AuthContext: typeof import('./src/context/Auth/index')['AuthContext']
   const AuthProvider: typeof import('./src/context/Auth/index')['AuthProvider']
+  const BRAND_NAME: typeof import('./src/utilities/constants')['BRAND_NAME']
   const CommentContext: typeof import('./src/context/Comment/index')['CommentContext']
   const CommentProvider: typeof import('./src/context/Comment/index')['CommentProvider']
   const Context: typeof import('./src/context/index')['Context']

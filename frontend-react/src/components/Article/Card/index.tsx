@@ -4,7 +4,7 @@ import { ButtonAction } from "../../Button/Action";
 import { TagContainer } from "../../Tag/Container";
 import { TagOutline } from "../../Tag/Outline";
 
-export const ProfileArticle = ({
+export const ArticleCard = ({
 	onClickFavorite,
 	profileLink,
 	profileImage,

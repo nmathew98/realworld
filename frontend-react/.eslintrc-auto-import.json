@@ -6,6 +6,7 @@
     "ArticleProvider": true,
     "AuthContext": true,
     "AuthProvider": true,
+    "BRAND_NAME": true,
     "CommentContext": true,
     "CommentProvider": true,
     "Context": true,
