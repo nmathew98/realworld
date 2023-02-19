@@ -1,7 +1,9 @@
+import { LayoutBase } from "../";
+
 // ArticleNavigation = ArticleTabContainer + ArticleTabItem
 export const LayoutProfile = ({ ArticleNavigation, Header, children }) => {
 	return (
-		<>
+		<LayoutBase>
 			<div className="profile-page">
 				<div className="user-info">
 					<div className="container">
@@ -22,6 +24,6 @@ export const LayoutProfile = ({ ArticleNavigation, Header, children }) => {
 					</div>
 				</div>
 			</div>
-		</>
+		</LayoutBase>
 	);
 };

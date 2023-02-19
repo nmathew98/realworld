@@ -1,7 +1,6 @@
 import { useNavigation } from "../../hooks/auth/useNavigation";
 import { useTags } from "../../hooks/article/useTags";
-import { NavigationContainer } from "../../components/Navigation/Container";
-import { NavigationItem } from "../../components/Navigation/Item";
+import { LayoutBase } from "../";
 import { ArticleTabContainer } from "../../components/Article/Tab/Container";
 import { ArticleTabItem } from "../../components/Article/Tab/Item";
 import { TagContainer } from "../../components/Tag/Container";
@@ -10,21 +9,10 @@ import { SidebarContainer } from "../../components/Sidebar/Container";
 
 export const LayoutHome = ({ Pagination, children }) => {
 	const { tags, isLoadingTags } = useTags();
-	const { articleTabs, allowedRoutes, isRouteActive } = useNavigation();
+	const { articleTabs } = useNavigation();
 
 	return (
-		<>
-			<NavigationContainer brandName={BRAND_NAME}>
-				{allowedRoutes.map(item => (
-					// @ts-expect-error: type stuff
-					<NavigationItem
-						key={item.title}
-						{...item}
-						isActive={isRouteActive(item)}>
-						{item.title}
-					</NavigationItem>
-				))}
-			</NavigationContainer>
+		<LayoutBase>
 			<div className="home-page">
 				<div className="banner">
 					<div className="container">
@@ -58,6 +46,6 @@ export const LayoutHome = ({ Pagination, children }) => {
 					</div>
 				</div>
 			</div>
-		</>
+		</LayoutBase>
 	);
 };
