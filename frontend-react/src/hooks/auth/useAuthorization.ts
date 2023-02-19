@@ -84,28 +84,17 @@ export const useAuthorization = () => {
 	};
 };
 
+const makeAuthorizationMatch = buildMakeMatch(
+	AUTHORIZATION_REDUCER_TYPES.UpdateUsername,
+	AUTHORIZATION_REDUCER_TYPES.UpdateEmail,
+	AUTHORIZATION_REDUCER_TYPES.UpdatePassword,
+);
 const reducer = (state, action) => {
-	switch (action.type) {
-		case AUTHORIZATION_REDUCER_TYPES.UpdateUsername: {
-			return {
-				...state,
-				username: action.username.toLowerCase(),
-			};
-		}
-		case AUTHORIZATION_REDUCER_TYPES.UpdateEmail: {
-			return {
-				...state,
-				email: action.email.toLowerCase(),
-			};
-		}
-		case AUTHORIZATION_REDUCER_TYPES.UpdatePassword: {
-			return {
-				...state,
-				password: action.password,
-			};
-		}
-		default: {
-			return state;
-		}
-	}
+	const match = makeAuthorizationMatch(action.type, state);
+
+	return match(
+		{ ...state, username: action.username.toLowerCase() },
+		{ ...state, email: action.email.toLowerCase() },
+		{ ...state, password: action.password },
+	);
 };
