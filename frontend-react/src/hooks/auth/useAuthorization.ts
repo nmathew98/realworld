@@ -23,6 +23,7 @@ export const useAuthorization = () => {
 			type: AUTHORIZATION_REDUCER_TYPES.UpdateEmail,
 			email,
 		});
+	const makeOnSubmitForm = f => f(form);
 
 	const validators = {
 		username: /[a-zA-Z0-9]{5,10}/,
@@ -79,6 +80,7 @@ export const useAuthorization = () => {
 		onChangeEmail,
 		onChangePassword,
 		onChangeUsername,
+		makeOnSubmitForm,
 	};
 };
 

@@ -8,7 +8,7 @@ export const useArticle = ({ slug }) => {
 		deleteComment: _deleteComment,
 	} = useContext(CommentContext);
 
-	const queryFnGetArticle = () => _getArticle({ slug });
+	const queryFnGetArticle = () => _getArticle({ slug })({ body: null });
 	const {
 		data: article,
 		refetch: refetchArticle,
@@ -18,7 +18,7 @@ export const useArticle = ({ slug }) => {
 		error: errorGetArticles,
 	} = useQuery([QUERY_KEYS.Article, slug], queryFnGetArticle);
 
-	const queryFnGetComments = () => _getComments({ slug });
+	const queryFnGetComments = () => _getComments({ slug })({ body: null });
 	const {
 		data: comments,
 		refetch: refetchComments,

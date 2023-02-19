@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
 	const onAuthenticationSuccess = useCallback(
 		result => {
-			setToken(result?.token);
+			setToken(result?.token || null);
 			setStatus(AUTHENTICATION_STATUS.Authenticated);
 		},
 		[setToken, setStatus],
@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }) => {
 					register,
 					authenticate,
 					verify,
+					onAuthenticationSuccess,
 					onAuthenticationError,
 					isAuthenticated:
 						!!token || status === AUTHENTICATION_STATUS.Authenticated,

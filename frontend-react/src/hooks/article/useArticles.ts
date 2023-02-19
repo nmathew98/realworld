@@ -15,8 +15,8 @@ export const useArticles = ({ type = "global", filters }) => {
 	};
 
 	const queryFnMap = {
-		global: () => _getAllGlobalArticles(managedFilter),
-		follower: () => _getAllFollowerArticles(managedFilter),
+		global: () => _getAllGlobalArticles(managedFilter)({ body: null }),
+		follower: () => _getAllFollowerArticles(managedFilter)({ body: null }),
 	};
 	const queryFnMapKey = type.toLowerCase();
 	const queryFn = queryFnMap[queryFnMapKey];
