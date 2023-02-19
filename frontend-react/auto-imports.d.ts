@@ -26,6 +26,7 @@ declare global {
 	const assert: typeof import("vitest")["assert"];
 	const beforeAll: typeof import("vitest")["beforeAll"];
 	const beforeEach: typeof import("vitest")["beforeEach"];
+	const buildMakeMatch: typeof import("./src/utilities/match")["buildMakeMatch"];
 	const chai: typeof import("vitest")["chai"];
 	const createRef: typeof import("react")["createRef"];
 	const describe: typeof import("vitest")["describe"];

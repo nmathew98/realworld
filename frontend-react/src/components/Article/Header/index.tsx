@@ -1,8 +1,8 @@
 import { ArticleActionBar } from "../ActionBar";
 
 export const ArticleHeader = ({
-	onPressFavorite,
-	onPressFollowAuthor,
+	onClickFavorite,
+	onClickFollowAuthor,
 	title,
 	profileImage,
 	profileLink,
@@ -14,8 +14,8 @@ export const ArticleHeader = ({
 		<h1>{title}</h1>
 		<div className="article-meta">
 			<ArticleActionBar
-				onPressFollowAuthor={onPressFollowAuthor}
-				onPressFavorite={onPressFavorite}
+				onClickFollowAuthor={onClickFollowAuthor}
+				onClickFavorite={onClickFavorite}
 				profileLink={profileLink}
 				profileImage={profileImage}
 				author={author}

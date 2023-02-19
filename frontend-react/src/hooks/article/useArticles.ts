@@ -1,8 +1,20 @@
 import { useQuery } from "react-query";
 
+export const ARTICLES_TYPES = {
+	Follower: Symbol("Follower"),
+	Global: Symbol("Global"),
+};
+
 const ARTICLES_PER_PAGE = 10;
 
-export const useArticles = ({ type = "global", filters }) => {
+const makeMatch = buildMakeMatch(
+	ARTICLES_TYPES.Follower,
+	ARTICLES_TYPES.Global,
+);
+
+export const useArticles = ({ type = ARTICLES_TYPES.Follower, filters }) => {
+	const match = makeMatch(type);
+
 	const { isAuthenticated } = useContext(AuthContext);
 	const {
 		getAllFollowerArticles: _getAllFollowerArticles,
@@ -19,7 +31,7 @@ export const useArticles = ({ type = "global", filters }) => {
 		...filters,
 	};
 
-	const isQueryEnabled = type === "followers" ? isAuthenticated : true;
+	const isQueryEnabled = match(isAuthenticated, true);
 	const queryFnGetAllGlobalArticles = () =>
 		_getAllGlobalArticles(managedFilter)({ body: null });
 
@@ -97,35 +109,33 @@ export const useArticles = ({ type = "global", filters }) => {
 	const calculateTotalNumberOfPages = result =>
 		Math.ceil(Number(result.articlesCount) / 10);
 	useEffect(() => {
-		if (type === "followers" && followerArticles) {
+		if (type === ARTICLES_TYPES.Follower && followerArticles) {
 			setTotalNumberOfArticles(followerArticles.articlesCount);
 			setTotalNumberOfPages(calculateTotalNumberOfPages(followerArticles));
-		} else if (type === "global" && globalArticles) {
+		} else if (type === ARTICLES_TYPES.Global && globalArticles) {
 			setTotalNumberOfArticles(globalArticles.articlesCount);
 			setTotalNumberOfPages(calculateTotalNumberOfPages(globalArticles));
 		}
 	}, [type, followerArticles, globalArticles]);
 
 	return {
-		articles: type === "followers" ? followerArticles : globalArticles,
-		articlesCount:
-			type === "followers"
-				? followerArticles?.articlesCount
-				: globalArticles?.articlesCount,
+		articles: match(followerArticles, globalArticles),
+		articlesCount: match(
+			followerArticles?.articlesCount,
+			globalArticles?.articlesCount,
+		),
 		currentPage: currentPage + 1,
 		nextPage,
 		previousPage,
-		isLoadingArticles:
-			type === "followers"
-				? isLoadingFollowerArticles
-				: isLoadingGlobalArticles,
-		isRefetchingArticles:
-			type === "followers"
-				? isRefetchingFollowerArticles
-				: isRefetchingGlobalArticles,
-		isErrorArticles:
-			type === "followers" ? isErrorFollowerArticles : isErrorGlobalArticles,
-		errorArticles:
-			type === "followers" ? errorFollowerArticles : errorGlobalArticles,
+		isLoadingArticles: match(
+			isLoadingFollowerArticles,
+			isLoadingGlobalArticles,
+		),
+		isRefetchingArticles: match(
+			isRefetchingFollowerArticles,
+			isRefetchingGlobalArticles,
+		),
+		isErrorArticles: match(isErrorFollowerArticles, isErrorGlobalArticles),
+		errorArticles: match(errorFollowerArticles, errorGlobalArticles),
 	};
 };

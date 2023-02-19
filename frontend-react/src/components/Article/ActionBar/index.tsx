@@ -3,8 +3,8 @@ import { format } from "date-fns";
 import { ButtonAction } from "../../Button/Action";
 
 export const ArticleActionBar = ({
-	onPressFollowAuthor,
-	onPressFavorite,
+	onClickFollowAuthor,
+	onClickFavorite,
 	profileLink,
 	profileImage,
 	author,
@@ -21,10 +21,10 @@ export const ArticleActionBar = ({
 			</a>
 			<span className="date">{formatDate(createdAt)}</span>
 		</div>
-		<ButtonAction icon="ion-plus-round" onClick={onPressFollowAuthor}>
+		<ButtonAction icon="ion-plus-round" onClick={onClickFollowAuthor}>
 			Follow {author}
 		</ButtonAction>
-		<ButtonAction icon="ion-heart" onClick={onPressFavorite}>
+		<ButtonAction icon="ion-heart" onClick={onClickFavorite}>
 			Favorite Post <span className="counter">({favoriteCount})</span>
 		</ButtonAction>
 	</>
