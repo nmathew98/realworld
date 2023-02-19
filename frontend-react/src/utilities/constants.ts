@@ -1,3 +1,5 @@
+export const BRAND_NAME = "conduit";
+
 export const STORAGE_KEYS = {
 	Token: "conduit-auth-token",
 	User: "conduit-user",
@@ -8,6 +10,7 @@ export const QUERY_KEYS = {
 	Articles: "articles",
 	Article: "article",
 	Comments: "comments",
+	Tags: "tags",
 };
 
 export const AUTHENTICATION_STATUS = {

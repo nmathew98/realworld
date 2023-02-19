@@ -3,18 +3,21 @@ import React from "react";
 export const AuthContext = React.createContext(Object.create(null));
 
 export const AuthProvider = ({ children }) => {
+	const [activeUser, setActiveUser] = useState(null);
 	const [status, setStatus] = useState(AUTHENTICATION_STATUS.Unauthenticated);
 	const [token, setToken] = useState<string | null>(null);
 
 	const onAuthenticationSuccess = useCallback(
 		result => {
 			setToken(result?.token || null);
+			setActiveUser(result);
 			setStatus(AUTHENTICATION_STATUS.Authenticated);
 		},
 		[setToken, setStatus],
 	);
 	const onAuthenticationError = useCallback(() => {
 		setToken(null);
+		setActiveUser(null);
 		setStatus(AUTHENTICATION_STATUS.Unauthenticated);
 	}, [setToken, setStatus]);
 
@@ -41,6 +44,7 @@ export const AuthProvider = ({ children }) => {
 		<AuthContext.Provider
 			value={useMemo(
 				() => ({
+					activeUser,
 					register,
 					authenticate,
 					verify,

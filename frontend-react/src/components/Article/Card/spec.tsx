@@ -2,9 +2,9 @@ import React from "react";
 import { render, screen, cleanup } from "@testing-library/react";
 import { format } from "date-fns";
 
-import { ProfileArticle } from ".";
+import { ArticleCard } from ".";
 
-describe("<ProfileArticle />", () => {
+describe("<ArticleCard />", () => {
 	afterEach(() => {
 		cleanup();
 	});
@@ -12,7 +12,7 @@ describe("<ProfileArticle />", () => {
 	it("createdAt is formatted like 'January 29th'", () => {
 		const currentDate = new Date();
 
-		render(<ProfileArticle createdAt={currentDate} />);
+		render(<ArticleCard createdAt={currentDate} />);
 
 		const expectedFormat = format(currentDate, "LLLL wo");
 

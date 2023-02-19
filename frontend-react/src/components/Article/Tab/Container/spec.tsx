@@ -1,20 +1,36 @@
 import React from "react";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 
-import { ProfileArticleTabContainer } from ".";
-import { ProfileArticleTabItem } from "../Item";
+import { ArticleTabContainer } from ".";
+import { ArticleTabItem } from "../Item";
 
-describe("<ProfileArticleTabContainer />", () => {
+describe("<ArticleTabContainer />", () => {
 	afterEach(() => {
 		cleanup();
 	});
 
+	it("is clickable", () => {
+		const onClick = vi.fn();
+
+		render(
+			<ArticleTabContainer>
+				<ArticleTabItem onClick={onClick}>Hello world</ArticleTabItem>
+			</ArticleTabContainer>,
+		);
+
+		const tab = screen.getByText("Hello world");
+
+		fireEvent.click(tab);
+
+		expect(onClick).toBeCalledTimes(1);
+	});
+
 	it("controls which tab is currently marked as active", () => {
 		render(
-			<ProfileArticleTabContainer>
-				<ProfileArticleTabItem>Hello world</ProfileArticleTabItem>
-				<ProfileArticleTabItem>!!!</ProfileArticleTabItem>
-			</ProfileArticleTabContainer>,
+			<ArticleTabContainer>
+				<ArticleTabItem>Hello world</ArticleTabItem>
+				<ArticleTabItem>!!!</ArticleTabItem>
+			</ArticleTabContainer>,
 		);
 
 		const firstTabItemInitial = screen.getByText("Hello world");
@@ -46,11 +62,11 @@ describe("<ProfileArticleTabContainer />", () => {
 
 	it("renders native dom elements correctly", () => {
 		render(
-			<ProfileArticleTabContainer>
-				<ProfileArticleTabItem>Hello world</ProfileArticleTabItem>
-				<ProfileArticleTabItem>!!!</ProfileArticleTabItem>
+			<ArticleTabContainer>
+				<ArticleTabItem>Hello world</ArticleTabItem>
+				<ArticleTabItem>!!!</ArticleTabItem>
 				<span>AHHH!!!</span>
-			</ProfileArticleTabContainer>,
+			</ArticleTabContainer>,
 		);
 
 		expect(screen.getByText("AHHH!!!")).toBeTruthy();
