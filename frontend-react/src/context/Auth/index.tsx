@@ -47,13 +47,23 @@ export const AuthProvider = ({ children }) => {
 					activeUser,
 					register,
 					authenticate,
+					revoke: onAuthenticationError,
 					verify,
 					onAuthenticationSuccess,
 					onAuthenticationError,
 					isAuthenticated:
 						!!token || status === AUTHENTICATION_STATUS.Authenticated,
 				}),
-				[register, authenticate, verify, onAuthenticationError, token, status],
+				[
+					activeUser,
+					register,
+					authenticate,
+					verify,
+					onAuthenticationSuccess,
+					onAuthenticationError,
+					token,
+					status,
+				],
 			)}>
 			{children}
 		</AuthContext.Provider>
