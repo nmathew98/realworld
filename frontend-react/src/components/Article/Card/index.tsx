@@ -35,7 +35,7 @@ export const ArticleCard = ({
 			<h1>{title}</h1>
 			<p>{description}</p>
 			<span>Read more...</span>
-			{!!tags && (
+			{!tags ? null : (
 				<TagContainer>
 					{tags?.map(tag => (
 						<TagOutline key={tag}>{tag}</TagOutline>

@@ -24,7 +24,7 @@ export const CommentCard = ({
 				{author}
 			</a>
 			<span className="date-posted">{formatDate(createdAt)}</span>
-			{!!(onClickEdit || onClickDelete) && (
+			{!(onClickEdit || onClickDelete) ? null : (
 				<span className="mod-options">
 					{onClickEdit && <Icon name="ion-edit" />}
 					{onClickDelete && <Icon name="ion-trash-a" />}

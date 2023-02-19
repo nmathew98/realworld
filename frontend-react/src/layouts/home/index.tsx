@@ -41,9 +41,9 @@ export const HomeLayout = ({ Pagination, children }) => {
 								))}
 							</ArticleTabContainer>
 							{children}
-							{!!Pagination && <Pagination />}
+							{!Pagination ? null : <Pagination />}
 						</div>
-						{!isLoadingTags && (
+						{isLoadingTags ? null : (
 							<div className="col-md-3">
 								<p>Popular Tags</p>
 								<TagContainer>
