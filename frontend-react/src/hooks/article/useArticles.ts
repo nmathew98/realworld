@@ -11,7 +11,7 @@ export const useArticles = ({ type = "global", filters }) => {
 
 	const [totalNumberOfArticles, setTotalNumberOfArticles] = useState(0);
 	const [totalNumberOfPages, setTotalNumberOfPages] = useState(0);
-	const [currentPage, setCurrentPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState(0);
 	const [offset, setOffset] = useState(0);
 
 	const managedFilter = {
@@ -38,14 +38,16 @@ export const useArticles = ({ type = "global", filters }) => {
 
 	const previousPage = (numberOfPages = 1) => {
 		if (currentPage > 1) {
-			setOffset(Math.max(offset - numberOfPages * ARTICLES_PER_PAGE, 0));
+			setOffset(
+				Math.max(offset - numberOfPages * ARTICLES_PER_PAGE, ARTICLES_PER_PAGE),
+			);
 
-			setCurrentPage(Math.max(currentPage - 1, 1));
+			setCurrentPage(Math.max(currentPage - 1, 0));
 		}
 	};
 
 	const onSuccess = () => {
-		setOffset(offset + 10);
+		setOffset(offset + ARTICLES_PER_PAGE);
 	};
 	const {
 		data: followerArticles,
@@ -55,7 +57,7 @@ export const useArticles = ({ type = "global", filters }) => {
 		isError: isErrorFollowerArticles,
 		error: errorFollowerArticles,
 	} = useQuery(
-		[QUERY_KEYS.Articles, "followers"],
+		[QUERY_KEYS.Articles, "followers", offset],
 		queryFnGetAllGlobalArticles,
 		{
 			enabled: isQueryEnabled,
@@ -72,10 +74,14 @@ export const useArticles = ({ type = "global", filters }) => {
 		isRefetching: isRefetchingGlobalArticles,
 		isError: isErrorGlobalArticles,
 		error: errorGlobalArticles,
-	} = useQuery([QUERY_KEYS.Articles, "global"], queryFnGetAllFollowerArticles, {
-		enabled: isQueryEnabled,
-		onSuccess,
-	});
+	} = useQuery(
+		[QUERY_KEYS.Articles, "global", offset],
+		queryFnGetAllFollowerArticles,
+		{
+			enabled: isQueryEnabled,
+			onSuccess,
+		},
+	);
 
 	useEffect(() => {
 		refetchFollowerArticles();
@@ -84,8 +90,8 @@ export const useArticles = ({ type = "global", filters }) => {
 
 	// If the `type` changes we want to go back to the first page
 	useEffect(() => {
-		setOffset(10);
-		setCurrentPage(1);
+		setOffset(1 * ARTICLES_PER_PAGE);
+		setCurrentPage(0);
 	}, [type]);
 
 	const calculateTotalNumberOfPages = result =>
@@ -106,7 +112,7 @@ export const useArticles = ({ type = "global", filters }) => {
 			type === "followers"
 				? followerArticles?.articlesCount
 				: globalArticles?.articlesCount,
-		currentPage,
+		currentPage: currentPage + 1,
 		nextPage,
 		previousPage,
 		isLoadingArticles:
