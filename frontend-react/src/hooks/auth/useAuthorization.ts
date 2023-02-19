@@ -4,7 +4,7 @@ const initialForm = Object.create(null);
 
 export const useAuthorization = () => {
 	const [form, dispatchFormUpdate] = useReducer(reducer, initialForm);
-	const [formErrors, setFormErrors] = useState([]);
+	const [formErrors, setFormErrors] = useState<[string, string][]>([]);
 	const { onAuthenticationSuccess, onAuthenticationError } =
 		useContext(AuthContext);
 
@@ -61,7 +61,7 @@ export const useAuthorization = () => {
 	useEffect(() => {
 		const formErrors = Object.entries(form)
 			.filter(([key, value]) => !validators[key].test(value))
-			.map(([key]) => [key, errors[key]]);
+			.map(([key]) => [key, errors[key]]) as [string, string][];
 
 		setFormErrors(formErrors);
 	}, [form]);

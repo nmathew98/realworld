@@ -1,3 +1,5 @@
+import { useQuery } from "react-query";
+
 export const useArticles = ({ type = "global", filters }) => {
 	const { isAuthenticated } = useContext(AuthContext);
 	const {
@@ -25,7 +27,7 @@ export const useArticles = ({ type = "global", filters }) => {
 		queryFn,
 		{
 			enabled: isQueryEnabled,
-			onSuccess: result => {
+			onSuccess: (result: any) => {
 				setOffset(offset + Number(result.articlesCount));
 			},
 		},

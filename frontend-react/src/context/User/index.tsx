@@ -14,6 +14,11 @@ export const UserProvider = ({ children }) => {
 	const queryClient = useQueryClient();
 	const { onAuthenticationError, isAuthenticated } = useContext(AuthContext);
 
+	const getProfile = useCallback(
+		() => Resources.User.read.current({ body: null }),
+		[],
+	);
+
 	const { data: profile, refetch: refetchProfile } = useQuery(
 		QUERY_KEYS.CurrentUser,
 		getProfile,
@@ -21,11 +26,6 @@ export const UserProvider = ({ children }) => {
 			onError: onAuthenticationError,
 			enabled: isAuthenticated,
 		},
-	);
-
-	const getProfile = useCallback(
-		() => Resources.User.read.current({ body: null }),
-		[],
 	);
 
 	const updateProfile = useMutation(Resources.User.update.profile, {

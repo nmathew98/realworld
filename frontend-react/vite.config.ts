@@ -8,7 +8,7 @@ export default defineConfig({
 		react(),
 		AutoImport({
 			imports: ["react"],
-			dirs: ["./src/utilities", "./src/context"],
+			dirs: ["./src/utilities", "./src/context/**"],
 			eslintrc: {
 				enabled: true,
 			},

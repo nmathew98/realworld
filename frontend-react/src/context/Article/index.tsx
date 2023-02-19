@@ -23,7 +23,7 @@ export interface Article {
 export const ArticleContext = React.createContext(Object.create(null));
 
 export const ArticleProvider = ({ children }) => {
-	const getAllFollowerArticles = Resources.Articles.read.follower;
+	const getAllFollowerArticles = Resources.Articles.read.followers;
 	const getAllGlobalArticles = Resources.Articles.read.global;
 
 	const getTags = Resources.Tags.read;

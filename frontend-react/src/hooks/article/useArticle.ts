@@ -34,7 +34,8 @@ export const useArticle = ({ slug }) => {
 		isError: isErrorCreateComment,
 		error: errorCreateComment,
 	} = useMutation(_createComment, {
-		onSuccess: refetchComments,
+		// The types don't match but all we need is a reference
+		onSuccess: refetchComments as any,
 	});
 
 	const {
@@ -43,7 +44,8 @@ export const useArticle = ({ slug }) => {
 		isError: isErrorDeleteComment,
 		error: errorDeleteComment,
 	} = useMutation(_deleteComment, {
-		onSuccess: refetchComments,
+		// The types don't match but all we need is a reference
+		onSuccess: refetchComments as any,
 	});
 
 	return {
