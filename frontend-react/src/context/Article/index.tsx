@@ -23,16 +23,16 @@ export interface Article {
 export const ArticleContext = React.createContext(Object.create(null));
 
 export const ArticleProvider = ({ children }) => {
-	const getAllArticles = Resources.Feed.read.articles;
-	const getAllArticlesByAuthor = Resources.Feed.read.article;
+	const getAllFollowerArticles = Resources.Articles.read.follower;
+	const getAllGlobalArticles = Resources.Articles.read.global;
 
 	const getTags = Resources.Tags.read;
 
 	return (
 		<ArticleContext.Provider
 			value={{
-				getAllArticles,
-				getAllArticlesByAuthor,
+				getAllFollowerArticles,
+				getAllGlobalArticles,
 				getTags,
 			}}>
 			{children}

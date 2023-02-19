@@ -11,7 +11,7 @@ export default defineConfig({
 	plugins: [
 		AutoImport({
 			imports: ["react", "vitest"],
-			dirs: ["./src/utilities"],
+			dirs: ["./src/utilities", "./src/context"],
 			eslintrc: {
 				enabled: true,
 			},

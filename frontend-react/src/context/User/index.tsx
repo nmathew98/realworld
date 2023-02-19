@@ -1,8 +1,6 @@
 import React from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 
-import { AuthContext } from "../Auth";
-
 export interface User {
 	username: string;
 	bio: string;
@@ -16,6 +14,15 @@ export const UserProvider = ({ children }) => {
 	const queryClient = useQueryClient();
 	const { onAuthenticationError, isAuthenticated } = useContext(AuthContext);
 
+	const { data: profile, refetch: refetchProfile } = useQuery(
+		QUERY_KEYS.CurrentUser,
+		getProfile,
+		{
+			onError: onAuthenticationError,
+			enabled: isAuthenticated,
+		},
+	);
+
 	const getProfile = useCallback(
 		() => Resources.User.read.current({ body: null }),
 		[],
@@ -27,22 +34,13 @@ export const UserProvider = ({ children }) => {
 		},
 	});
 
-	const createArticle = Resources.Articles.create;
+	const getArticle = Resources.Articles.read.single;
 
+	const createArticle = Resources.Articles.create;
 	const updateArticle = Resources.Articles.update.article;
 	const favoriteArticle = Resources.Articles.update.favorite;
-
 	const deleteArticle = Resources.Articles.delete.article;
 	const unfavoriteArticle = Resources.Articles.delete.favorite;
-
-	const { data: profile, refetch: refetchProfile } = useQuery(
-		QUERY_KEYS.CurrentUser,
-		getProfile,
-		{
-			onError: onAuthenticationError,
-			enabled: isAuthenticated,
-		},
-	);
 
 	return (
 		<UserContext.Provider
@@ -51,6 +49,7 @@ export const UserProvider = ({ children }) => {
 				refetchProfile,
 				updateProfile,
 				createArticle,
+				getArticle,
 				updateArticle,
 				favoriteArticle,
 				deleteArticle,
