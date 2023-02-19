@@ -13,13 +13,13 @@ export const AuthProvider = ({ children }) => {
 			setActiveUser(result);
 			setStatus(AUTHENTICATION_STATUS.Authenticated);
 		},
-		[setToken, setStatus],
+		[setToken, setActiveUser, setStatus],
 	);
 	const onAuthenticationError = useCallback(() => {
 		setToken(null);
 		setActiveUser(null);
 		setStatus(AUTHENTICATION_STATUS.Unauthenticated);
-	}, [setToken, setStatus]);
+	}, [setToken, setActiveUser, setStatus]);
 
 	const register = Resources.User.create;
 	const authenticate = Resources.User.read.login;
