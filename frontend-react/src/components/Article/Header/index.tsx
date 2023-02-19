@@ -1,6 +1,4 @@
-import { format } from "date-fns";
-
-import { ButtonAction } from "../../Button/Action";
+import { ArticleActionBar } from "../ActionBar";
 
 export const ArticleHeader = ({
 	onPressFavorite,
@@ -15,23 +13,15 @@ export const ArticleHeader = ({
 	<>
 		<h1>{title}</h1>
 		<div className="article-meta">
-			<a href={profileLink}>
-				<img src={profileImage} />
-			</a>
-			<div className="info">
-				<a href={profileLink} className="author">
-					{author}
-				</a>
-				<span className="date">{formatDate(createdAt)}</span>
-			</div>
-			<ButtonAction icon="ion-plus-round" onClick={onPressFollowAuthor}>
-				Follow {author}
-			</ButtonAction>
-			<ButtonAction icon="ion-heart" onClick={onPressFavorite}>
-				Favorite Post <span className="counter">({favoriteCount})</span>
-			</ButtonAction>
+			<ArticleActionBar
+				onPressFollowAuthor={onPressFollowAuthor}
+				onPressFavorite={onPressFavorite}
+				profileLink={profileLink}
+				profileImage={profileImage}
+				author={author}
+				createdAt={createdAt}
+				favoriteCount={favoriteCount}
+			/>
 		</div>
 	</>
 );
-
-const formatDate = (date: Date) => format(date, "LLLL wo");
