@@ -6,8 +6,9 @@ import { ArticleTabContainer } from "../../components/Article/Tab/Container";
 import { ArticleTabItem } from "../../components/Article/Tab/Item";
 import { TagContainer } from "../../components/Tag/Container";
 import { TagPill } from "../../components/Tag/Pill";
+import { SidebarContainer } from "../../components/Sidebar/Container";
 
-export const HomeLayout = ({ Pagination, children }) => {
+export const LayoutHome = ({ Pagination, children }) => {
 	const { tags, isLoadingTags } = useTags();
 	const { articleTabs, allowedRoutes, isRouteActive } = useNavigation();
 
@@ -45,12 +46,13 @@ export const HomeLayout = ({ Pagination, children }) => {
 						</div>
 						{isLoadingTags ? null : (
 							<div className="col-md-3">
-								<p>Popular Tags</p>
-								<TagContainer>
-									{tags.map(tag => (
-										<TagPill key={tag}>{tag}</TagPill>
-									))}
-								</TagContainer>
+								<SidebarContainer title="Popular Tags">
+									<TagContainer>
+										{tags.map(tag => (
+											<TagPill key={tag}>{tag}</TagPill>
+										))}
+									</TagContainer>
+								</SidebarContainer>
 							</div>
 						)}
 					</div>

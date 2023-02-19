@@ -1,5 +1,5 @@
 // ArticleNavigation = ArticleTabContainer + ArticleTabItem
-export const ProfileLayout = ({ ArticleNavigation, Header, children }) => {
+export const LayoutProfile = ({ ArticleNavigation, Header, children }) => {
 	return (
 		<>
 			<div className="profile-page">

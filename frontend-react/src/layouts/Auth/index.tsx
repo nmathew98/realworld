@@ -1,4 +1,4 @@
-export const AuthLayout = ({ children }) => (
+export const LayoutAuth = ({ children }) => (
 	<div className="auth-page">
 		<div className="container page">
 			<div className="row">
