@@ -1,5 +1,4 @@
 import React from "react";
-import { useMutation } from "react-query";
 
 export const AuthContext = React.createContext(Object.create(null));
 
@@ -19,14 +18,8 @@ export const AuthProvider = ({ children }) => {
 		setStatus(AUTHENTICATION_STATUS.Unauthenticated);
 	}, [setToken, setStatus]);
 
-	const register = useMutation(Resources.User.create, {
-		onSuccess: onAuthenticationSuccess,
-		onError: onAuthenticationError,
-	});
-	const authenticate = useMutation(Resources.User.read.login, {
-		onSuccess: onAuthenticationSuccess,
-		onError: onAuthenticationError,
-	});
+	const register = Resources.User.create;
+	const authenticate = Resources.User.read.login;
 
 	const verify = () => {
 		if (!import.meta.env.API) {

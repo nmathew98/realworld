@@ -75,14 +75,17 @@ export const Resources = Object.freeze({
 				_fetch(`/profiles/${username}/follow`, "DELETE", unwrapProfileResult),
 		},
 	},
-	Feed: {
+	Articles: {
+		create: _fetch("/articles", "POST", unwrapArticlesResult),
 		read: {
-			articles: ({ limit, offset }) =>
+			single: ({ slug }) =>
+				_fetch(`/articles/${slug}`, "GET", unwrapArticlesResult),
+			followers: ({ limit, offset }) =>
 				_fetch("/articles/feed", "GET", null, {
 					limit,
 					offset,
 				}),
-			article: ({ tag, author, favorited, limit, offset }) =>
+			global: ({ tag, author, favorited, limit, offset }) =>
 				_fetch("/articles", "GET", null, {
 					tag,
 					author,
@@ -91,11 +94,6 @@ export const Resources = Object.freeze({
 					offset,
 				}),
 		},
-	},
-	Articles: {
-		create: _fetch("/articles", "POST", unwrapArticlesResult),
-		read: ({ slug }) =>
-			_fetch(`/articles/${slug}`, "GET", unwrapArticlesResult),
 		update: {
 			article: ({ slug }) =>
 				_fetch(`/articles/${slug}`, "PUT", unwrapArticlesResult),
