@@ -1,4 +1,4 @@
-import { LayoutBase } from "../";
+import { LayoutBase } from "../../";
 
 export const LayoutArticleCreate = ({ children }) => (
 	<LayoutBase>
