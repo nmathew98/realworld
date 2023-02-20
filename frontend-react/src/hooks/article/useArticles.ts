@@ -13,7 +13,7 @@ export const useArticles = ({
 		getAllGlobalArticles: _getAllGlobalArticles,
 	} = useContext(ArticleContext);
 
-	const [offset, setOffset] = useState(0);
+	const [currentPage, setCurrentPage] = useState(1);
 
 	const _getAllArticles = matchAccordingToType(
 		_getAllFollowerArticles,
@@ -25,25 +25,23 @@ export const useArticles = ({
 			limit,
 			offset,
 		})({ body: null });
-	const getNextPageParam = lastPage => {
+	const getNextPageParam = (lastPage, allPages) => {
+		const totalNumberOfArticlesFetched = transformArticlesData(allPages).length;
 		const totalNumberOfArticles = lastPage.articlesCount;
 
-		if (offset < totalNumberOfArticles) {
-			const pageParam = Math.min(offset + limit, totalNumberOfArticles);
+		if (totalNumberOfArticlesFetched < totalNumberOfArticles)
+			return allPages.length * limit;
 
-			setOffset(pageParam);
-
-			return pageParam;
-		}
+		return undefined;
 	};
-	const getPreviousPageParam = () => {
-		if (offset > limit) {
-			const pageParam = Math.max(offset - limit, 0);
+	const getPreviousPageParam = (firstPage, allPages) => {
+		if (allPages.length === 1) return undefined;
 
-			setOffset(pageParam);
+		const totalNumberOfArticlesFetched = transformArticlesData(allPages).length;
+		const totalNumberOfArticles = firstPage.articlesCount;
 
-			return pageParam;
-		}
+		if (totalNumberOfArticlesFetched < totalNumberOfArticles)
+			return (allPages.length - 1) * limit;
 	};
 
 	const {
@@ -63,28 +61,57 @@ export const useArticles = ({
 		enabled: matchAccordingToType(isAuthenticated, true),
 	});
 
+	const onPressNextPage = (page = 1) => {
+		const offset = convertPageToOffset(Math.abs(page), limit);
+
+		if (hasNextPageArticles) {
+			fetchNextPageArticles({
+				pageParam: offset,
+			});
+
+			setCurrentPage(page);
+		}
+	};
+
+	const onPressPreviousPage = (page = 1) => {
+		const offset = convertPageToOffset(Math.abs(page), limit);
+
+		if (hasPreviousPageArticles) {
+			fetchPreviousPageArticles({
+				pageParam: offset,
+			});
+
+			setCurrentPage(page);
+		}
+	};
+
 	return {
-		articles: transformArticlesData(data),
-		currentPage: offset / limit + 1,
+		currentPage,
+		currentPageArticles: transformArticlesData(data?.pages).at(
+			convertPageToIndex(currentPage),
+		),
 		totalNumberOfPages: calculateTotalNumberOfPages(data, limit),
 		totalNumberOfFetchedPages: data?.pages?.length ?? 0,
-		fetchNextPageArticles,
-		fetchPreviousPageArticles,
+		onPressNextPage,
+		onPressPreviousPage,
 		isLoadingArticles,
 		isFetchingNextPageArticles,
 		isFetchingPreviousPageArticles,
-		hasNextPageArticles,
-		hasPreviousPageArticles,
 		isErrorArticles,
 		errorArticles,
 	};
 };
 
+const convertPageToIndex = (page: number) => Math.max(page - 1, 0);
+
+const convertPageToOffset = (page: number, limit: number) =>
+	Math.max(convertPageToIndex(page) * limit, 0);
+
 const calculateTotalNumberOfPages = (data, limit) =>
 	(data?.pages?.at(0)?.articlesCount ?? 0) / limit;
 
-const transformArticlesData = data =>
-	data?.pages?.map(page => page.articles)?.flat() ?? [];
+const transformArticlesData = pages =>
+	pages?.map(page => page.articles)?.flat() ?? [];
 
 const makeMatch = buildMakeMatch(
 	ARTICLES_TYPES.Follower,
