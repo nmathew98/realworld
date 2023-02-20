@@ -1,13 +1,7 @@
 export const buildMakeMatch =
 	(...cases: any[]) =>
-	(type: any, catchAll: any = null) =>
-	(...items: any[]) => {
-		const index = Object.entries(cases)
-			.filter(([, value]) => value === type)
-			?.pop()
-			?.shift();
+	(type: any, catchAll: any = null) => {
+		const index = cases.findIndex(value => value === type);
 
-		if (!index) return catchAll;
-
-		return items[index];
+		return (...items: any[]) => items.at(index) ?? catchAll;
 	};

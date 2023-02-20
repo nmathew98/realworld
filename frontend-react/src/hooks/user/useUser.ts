@@ -19,7 +19,7 @@ export const useUser = () => {
 
 	const onArticleMutated = (_, { slug }) => {
 		queryClient.invalidateQueries([QUERY_KEYS.Article, slug]);
-		queryClient.invalidateQueries([QUERY_KEYS.Articles, "global"]);
+		queryClient.invalidateQueries([QUERY_KEYS.Articles, ARTICLES_TYPES.Global]);
 	};
 	const {
 		mutate: deleteArticle,

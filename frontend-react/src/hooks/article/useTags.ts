@@ -5,7 +5,7 @@ export const useTags = () => {
 
 	const queryFnGetTags = () => getTags({ body: null });
 	const { data, isLoading, isRefetching, isError, error } = useQuery(
-		QUERY_KEYS.Tags,
+		[QUERY_KEYS.Tags],
 		queryFnGetTags,
 	);
 

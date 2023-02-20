@@ -13,6 +13,11 @@ export const QUERY_KEYS = {
 	Tags: "tags",
 };
 
+export const ARTICLES_TYPES = {
+	Follower: Symbol("Follower"),
+	Global: Symbol("Global"),
+};
+
 export const AUTHENTICATION_STATUS = {
 	Unauthenticated: Symbol("Unauthenticated"),
 	Authenticated: Symbol("Authenticated"),

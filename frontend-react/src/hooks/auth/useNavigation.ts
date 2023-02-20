@@ -1,33 +1,3 @@
-const unauthenticatedRoutes = [
-	{
-		title: "Home",
-		href: "/",
-	},
-	{
-		title: "Sign in",
-		href: "/login",
-	},
-	{
-		title: "Sign up",
-		href: "/register",
-	},
-];
-
-const unauthenticatedArticleTabs = [
-	{
-		title: "Global Feed",
-	},
-];
-
-const authenticatedArticleTabs = [
-	{
-		title: "Your Feed",
-	},
-	{
-		title: "Global Feed",
-	},
-];
-
 export const useNavigation = () => {
 	const { activeUser, isAuthenticated } = useContext(AuthContext);
 	const [allowedRoutes, setAllowedRoutes] = useState<Record<string, any>[]>([]);
@@ -74,3 +44,33 @@ export const useNavigation = () => {
 		isRouteActive,
 	};
 };
+
+const unauthenticatedRoutes = [
+	{
+		title: "Home",
+		href: "/",
+	},
+	{
+		title: "Sign in",
+		href: "/login",
+	},
+	{
+		title: "Sign up",
+		href: "/register",
+	},
+];
+
+const unauthenticatedArticleTabs = [
+	{
+		title: "Global Feed",
+	},
+];
+
+const authenticatedArticleTabs = [
+	{
+		title: "Your Feed",
+	},
+	{
+		title: "Global Feed",
+	},
+];

@@ -1,7 +1,5 @@
 import { useMutation } from "react-query";
 
-const initialForm = Object.create(null);
-
 export const useAuthorization = () => {
 	const [form, dispatchFormUpdate] = useReducer(reducer, initialForm);
 	const [formErrors, setFormErrors] = useState<[string, string][]>([]);
@@ -98,3 +96,5 @@ const reducer = (state, action) => {
 		{ ...state, password: action.password },
 	);
 };
+
+const initialForm = Object.create(null);
