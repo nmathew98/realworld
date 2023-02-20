@@ -61,39 +61,43 @@ export const useArticles = ({
 		enabled: matchAccordingToType(isAuthenticated, true),
 	});
 
-	const onPressNextPage = (page = 1) => {
-		const offset = convertPageToOffset(Math.abs(page), limit);
+	const makeOnClickNextPage =
+		(page = 1) =>
+		() => {
+			const offset = convertPageToOffset(Math.abs(page), limit);
 
-		if (hasNextPageArticles) {
-			fetchNextPageArticles({
-				pageParam: offset,
-			});
+			if (hasNextPageArticles) {
+				fetchNextPageArticles({
+					pageParam: offset,
+				});
 
-			setCurrentPage(page);
-		}
-	};
+				setCurrentPage(page);
+			}
+		};
 
-	const onPressPreviousPage = (page = 1) => {
-		const offset = convertPageToOffset(Math.abs(page), limit);
+	const makeOnClickPreviousPage =
+		(page = 1) =>
+		() => {
+			const offset = convertPageToOffset(Math.abs(page), limit);
 
-		if (hasPreviousPageArticles) {
-			fetchPreviousPageArticles({
-				pageParam: offset,
-			});
+			if (hasPreviousPageArticles) {
+				fetchPreviousPageArticles({
+					pageParam: offset,
+				});
 
-			setCurrentPage(page);
-		}
-	};
+				setCurrentPage(page);
+			}
+		};
 
 	return {
 		currentPage,
 		currentPageArticles: transformArticlesData(data?.pages).at(
 			convertPageToIndex(currentPage),
 		),
-		totalNumberOfPages: calculateTotalNumberOfPages(data, limit),
+		totalNumberOfPages: calculateTotalNumberOfPages(data?.pages, limit),
 		totalNumberOfFetchedPages: data?.pages?.length ?? 0,
-		onPressNextPage,
-		onPressPreviousPage,
+		makeOnClickNextPage,
+		makeOnClickPreviousPage,
 		isLoadingArticles,
 		isFetchingNextPageArticles,
 		isFetchingPreviousPageArticles,
@@ -107,8 +111,8 @@ const convertPageToIndex = (page: number) => Math.max(page - 1, 0);
 const convertPageToOffset = (page: number, limit: number) =>
 	Math.max(convertPageToIndex(page) * limit, 0);
 
-const calculateTotalNumberOfPages = (data, limit) =>
-	(data?.pages?.at(0)?.articlesCount ?? 0) / limit;
+const calculateTotalNumberOfPages = (pages, limit) =>
+	(pages?.at(0)?.articlesCount ?? 0) / limit;
 
 const transformArticlesData = pages =>
 	pages?.map(page => page.articles)?.flat() ?? [];
