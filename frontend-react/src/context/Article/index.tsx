@@ -28,12 +28,19 @@ export const ArticleProvider = ({ children }) => {
 
 	const getTags = Resources.Tags.read;
 
+	const transformArticle = article => ({
+		...article,
+		createdAt: new Date(article.createdAt),
+		updatedAt: new Date(article.updatedAt),
+	});
+
 	return (
 		<ArticleContext.Provider
 			value={{
 				getAllFollowerArticles,
 				getAllGlobalArticles,
 				getTags,
+				transformArticle,
 			}}>
 			{children}
 		</ArticleContext.Provider>
