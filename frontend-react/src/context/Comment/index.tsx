@@ -17,12 +17,19 @@ export const CommentProvider = ({ children }) => {
 	const createComment = Resources.Comments.create;
 	const deleteComment = Resources.Comments.delete;
 
+	const transformComment = comment => ({
+		...comment,
+		createdAt: new Date(comment.createdAt),
+		updatedAt: new Date(comment.updatedAt),
+	});
+
 	return (
 		<CommentContext.Provider
 			value={{
 				getComments,
 				createComment,
 				deleteComment,
+				transformComment,
 			}}>
 			{children}
 		</CommentContext.Provider>

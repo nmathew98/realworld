@@ -49,7 +49,7 @@ const unwrapProfileResult = (result: Record<string, any>) =>
 const unwrapArticlesResult = (result: Record<string, any>) =>
 	result?.articles ?? result?.article ?? null;
 const unwrapCommentsResult = (result: Record<string, any>) =>
-	result?.comment ?? null;
+	result?.comments ?? null;
 const unwrapTagsResult = (result: Record<string, any>) => result?.tags ?? null;
 
 // Docs: https://api.realworld.io/api-docs/#/

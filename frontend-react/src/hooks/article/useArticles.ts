@@ -1,16 +1,18 @@
-import { useInfiniteQuery } from "react-query";
+import { useQueryClient, useInfiniteQuery } from "react-query";
 
 export const useArticles = ({
 	type = ARTICLES_TYPES.Follower,
 	articlesPerPage: limit = 10,
 	filters,
 }) => {
+	const queryClient = useQueryClient();
 	const matchAccordingToType = makeMatch(type);
 
 	const { isAuthenticated } = useContext(AuthContext);
 	const {
 		getAllFollowerArticles: _getAllFollowerArticles,
 		getAllGlobalArticles: _getAllGlobalArticles,
+		transformArticle,
 	} = useContext(ArticleContext);
 
 	const [currentPage, setCurrentPage] = useState(1);
@@ -44,6 +46,28 @@ export const useArticles = ({
 			return (allPages.length - 1) * limit;
 	};
 
+	const cacheArticles = result =>
+		result?.pages?.forEach(page => {
+			page.articles.forEach(article => {
+				const cached = queryClient.getQueryData([
+					QUERY_KEYS.Articles,
+					article.slug,
+				]);
+
+				if (!cached)
+					queryClient.setQueryData(
+						[QUERY_KEYS.Articles, article.slug],
+						article,
+					);
+			});
+		});
+	const transformArticles = result => ({
+		...result,
+		pages: result.pages.map(page => ({
+			...page,
+			articles: page.articles.map(transformArticle),
+		})),
+	});
 	const {
 		data,
 		isLoading: isLoadingArticles,
@@ -59,6 +83,9 @@ export const useArticles = ({
 		getNextPageParam,
 		getPreviousPageParam,
 		enabled: matchAccordingToType(isAuthenticated, true),
+		keepPreviousData: true,
+		select: transformArticles,
+		onSettled: cacheArticles,
 	});
 
 	const makeOnClickNextPage =

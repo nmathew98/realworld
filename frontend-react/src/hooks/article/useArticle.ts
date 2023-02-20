@@ -1,11 +1,13 @@
 import { useQuery, useMutation } from "react-query";
 
 export const useArticle = ({ slug }) => {
+	const { transformArticle } = useContext(ArticleContext);
 	const { getArticle: _getArticle } = useContext(UserContext);
 	const {
 		getComments: _getComments,
 		createComment: _createComment,
 		deleteComment: _deleteComment,
+		transformComment,
 	} = useContext(CommentContext);
 
 	const queryFnGetArticle = () => _getArticle({ slug })({ body: null });
@@ -16,7 +18,9 @@ export const useArticle = ({ slug }) => {
 		isRefetching: isRefetchingGetArticle,
 		isError: isErrorGetArticle,
 		error: errorGetArticles,
-	} = useQuery([QUERY_KEYS.Article, slug], queryFnGetArticle);
+	} = useQuery([QUERY_KEYS.Article, slug], queryFnGetArticle, {
+		select: transformArticle,
+	});
 
 	const queryFnGetComments = () => _getComments({ slug })({ body: null });
 	const {
@@ -26,7 +30,9 @@ export const useArticle = ({ slug }) => {
 		isRefetching: isRefetchingGetComments,
 		isError: isErrorGetComments,
 		error: errorGetComments,
-	} = useQuery([QUERY_KEYS.Comments, slug], queryFnGetComments);
+	} = useQuery([QUERY_KEYS.Comments, slug], queryFnGetComments, {
+		select: comments => comments.map(transformComment),
+	});
 
 	const {
 		mutate: createComment,
