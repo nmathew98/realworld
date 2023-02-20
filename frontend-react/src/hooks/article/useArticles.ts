@@ -55,10 +55,7 @@ export const useArticles = ({
 				]);
 
 				if (!cached)
-					queryClient.setQueryData(
-						[QUERY_KEYS.Articles, article.slug],
-						article,
-					);
+					queryClient.setQueryData([QUERY_KEYS.Article, article.slug], article);
 			});
 		});
 	const transformArticles = result => ({
