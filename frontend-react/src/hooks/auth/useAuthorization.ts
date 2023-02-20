@@ -91,8 +91,8 @@ const reducer = (state, action) => {
 	const match = makeAuthorizationMatch(action.type, state);
 
 	return match(
-		{ ...state, username: action.username.toLowerCase() },
-		{ ...state, email: action.email.toLowerCase() },
+		{ ...state, username: action.username?.toLowerCase() },
+		{ ...state, email: action.email?.toLowerCase() },
 		{ ...state, password: action.password },
 	);
 };
