@@ -15,28 +15,32 @@ const _fetch =
 			? window.localStorage.getItem(STORAGE_KEYS.Token)
 			: null;
 
-		const searchParams = new URLSearchParams(
+		const validSearchParams = Object.entries(
 			params ?? Object.create(null),
+		).filter(([, value]) => !!value) as string[][];
+
+		const searchParams = new URLSearchParams(
+			Object.fromEntries(validSearchParams),
 		).toString();
 
 		const headers = new Headers();
 		if (token) headers.append("Authorization", `Token ${token}`);
 		if (body) headers.append("Content-Type", "application/json");
 
-		const resource =
-			`${API_BASE}${url}` + searchParams ? `?${searchParams}` : "";
+		const resource = `${API_BASE}${url}`.concat(
+			searchParams ? `?${searchParams}` : "",
+		);
 
 		const response = await fetch(resource, {
 			method,
-			body: JSON.stringify(body),
+			body: method === "GET" ? null : JSON.stringify(body),
 			headers,
 		});
-
-		if (!response.ok || response.status !== 200) throw new HTTPError(response);
 
 		const result = await response.json();
 
 		if (result.errors) throw new AggregateError(Object.entries(result.errors));
+		if (!response.ok || response.status !== 200) throw new HTTPError(response);
 
 		const unwrapped = unwrap?.(result) ?? result;
 

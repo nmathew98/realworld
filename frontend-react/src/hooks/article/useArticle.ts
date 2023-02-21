@@ -1,4 +1,5 @@
 import { useQuery, useMutation } from "react-query";
+import { minutesToMilliseconds } from "date-fns";
 
 export const useArticle = ({ slug }) => {
 	const { transformArticle } = useContext(ArticleContext);
@@ -31,6 +32,8 @@ export const useArticle = ({ slug }) => {
 		isError: isErrorGetComments,
 		error: errorGetComments,
 	} = useQuery([QUERY_KEYS.Comments, slug], queryFnGetComments, {
+		refetchInterval: minutesToMilliseconds(2.5),
+		refetchIntervalInBackground: true,
 		select: comments => comments.map(transformComment),
 	});
 

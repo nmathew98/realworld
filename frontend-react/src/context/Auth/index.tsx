@@ -9,9 +9,22 @@ export const AuthProvider = ({ children }) => {
 
 	const onAuthenticationSuccess = useCallback(
 		result => {
-			setToken(result?.token || null);
+			if (!import.meta.env.API && result?.token) {
+				window.localStorage.setItem(STORAGE_KEYS.Token, result.token);
+				setToken(result.token);
+			} else {
+				setToken(null);
+			}
+
 			setActiveUser(result);
 			setStatus(AUTHENTICATION_STATUS.Authenticated);
+
+			if (
+				window.location.pathname === "/login" ||
+				window.location.pathname === "/register"
+			) {
+				window.location.pathname = "/";
+			}
 		},
 		[setToken, setActiveUser, setStatus],
 	);

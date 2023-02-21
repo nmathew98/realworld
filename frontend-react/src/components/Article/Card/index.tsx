@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 import { ButtonAction } from "../../Button/Action";
 import { TagContainer } from "../../Tag/Container";
@@ -10,28 +11,32 @@ export const ArticleCard = ({
 	profileImage,
 	author,
 	createdAt,
-	favoriteCount,
+	favorited,
+	favoritesCount,
 	articleLink,
 	title,
 	description,
 	tags,
-}) => (
+}: ArticleCard) => (
 	<div className="article-preview">
 		<div className="article-meta">
-			<a href={profileLink}>
+			<Link to={profileLink}>
 				<img src={profileImage} />
-			</a>
+			</Link>
 			<div className="info">
-				<a href={profileLink} className="author">
+				<Link to={profileLink} className="author">
 					{author}
-				</a>
+				</Link>
 				<span className="date">{formatDate(createdAt)}</span>
 			</div>
-			<ButtonAction onClick={onClickFavorite} icon="ion-heart">
-				{favoriteCount}
+			<ButtonAction
+				onClick={onClickFavorite}
+				icon="ion-heart"
+				isActive={favorited}>
+				{favoritesCount}
 			</ButtonAction>
 		</div>
-		<a href={articleLink} className="preview-link">
+		<Link to={articleLink} className="preview-link">
 			<h1>{title}</h1>
 			<p>{description}</p>
 			<span>Read more...</span>
@@ -42,8 +47,22 @@ export const ArticleCard = ({
 					))}
 				</TagContainer>
 			)}
-		</a>
+		</Link>
 	</div>
 );
+
+interface ArticleCard {
+	onClickFavorite?: () => any;
+	profileLink: string;
+	profileImage: string;
+	author: string;
+	createdAt: Date;
+	favorited: boolean;
+	favoritesCount: number;
+	articleLink: string;
+	title: string;
+	description: string;
+	tags: string[];
+}
 
 const formatDate = (date: Date) => format(date, "LLLL wo");
