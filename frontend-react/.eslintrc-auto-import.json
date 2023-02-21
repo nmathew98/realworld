@@ -33,6 +33,7 @@
 		"joinClasses": true,
 		"lazy": true,
 		"memo": true,
+		"render": true,
 		"startTransition": true,
 		"suite": true,
 		"test": true,

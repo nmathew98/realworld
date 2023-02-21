@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, cleanup } from "@testing-library/react";
+import { screen, cleanup } from "@testing-library/react";
 
 import { NavigationItem } from ".";
 
@@ -18,7 +18,7 @@ describe("<NavigationItem />", () => {
 		const element = screen.getByText("Test");
 
 		expect(element).toBeTruthy();
-		expect(element.href).toStrictEqual("test");
+		expect(element.href).toStrictEqual("/test");
 		expect(element.className).toStrictEqual("nav-link");
 
 		const icon = element.children[0];
@@ -35,7 +35,7 @@ describe("<NavigationItem />", () => {
 		const element = screen.getByText("Test");
 
 		expect(element).toBeTruthy();
-		expect(element.href).toStrictEqual("test");
+		expect(element.href).toStrictEqual("/test");
 		expect(element.className).toStrictEqual("nav-link active");
 
 		const icon = element.children[0];
