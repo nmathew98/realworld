@@ -1,10 +1,12 @@
 import { useQueryClient, useInfiniteQuery } from "react-query";
+import { minutesToMilliseconds } from "date-fns";
 
 export const useArticles = ({
-	type = ARTICLES_TYPES.Follower,
+	type = ARTICLES_TYPES.Global,
 	articlesPerPage: limit = 10,
 	filters,
 }) => {
+	const previousFilters = useRef({ ...filters });
 	const queryClient = useQueryClient();
 	const matchAccordingToType = makeMatch(type);
 
@@ -15,35 +17,43 @@ export const useArticles = ({
 		transformArticle,
 	} = useContext(ArticleContext);
 
-	const [currentPage, setCurrentPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState(
+		convertOffsetToPage(filters.offset, limit),
+	);
 
 	const _getAllArticles = matchAccordingToType(
 		_getAllFollowerArticles,
 		_getAllGlobalArticles,
 	);
-	const queryFnGetAllArticles = ({ pageParam: offset = 0 }) =>
-		_getAllArticles({
-			...filters,
+	// Because we are also setting the offset in the URL
+	// We don't need `pageParam` or `filters`
+	const queryFnGetAllArticles = async () => {
+		const url = new URL(window.location.href);
+
+		const result = await _getAllArticles({
+			...Object.fromEntries(url.searchParams),
 			limit,
-			offset,
 		})({ body: null });
-	const getNextPageParam = (lastPage, allPages) => {
-		const totalNumberOfArticlesFetched = transformArticlesData(allPages).length;
-		const totalNumberOfArticles = lastPage.articlesCount;
 
-		if (totalNumberOfArticlesFetched < totalNumberOfArticles)
-			return allPages.length * limit;
+		const offset = Number(url.searchParams.get("offset") || 0);
 
-		return undefined;
+		return {
+			page: convertOffsetToPage(offset, limit),
+			...result,
+		};
 	};
-	const getPreviousPageParam = (firstPage, allPages) => {
+	const getNextPageParam = (lastPage, allPages) => {
+		const currentPage = lastPage.page;
+		const totalNumberOfPages = Math.ceil(lastPage.articlesCount / limit);
+
+		if (currentPage === totalNumberOfPages) return undefined;
+
+		return allPages.length * limit;
+	};
+	const getPreviousPageParam = (_, allPages) => {
 		if (allPages.length === 1) return undefined;
 
-		const totalNumberOfArticlesFetched = transformArticlesData(allPages).length;
-		const totalNumberOfArticles = firstPage.articlesCount;
-
-		if (totalNumberOfArticlesFetched < totalNumberOfArticles)
-			return (allPages.length - 1) * limit;
+		return (allPages.length - 1) * limit;
 	};
 
 	const cacheArticles = result =>
@@ -67,68 +77,96 @@ export const useArticles = ({
 	});
 	const {
 		data,
+		refetch: refetchArticles,
 		isLoading: isLoadingArticles,
+		isRefetching: isRefetchingArticles,
 		isFetchingNextPage: isFetchingNextPageArticles,
 		isFetchingPreviousPage: isFetchingPreviousPageArticles,
 		fetchNextPage: fetchNextPageArticles,
 		fetchPreviousPage: fetchPreviousPageArticles,
-		hasNextPage: hasNextPageArticles,
-		hasPreviousPage: hasPreviousPageArticles,
 		isError: isErrorArticles,
 		error: errorArticles,
 	} = useInfiniteQuery([QUERY_KEYS.Articles, type], queryFnGetAllArticles, {
+		refetchInterval: minutesToMilliseconds(2.5),
+		refetchIntervalInBackground: true,
 		getNextPageParam,
 		getPreviousPageParam,
 		enabled: matchAccordingToType(isAuthenticated, true),
-		keepPreviousData: true,
 		select: transformArticles,
 		onSettled: cacheArticles,
 	});
 
-	const makeOnClickNextPage =
-		(page = 1) =>
-		() => {
-			const offset = convertPageToOffset(Math.abs(page), limit);
+	// Pushing the history because we don't want a reload
+	const appendSearchParam = (params: Record<string, any>) => {
+		const url = new URL(window.location.href);
 
-			if (hasNextPageArticles) {
-				fetchNextPageArticles({
-					pageParam: offset,
-				});
+		Object.entries(params).forEach(([key, value]) => {
+			url.searchParams.set(key, value);
+		});
 
-				setCurrentPage(page);
-			}
-		};
+		window.history.pushState(null, "", url.toString());
+	};
 
-	const makeOnClickPreviousPage =
-		(page = 1) =>
-		() => {
-			const offset = convertPageToOffset(Math.abs(page), limit);
+	const onClickNextPage = async (page: number) => {
+		const offset = convertPageToOffset(Math.abs(page), limit);
 
-			if (hasPreviousPageArticles) {
-				fetchPreviousPageArticles({
-					pageParam: offset,
-				});
+		appendSearchParam({ offset });
 
-				setCurrentPage(page);
-			}
-		};
+		await fetchNextPageArticles({
+			pageParam: offset,
+		});
+
+		setCurrentPage(page);
+	};
+
+	const onClickPreviousPage = async (page: number) => {
+		const offset = convertPageToOffset(Math.abs(page), limit);
+
+		appendSearchParam({ offset });
+
+		await fetchPreviousPageArticles({
+			pageParam: offset,
+		});
+
+		setCurrentPage(page);
+	};
+
+	const makeOnClickPaginationItem = (page: number) => () => {
+		if (page > currentPage) {
+			onClickNextPage(page);
+		} else {
+			onClickPreviousPage(page);
+		}
+	};
+
+	useEffect(() => {
+		if (previousFilters.current.tag !== filters.tag) {
+			setCurrentPage(1);
+			appendSearchParam({ offset: 0 });
+			refetchArticles();
+
+			previousFilters.current = filters;
+		}
+	}, [filters]);
 
 	return {
 		currentPage,
-		currentPageArticles: transformArticlesData(data?.pages).at(
-			convertPageToIndex(currentPage),
-		),
+		currentPageArticles: transformArticlesData(data?.pages, currentPage),
+		makeOnClickPaginationItem,
 		totalNumberOfPages: calculateTotalNumberOfPages(data?.pages, limit),
 		totalNumberOfFetchedPages: data?.pages?.length ?? 0,
-		makeOnClickNextPage,
-		makeOnClickPreviousPage,
-		isLoadingArticles,
-		isFetchingNextPageArticles,
-		isFetchingPreviousPageArticles,
+		refetchArticles,
+		isLoadingArticles: isLoadingArticles,
+		isRefetchingArticles: isRefetchingArticles,
+		isChangingPageArticles:
+			isFetchingNextPageArticles || isFetchingPreviousPageArticles,
 		isErrorArticles,
 		errorArticles,
 	};
 };
+
+const convertOffsetToPage = (offset: number, limit: number) =>
+	Math.max(offset / limit + 1, 0) || 1;
 
 const convertPageToIndex = (page: number) => Math.max(page - 1, 0);
 
@@ -138,8 +176,8 @@ const convertPageToOffset = (page: number, limit: number) =>
 const calculateTotalNumberOfPages = (pages, limit) =>
 	(pages?.at(0)?.articlesCount ?? 0) / limit;
 
-const transformArticlesData = pages =>
-	pages?.map(page => page.articles)?.flat() ?? [];
+const transformArticlesData = (pages, currentPage) =>
+	pages?.find(item => item.page === currentPage)?.articles ?? [];
 
 const makeMatch = buildMakeMatch(
 	ARTICLES_TYPES.Follower,

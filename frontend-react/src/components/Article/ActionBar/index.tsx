@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 import { ButtonAction } from "../../Button/Action";
 
@@ -10,15 +11,15 @@ export const ArticleActionBar = ({
 	author,
 	createdAt,
 	favoriteCount,
-}) => (
+}: ArticleActionBarProps) => (
 	<>
-		<a href={profileLink}>
+		<Link to={profileLink}>
 			<img src={profileImage} />
-		</a>
+		</Link>
 		<div className="info">
-			<a href={profileLink} className="author">
+			<Link to={profileLink} className="author">
 				{author}
-			</a>
+			</Link>
 			<span className="date">{formatDate(createdAt)}</span>
 		</div>
 		<ButtonAction icon="ion-plus-round" onClick={onClickFollowAuthor}>
@@ -29,5 +30,15 @@ export const ArticleActionBar = ({
 		</ButtonAction>
 	</>
 );
+
+interface ArticleActionBarProps {
+	onClickFollowAuthor: () => any;
+	onClickFavorite: () => any;
+	profileLink: string;
+	profileImage: string;
+	author: string;
+	createdAt: Date;
+	favoriteCount: number;
+}
 
 const formatDate = (date: Date) => format(date, "LLLL wo");

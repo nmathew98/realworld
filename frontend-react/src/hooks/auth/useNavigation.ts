@@ -19,10 +19,10 @@ export const useNavigation = () => {
 			icon: "ion-gear-a",
 		},
 		{
-			title: activeUser.username,
-			href: `/@${activeUser.username}`,
+			title: activeUser?.username,
+			href: `/@${activeUser?.username}`,
 			avatar: "https://api.realworld.io/images/smiley-cyrus.jpeg",
-			username: activeUser.username,
+			username: activeUser?.username,
 		},
 	];
 

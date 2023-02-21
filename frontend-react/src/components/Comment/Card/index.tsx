@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
 
 import { Icon } from "../../Icon";
@@ -16,13 +17,13 @@ export const CommentCard = ({
 			<p className="card-text">{text}</p>
 		</div>
 		<div className="card-footer">
-			<a href={profileLink} className="comment-author">
+			<Link to={profileLink} className="comment-author">
 				<img src={profileImage} className="comment-author-img" />
-			</a>
+			</Link>
 			&nbsp;
-			<a href={profileLink} className="comment-author">
+			<Link to={profileLink} className="comment-author">
 				{author}
-			</a>
+			</Link>
 			<span className="date-posted">{formatDate(createdAt)}</span>
 			{!(onClickEdit || onClickDelete) ? null : (
 				<span className="mod-options">

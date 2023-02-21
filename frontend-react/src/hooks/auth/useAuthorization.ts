@@ -6,22 +6,29 @@ export const useAuthorization = () => {
 	const { onAuthenticationSuccess, onAuthenticationError } =
 		useContext(AuthContext);
 
-	const onChangeUsername = username =>
+	const onChangeUsername = event =>
 		dispatchFormUpdate({
 			type: AUTHORIZATION_REDUCER_TYPES.UpdateUsername,
-			username,
+			username: event.target.value,
 		});
-	const onChangePassword = password =>
+	const onChangePassword = event =>
 		dispatchFormUpdate({
 			type: AUTHORIZATION_REDUCER_TYPES.UpdatePassword,
-			password,
+			password: event.target.value,
 		});
-	const onChangeEmail = email =>
+	const onChangeEmail = event =>
 		dispatchFormUpdate({
 			type: AUTHORIZATION_REDUCER_TYPES.UpdateEmail,
-			email,
+			email: event.target.value,
 		});
-	const makeOnSubmitForm = f => f(form);
+	const makeOnSubmitForm = f => event => {
+		event.preventDefault();
+
+		if (Object.values(form).length === 0)
+			return setFormErrors([["form", "Form is incomplete"]]);
+
+		f(event, form);
+	};
 
 	const validators = {
 		username: /[a-zA-Z0-9]{5,10}/,
@@ -59,7 +66,7 @@ export const useAuthorization = () => {
 
 	useEffect(() => {
 		const formErrors = Object.entries(form)
-			.filter(([key, value]) => !validators[key].test(value))
+			.filter(([key, value]) => value && !validators[key].test(value))
 			.map(([key]) => [key, errors[key]]) as [string, string][];
 
 		setFormErrors(formErrors);
@@ -70,8 +77,8 @@ export const useAuthorization = () => {
 		authenticate,
 		isLoadingRegister,
 		isLoadingLogin,
-		isErrorRegister,
-		isErrorLogin,
+		isErrorRegister: isErrorRegister || formErrors.length > 0,
+		isErrorLogin: isErrorLogin || formErrors.length > 0,
 		errorRegister,
 		errorLogin,
 		formErrors,

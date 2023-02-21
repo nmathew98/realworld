@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import { Icon } from "../../Icon";
 
 export const NavigationItem = ({
@@ -9,7 +11,7 @@ export const NavigationItem = ({
 	children,
 }) => (
 	<li className="nav-item">
-		<a className={joinClasses(isActive, "nav-link", "active")} href={href}>
+		<Link className={joinClasses(isActive, "nav-link", "active")} to={href}>
 			{(icon || avatar) && (
 				<>
 					{icon && <Icon name={icon} />}
@@ -18,6 +20,6 @@ export const NavigationItem = ({
 				</>
 			)}
 			{children}
-		</a>
+		</Link>
 	</li>
 );

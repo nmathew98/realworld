@@ -1,10 +1,10 @@
 import React from "react";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 
-import { PaginationContainer } from ".";
-import { PaginationItem } from "../Item";
+import { ArticlePaginationContainer } from ".";
+import { ArticlePaginationItem } from "../Item";
 
-describe("<PaginationContainer />", () => {
+describe("<ArticlePaginationContainer />", () => {
 	afterEach(() => {
 		cleanup();
 	});
@@ -13,9 +13,11 @@ describe("<PaginationContainer />", () => {
 		const onClick = vi.fn();
 
 		render(
-			<PaginationContainer>
-				<PaginationItem onClick={onClick}>Hello world</PaginationItem>
-			</PaginationContainer>,
+			<ArticlePaginationContainer>
+				<ArticlePaginationItem onClick={onClick}>
+					Hello world
+				</ArticlePaginationItem>
+			</ArticlePaginationContainer>,
 		);
 
 		const tab = screen.getByText("Hello world");
@@ -27,10 +29,10 @@ describe("<PaginationContainer />", () => {
 
 	it("controls which tab is currently marked as active", () => {
 		render(
-			<PaginationContainer>
-				<PaginationItem>Hello world</PaginationItem>
-				<PaginationItem>!!!</PaginationItem>
-			</PaginationContainer>,
+			<ArticlePaginationContainer>
+				<ArticlePaginationItem>Hello world</ArticlePaginationItem>
+				<ArticlePaginationItem>!!!</ArticlePaginationItem>
+			</ArticlePaginationContainer>,
 		);
 
 		const firstTabItemInitial = screen.getByText("Hello world");
@@ -62,11 +64,11 @@ describe("<PaginationContainer />", () => {
 
 	it("renders native dom elements correctly", () => {
 		render(
-			<PaginationContainer>
-				<PaginationItem>Hello world</PaginationItem>
-				<PaginationItem>!!!</PaginationItem>
+			<ArticlePaginationContainer>
+				<ArticlePaginationItem>Hello world</ArticlePaginationItem>
+				<ArticlePaginationItem>!!!</ArticlePaginationItem>
 				<span>AHHH!!!</span>
-			</PaginationContainer>,
+			</ArticlePaginationContainer>,
 		);
 
 		expect(screen.getByText("AHHH!!!")).toBeTruthy();
