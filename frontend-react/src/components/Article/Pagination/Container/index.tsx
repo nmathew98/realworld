@@ -6,12 +6,12 @@ export const ArticlePaginationContainer = ({ children }) => {
 	return (
 		<ul className="pagination">
 			{React.Children.map(children, (child, index) => {
+				if (!child || typeof child.type === "string") return child;
+
 				const onClick = () => {
 					setActivePage(index);
 					child.props.onClick?.(index);
 				};
-
-				if (typeof child.type === "string") return child;
 
 				return React.cloneElement(child, {
 					...child.props,

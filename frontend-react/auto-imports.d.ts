@@ -37,6 +37,7 @@ declare global {
 	const joinClasses: typeof import("./src/utilities/joinClasses")["joinClasses"];
 	const lazy: typeof import("react")["lazy"];
 	const memo: typeof import("react")["memo"];
+	const render: typeof import("./src/utilities/render")["render"];
 	const startTransition: typeof import("react")["startTransition"];
 	const suite: typeof import("vitest")["suite"];
 	const test: typeof import("vitest")["test"];
