@@ -7,6 +7,7 @@ import {
 import { SignIn } from "../pages/Auth/SignIn";
 import { SignUp } from "../pages/Auth/SignUp";
 import { Home } from "../pages/Home";
+import { Profile } from "../pages/Profile";
 
 const NoMatch = () => <div>Ahhh!!!</div>;
 
@@ -16,6 +17,7 @@ export const router = createBrowserRouter(
 			<Route index element={<Home />} />
 			<Route path="/login" element={<SignIn />} />
 			<Route path="/register" element={<SignUp />} />
+			<Route path="/:username" element={<Profile />} />
 			<Route path="*" element={<NoMatch />} />
 		</Route>,
 	),
