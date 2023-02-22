@@ -23,8 +23,6 @@ const Body = () => {
 };
 
 const ArticleNavigation = ({ username }) => {
-	if (!username) return null;
-
 	const [searchParams] = useSearchParams();
 
 	const myArticlesParams = new URLSearchParams({
@@ -53,8 +51,10 @@ const ArticleNavigation = ({ username }) => {
 				isActive: searchParams.has("favorited"),
 			},
 		],
-		[searchParams],
+		[searchParams, username],
 	);
+
+	if (!username) return null;
 
 	return (
 		<ArticleTabContainer>
