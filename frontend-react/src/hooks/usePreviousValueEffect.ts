@@ -1,7 +1,10 @@
-export const usePreviousValueEffect = (f, from, to) => {
-	useEffect(() => {
-		const effect = f(from, ...to);
+export const usePreviousValueEffect = (f, to) => {
+	const previousValue = useRef(to);
 
-		if (effect !== null && effect !== undefined) from.current = effect;
-	}, to);
+	useEffect(() => {
+		const effect = f(previousValue.current, to);
+
+		if (effect !== undefined) previousValue.current = effect;
+		if (effect === undefined) previousValue.current = to;
+	}, [to]);
 };

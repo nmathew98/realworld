@@ -8,7 +8,6 @@ export const useArticles = ({
 	articlesPerPage: limit = 10,
 	filters,
 }) => {
-	const previousValues = useRef({ type, filters });
 	const queryClient = useQueryClient();
 	const matchAccordingToType = makeMatch(type);
 
@@ -141,49 +140,20 @@ export const useArticles = ({
 		}
 	};
 
-	usePreviousValueEffect(
-		(previousValues, filters, type) => {
-			if (previousValues.current.filters.tag !== filters.tag) {
-				setCurrentPage(1);
-				appendSearchParam({ offset: 0 });
-				refetchArticles();
+	usePreviousValueEffect((from, to) => {
+		if (from.tag !== to.tag) {
+			setCurrentPage(1);
+			appendSearchParam({ offset: 0 });
+			refetchArticles();
+		}
 
-				return {
-					...previousValues.current,
-					filters,
-				};
-			}
+		if (from.favorited !== to.favorited || from.author !== to.author)
+			refetchArticles();
+	}, filters);
 
-			if (previousValues.current.type !== type) {
-				refetchArticles();
-
-				return {
-					...previousValues.current,
-					type,
-				};
-			}
-
-			if (previousValues.current.favorited !== filters.favorited) {
-				refetchArticles();
-
-				return {
-					...previousValues.current,
-					favorited: filters.favorited,
-				};
-			}
-
-			if (previousValues.current.author !== filters.author) {
-				refetchArticles();
-
-				return {
-					...previousValues.current,
-					author: filters.author,
-				};
-			}
-		},
-		previousValues,
-		[filters, type],
-	);
+	usePreviousValueEffect((from, to) => {
+		if (from !== to) refetchArticles();
+	}, type);
 
 	return {
 		currentPage,
