@@ -8,7 +8,14 @@ import { FormErrorItem } from "../../../components/Form/Error/Item";
 import { ButtonSubmit } from "../../../components/Button/Submit";
 import { useAuthorization } from "../../../hooks/auth/useAuthorization";
 
-export const SignUp = () => {
+export const SignUp = () => (
+	<LayoutAuth>
+		<Title>Sign up - {BRAND_NAME}</Title>
+		<Body />
+	</LayoutAuth>
+);
+
+const Body = () => {
 	const {
 		register,
 		isErrorRegister,
@@ -33,8 +40,7 @@ export const SignUp = () => {
 	});
 
 	return (
-		<LayoutAuth>
-			<Title>Sign up - {BRAND_NAME}</Title>
+		<>
 			<FormHeader
 				title="Sign up"
 				subtitle="Have an account?"
@@ -42,7 +48,7 @@ export const SignUp = () => {
 			/>
 			{!isErrorRegister ? null : (
 				<FormErrorContainer>
-					{formErrors.map(([key, value]) => (
+					{formErrors?.map(([key, value]) => (
 						<FormErrorItem key={key}>{value}</FormErrorItem>
 					))}
 					{!(errorRegister instanceof AggregateError)
@@ -81,6 +87,6 @@ export const SignUp = () => {
 				/>
 				<ButtonSubmit onClick={onSubmitForm}>Sign up</ButtonSubmit>
 			</form>
-		</LayoutAuth>
+		</>
 	);
 };

@@ -44,7 +44,7 @@ export const useArticles = ({
 	};
 	const getNextPageParam = (lastPage, allPages) => {
 		const currentPage = lastPage.page;
-		const totalNumberOfPages = Math.ceil(lastPage.articlesCount / limit);
+		const totalNumberOfPages = calculateTotalNumberOfPages(lastPage, limit);
 
 		if (currentPage === totalNumberOfPages) return undefined;
 
@@ -153,7 +153,7 @@ export const useArticles = ({
 		currentPage,
 		currentPageArticles: transformArticlesData(data?.pages, currentPage),
 		makeOnClickPaginationItem,
-		totalNumberOfPages: calculateTotalNumberOfPages(data?.pages, limit),
+		totalNumberOfPages: calculateTotalNumberOfPages(data?.pages?.at(0), limit),
 		totalNumberOfFetchedPages: data?.pages?.length ?? 0,
 		refetchArticles,
 		isLoadingArticles: isLoadingArticles,
@@ -173,8 +173,8 @@ const convertPageToIndex = (page: number) => Math.max(page - 1, 0);
 const convertPageToOffset = (page: number, limit: number) =>
 	Math.max(convertPageToIndex(page) * limit, 0);
 
-const calculateTotalNumberOfPages = (pages, limit) =>
-	(pages?.at(0)?.articlesCount ?? 0) / limit;
+const calculateTotalNumberOfPages = (page, limit) =>
+	Math.ceil((page?.articlesCount ?? 0) / limit);
 
 const transformArticlesData = (pages, currentPage) =>
 	pages?.find(item => item.page === currentPage)?.articles ?? [];

@@ -1,30 +1,11 @@
 export const useNavigation = () => {
 	const { activeUser, isAuthenticated } = useContext(AuthContext);
-	const [allowedRoutes, setAllowedRoutes] = useState<Record<string, any>[]>([]);
-	const [articleTabs, setArticleTabs] = useState<Record<string, any>[]>([]);
-
-	const authenticatedRoutes = [
-		{
-			title: "Home",
-			href: "/",
-		},
-		{
-			title: "New Post",
-			href: "/new-post",
-			icon: "ion-compose",
-		},
-		{
-			title: "Settings",
-			href: "/settings",
-			icon: "ion-gear-a",
-		},
-		{
-			title: activeUser?.username,
-			href: `/@${activeUser?.username}`,
-			avatar: "https://api.realworld.io/images/smiley-cyrus.jpeg",
-			username: activeUser?.username,
-		},
-	];
+	const [allowedRoutes, setAllowedRoutes] = useState<
+		Record<string, any>[] | null
+	>(null);
+	const [articleTabs, setArticleTabs] = useState<Record<string, any>[] | null>(
+		null,
+	);
 
 	const isRouteActive = item => window.location.pathname === item.href;
 
@@ -34,7 +15,9 @@ export const useNavigation = () => {
 			setArticleTabs(unauthenticatedArticleTabs);
 		} else {
 			setAllowedRoutes(authenticatedRoutes);
-			setArticleTabs(authenticatedArticleTabs);
+			setArticleTabs(
+				authenticatedArticleTabs.concat(createAvatarRoute(activeUser.username)),
+			);
 		}
 	}, [isAuthenticated]);
 
@@ -44,6 +27,30 @@ export const useNavigation = () => {
 		isRouteActive,
 	};
 };
+
+const authenticatedRoutes = [
+	{
+		title: "Home",
+		href: "/",
+	},
+	{
+		title: "New Post",
+		href: "/new-post",
+		icon: "ion-compose",
+	},
+	{
+		title: "Settings",
+		href: "/settings",
+		icon: "ion-gear-a",
+	},
+];
+
+const createAvatarRoute = (username: string) => ({
+	title: username,
+	href: `/@${username}`,
+	avatar: "https://api.realworld.io/images/smiley-cyrus.jpeg",
+	username: username,
+});
 
 const unauthenticatedRoutes = [
 	{
@@ -69,8 +76,10 @@ const unauthenticatedArticleTabs = [
 const authenticatedArticleTabs = [
 	{
 		title: "Your Feed",
+		href: "/",
 	},
 	{
 		title: "Global Feed",
+		href: "/",
 	},
 ];

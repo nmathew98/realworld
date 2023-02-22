@@ -3,10 +3,19 @@ import { useSearchParams } from "react-router-dom";
 
 import { LayoutHome } from "../../layouts/Home";
 import { ArticleCard } from "../../components/Article/Card";
+import { ArticlePaginationContainer } from "../../components/Article/Pagination/Container";
 import { ArticlePaginationItem } from "../../components/Article/Pagination/Item";
 import { useArticles } from "../../hooks/article/useArticles";
 
-export const Home = () => {
+// Everytime a filter (which is reflected in the URL changes), `Body` rerenders
+export const Home = () => (
+	<LayoutHome>
+		<Title>Home - {BRAND_NAME}</Title>
+		<Body />
+	</LayoutHome>
+);
+
+const Body = () => {
 	const [searchParams] = useSearchParams();
 	const filters = Object.fromEntries(searchParams);
 
@@ -22,18 +31,7 @@ export const Home = () => {
 	} = useArticles({ filters });
 
 	return (
-		<LayoutHome
-			Pagination={
-				isRefetchingArticles && !isChangingPageArticles ? null : (
-					<Pagination
-						totalNumberOfPages={totalNumberOfPages}
-						makeOnClickPaginationItem={makeOnClickPaginationItem}
-						currentPage={currentPage}
-					/>
-				)
-			}>
-			<Title>Home - {BRAND_NAME}</Title>
-
+		<>
 			{!isLoadingArticles ? null : <span>Loading!!</span>}
 			{!isErrorArticles ? null : <span>Big F</span>}
 
@@ -54,29 +52,24 @@ export const Home = () => {
 							tags={article.tagList}
 						/>
 				  ))}
-		</LayoutHome>
+			{isRefetchingArticles && !isChangingPageArticles ? null : (
+				<ArticlePaginationContainer>
+					{new Array(totalNumberOfPages).fill(null).map((_, i) => {
+						const onClickPaginationItem = makeOnClickPaginationItem(i + 1);
+
+						const isActive = currentPage === i + 1;
+
+						return (
+							<ArticlePaginationItem
+								key={i}
+								onClick={onClickPaginationItem}
+								isActive={isActive}>
+								{i + 1}
+							</ArticlePaginationItem>
+						);
+					})}
+				</ArticlePaginationContainer>
+			)}
+		</>
 	);
 };
-
-const Pagination = ({
-	totalNumberOfPages,
-	makeOnClickPaginationItem,
-	currentPage,
-}) => (
-	<>
-		{new Array(Math.ceil(totalNumberOfPages)).fill(null).map((_, i) => {
-			const onClickPaginationItem = makeOnClickPaginationItem(i + 1);
-
-			const isActive = currentPage === i + 1;
-
-			return (
-				<ArticlePaginationItem
-					key={i}
-					onClick={onClickPaginationItem}
-					isActive={isActive}>
-					{i + 1}
-				</ArticlePaginationItem>
-			);
-		})}
-	</>
-);

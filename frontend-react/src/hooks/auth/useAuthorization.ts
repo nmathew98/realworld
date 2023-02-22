@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 
 export const useAuthorization = () => {
 	const [form, dispatchFormUpdate] = useReducer(reducer, initialForm);
-	const [formErrors, setFormErrors] = useState<[string, string][]>([]);
+	const [formErrors, setFormErrors] = useState<[string, string][] | null>(null);
 	const { onAuthenticationSuccess, onAuthenticationError } =
 		useContext(AuthContext);
 
@@ -77,8 +77,8 @@ export const useAuthorization = () => {
 		authenticate,
 		isLoadingRegister,
 		isLoadingLogin,
-		isErrorRegister: isErrorRegister || formErrors.length > 0,
-		isErrorLogin: isErrorLogin || formErrors.length > 0,
+		isErrorRegister: isErrorRegister || (formErrors && formErrors?.length > 0),
+		isErrorLogin: isErrorLogin || (formErrors && formErrors?.length > 0),
 		errorRegister,
 		errorLogin,
 		formErrors,
