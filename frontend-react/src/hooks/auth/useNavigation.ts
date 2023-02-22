@@ -22,6 +22,9 @@ export const useNavigation = () => {
 	}, [isAuthenticated]);
 
 	return {
+		homeHref: isAuthenticated
+			? `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`
+			: `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
 		articleTabs,
 		allowedRoutes,
 		isRouteActive,

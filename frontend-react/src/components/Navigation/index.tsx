@@ -3,10 +3,10 @@ import { NavigationContainer } from "./Container";
 import { NavigationItem } from "./Item";
 
 export const Navigation = () => {
-	const { allowedRoutes, isRouteActive } = useNavigation();
+	const { homeHref, allowedRoutes, isRouteActive } = useNavigation();
 
 	return (
-		<NavigationContainer brandName={BRAND_NAME}>
+		<NavigationContainer brandName={BRAND_NAME} homeHref={homeHref}>
 			{allowedRoutes?.map(item => (
 				// @ts-expect-error: type stuff
 				<NavigationItem
