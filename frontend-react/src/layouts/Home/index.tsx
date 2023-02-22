@@ -10,29 +10,27 @@ import { TagContainer } from "../../components/Tag/Container";
 import { TagPill } from "../../components/Tag/Pill";
 import { SidebarContainer } from "../../components/Sidebar/Container";
 
-export const LayoutHome = ({ children }) => {
-	return (
-		<LayoutBase>
-			<div className="home-page">
-				<div className="banner">
-					<div className="container">
-						<h1 className="logo-font">{BRAND_NAME}</h1>
-						<p>A place to share your knowledge.</p>
-					</div>
-				</div>
-				<div className="container page">
-					<div className="row">
-						<div className="col-md-9">
-							<ArticleTabs />
-							{children}
-						</div>
-						<Sidebar />
-					</div>
+export const LayoutHome = ({ children }) => (
+	<LayoutBase>
+		<div className="home-page">
+			<div className="banner">
+				<div className="container">
+					<h1 className="logo-font">{BRAND_NAME}</h1>
+					<p>A place to share your knowledge.</p>
 				</div>
 			</div>
-		</LayoutBase>
-	);
-};
+			<div className="container page">
+				<div className="row">
+					<div className="col-md-9">
+						<ArticleTabs />
+						{children}
+					</div>
+					<Sidebar />
+				</div>
+			</div>
+		</div>
+	</LayoutBase>
+);
 
 const ArticleTabs = () => (
 	<ArticleTabContainer>
