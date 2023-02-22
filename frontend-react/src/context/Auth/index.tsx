@@ -1,9 +1,9 @@
 import React from "react";
+import { redirect } from "react-router-dom";
 
 export const AuthContext = React.createContext(Object.create(null));
 
 export const AuthProvider = ({ children }) => {
-	const [activeUser, setActiveUser] = useState(null);
 	const [status, setStatus] = useState(AUTHENTICATION_STATUS.Unauthenticated);
 	const [token, setToken] = useState<string | null>(null);
 
@@ -11,30 +11,26 @@ export const AuthProvider = ({ children }) => {
 		result => {
 			if (!import.meta.env.API && result?.token) {
 				window.localStorage.setItem(STORAGE_KEYS.Token, result.token);
+
 				setToken(result.token);
 			} else {
 				setToken(null);
 			}
 
-			setActiveUser(result);
 			setStatus(AUTHENTICATION_STATUS.Authenticated);
 
 			if (
 				window.location.pathname === "/login" ||
 				window.location.pathname === "/register"
-			) {
-				window.location.pathname = `/${
-					ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]
-				}`;
-			}
+			)
+				redirect(`/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`);
 		},
-		[setToken, setActiveUser, setStatus],
+		[setToken, setStatus],
 	);
 	const onAuthenticationError = useCallback(() => {
 		setToken(null);
-		setActiveUser(null);
 		setStatus(AUTHENTICATION_STATUS.Unauthenticated);
-	}, [setToken, setActiveUser, setStatus]);
+	}, [setToken, setStatus]);
 
 	const register = Resources.User.create;
 	const authenticate = Resources.User.read.login;
@@ -59,7 +55,6 @@ export const AuthProvider = ({ children }) => {
 		<AuthContext.Provider
 			value={useMemo(
 				() => ({
-					activeUser,
 					register,
 					authenticate,
 					revoke: onAuthenticationError,
@@ -70,7 +65,6 @@ export const AuthProvider = ({ children }) => {
 						!!token || status === AUTHENTICATION_STATUS.Authenticated,
 				}),
 				[
-					activeUser,
 					register,
 					authenticate,
 					verify,

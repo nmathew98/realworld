@@ -1,5 +1,5 @@
 export const useNavigation = () => {
-	const { activeUser, isAuthenticated } = useContext(AuthContext);
+	const { profile } = useContext(UserContext);
 	const [allowedRoutes, setAllowedRoutes] = useState<
 		Record<string, any>[] | null
 	>(null);
@@ -10,19 +10,19 @@ export const useNavigation = () => {
 	const isRouteActive = item => window.location.pathname === item.href;
 
 	useEffect(() => {
-		if (!isAuthenticated) {
+		if (!profile) {
 			setAllowedRoutes(unauthenticatedRoutes);
 			setArticleTabs(unauthenticatedArticleTabs);
 		} else {
-			setAllowedRoutes(authenticatedRoutes);
-			setArticleTabs(
-				authenticatedArticleTabs.concat(createAvatarRoute(activeUser.username)),
+			setAllowedRoutes(
+				authenticatedRoutes.concat(createAvatarRoute(profile.username)),
 			);
+			setArticleTabs(authenticatedArticleTabs);
 		}
-	}, [isAuthenticated]);
+	}, [profile]);
 
 	return {
-		homeHref: isAuthenticated
+		homeHref: profile
 			? `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`
 			: `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
 		articleTabs,

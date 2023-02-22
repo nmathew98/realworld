@@ -1,13 +1,16 @@
-import { useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
-export const useUser = () => {
+export const useUser = ({ username }) => {
 	const queryClient = useQueryClient();
+	const { isAuthenticated } = useContext(AuthContext);
 	const {
 		createArticle: _createArticle,
 		deleteArticle: _deleteArticle,
 		updateArticle: _updateArticle,
 		favoriteArticle: _favoriteArticle,
 		unfavoriteArticle: _unfavoriteArticle,
+		followUser: _followUser,
+		unfollowUser: _unfollowUser,
 	} = useContext(UserContext);
 
 	const {
@@ -54,7 +57,29 @@ export const useUser = () => {
 		onSuccess: onArticleMutated,
 	});
 
+	const { mutate: followUser } = useMutation<any, any, any>(_followUser);
+	const { mutate: unfollowUser } = useMutation<any, any, any>(_unfollowUser);
+
+	const queryFnGetProfile = () =>
+		Resources.User.read.username({ username })({ body: null });
+	const { data: profile, refetch: refetchProfile } = useQuery(
+		[QUERY_KEYS.Profile, username],
+		queryFnGetProfile,
+		{
+			enabled: isAuthenticated && username,
+		},
+	);
+
+	const makeOnClickFollow = (username: string) => () => {
+		if (profile.following) unfollowUser({ username });
+		else followUser({ username });
+
+		refetchProfile();
+	};
+
 	return {
+		profile,
+		makeOnClickFollow,
 		createArticle,
 		deleteArticle,
 		updateArticle,

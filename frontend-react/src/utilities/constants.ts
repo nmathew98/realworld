@@ -11,6 +11,7 @@ export const QUERY_KEYS = {
 	Article: "article",
 	Comments: "comments",
 	Tags: "tags",
+	Profile: "profile",
 };
 
 export const ARTICLES_TYPES = {

@@ -14,10 +14,13 @@ export const UserProvider = ({ children }) => {
 	const queryClient = useQueryClient();
 	const { onAuthenticationError, isAuthenticated } = useContext(AuthContext);
 
-	const getProfile = useCallback(
-		() => Resources.User.read.current({ body: null }),
-		[],
-	);
+	const getProfile = async () => {
+		const currentUser = await Resources.User.read.current({ body: null });
+
+		return Resources.User.read.username({
+			username: currentUser.username,
+		})({ body: null });
+	};
 
 	const { data: profile, refetch: refetchProfile } = useQuery(
 		QUERY_KEYS.CurrentUser,
@@ -31,8 +34,21 @@ export const UserProvider = ({ children }) => {
 	const updateProfile = useMutation(Resources.User.update.profile, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(QUERY_KEYS.CurrentUser);
+			refetchProfile();
 		},
 	});
+
+	const followUser = useCallback(
+		({ username }) =>
+			Resources.User.update.follow({ username })({ body: null }),
+		[],
+	);
+
+	const unfollowUser = useCallback(
+		({ username }) =>
+			Resources.User.update.unfollow({ username })({ body: null }),
+		[],
+	);
 
 	const getArticle = Resources.Articles.read.single;
 
@@ -48,6 +64,8 @@ export const UserProvider = ({ children }) => {
 				profile,
 				refetchProfile,
 				updateProfile,
+				followUser,
+				unfollowUser,
 				createArticle,
 				getArticle,
 				updateArticle,
