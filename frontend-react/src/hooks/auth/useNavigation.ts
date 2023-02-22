@@ -48,12 +48,20 @@ const authenticatedRoutes = [
 	},
 ];
 
-const createAvatarRoute = (username: string) => ({
-	title: username,
-	href: `/@${username}`,
-	avatar: "https://api.realworld.io/images/smiley-cyrus.jpeg",
-	username: username,
-});
+const createAvatarRoute = (username: string) => {
+	const myArticlesParams = new URLSearchParams({
+		author: username,
+	});
+
+	return {
+		title: username,
+		href: `/@${username}/?${myArticlesParams.toString()}${
+			ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]
+		}`,
+		avatar: "https://api.realworld.io/images/smiley-cyrus.jpeg",
+		username: username,
+	};
+};
 
 const unauthenticatedRoutes = [
 	{

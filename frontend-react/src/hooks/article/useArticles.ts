@@ -1,6 +1,8 @@
 import { useQueryClient, useInfiniteQuery } from "react-query";
 import { minutesToMilliseconds } from "date-fns";
 
+import { usePreviousValueEffect } from "../usePreviousValueEffect";
+
 export const useArticles = ({
 	type = ARTICLES_TYPES.Global,
 	articlesPerPage: limit = 10,
@@ -139,21 +141,49 @@ export const useArticles = ({
 		}
 	};
 
-	useEffect(() => {
-		if (previousValues.current.filters.tag !== filters.tag) {
-			setCurrentPage(1);
-			appendSearchParam({ offset: 0 });
-			refetchArticles();
+	usePreviousValueEffect(
+		(previousValues, filters, type) => {
+			if (previousValues.current.filters.tag !== filters.tag) {
+				setCurrentPage(1);
+				appendSearchParam({ offset: 0 });
+				refetchArticles();
 
-			previousValues.current.filters = filters;
-		}
+				return {
+					...previousValues.current,
+					filters,
+				};
+			}
 
-		if (previousValues.current.type !== type) {
-			refetchArticles();
+			if (previousValues.current.type !== type) {
+				refetchArticles();
 
-			previousValues.current.type = type;
-		}
-	}, [filters, type]);
+				return {
+					...previousValues.current,
+					type,
+				};
+			}
+
+			if (previousValues.current.favorited !== filters.favorited) {
+				refetchArticles();
+
+				return {
+					...previousValues.current,
+					favorited: filters.favorited,
+				};
+			}
+
+			if (previousValues.current.author !== filters.author) {
+				refetchArticles();
+
+				return {
+					...previousValues.current,
+					author: filters.author,
+				};
+			}
+		},
+		previousValues,
+		[filters, type],
+	);
 
 	return {
 		currentPage,

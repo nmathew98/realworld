@@ -1,6 +1,7 @@
 import { Title } from "react-head";
 import { Link, useSearchParams } from "react-router-dom";
 
+import { Articles } from "../../components/Article";
 import { LayoutProfile } from "../../layouts/Profile";
 import { ArticleTabContainer } from "../../components/Article/Tab/Container";
 import { ArticleTabItem } from "../../components/Article/Tab/Item";
@@ -18,6 +19,7 @@ const Body = () => {
 		<>
 			<Title>{profile?.username} - Conduit</Title>
 			<ArticleNavigation username={profile?.username} />
+			<Articles />
 		</>
 	);
 };
