@@ -7,8 +7,10 @@ export const ArticleTabItem = ({
 }: ArticleTabItemProps<any>) => {
 	const As = as as unknown as ElementType;
 
+	const key = useId();
+
 	return (
-		<li className="nav-item">
+		<li key={key} className="nav-item">
 			<As {...rest} className={joinClasses(!!isActive, "nav-link", "active")} />
 		</li>
 	);

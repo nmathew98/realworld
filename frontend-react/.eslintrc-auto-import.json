@@ -1,6 +1,7 @@
 {
 	"globals": {
 		"ARTICLES_TYPES": true,
+		"ARTICLES_TYPES_HASH": true,
 		"AUTHENTICATION_STATUS": true,
 		"AUTHORIZATION_REDUCER_TYPES": true,
 		"ArticleContext": true,

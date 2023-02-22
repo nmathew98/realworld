@@ -18,6 +18,13 @@ export const ARTICLES_TYPES = {
 	Global: Symbol("Global"),
 };
 
+export const ARTICLES_TYPES_HASH = {
+	"#personal": ARTICLES_TYPES.Follower,
+	"#global": ARTICLES_TYPES.Global,
+	[ARTICLES_TYPES.Follower]: "#personal",
+	[ARTICLES_TYPES.Global]: "#global",
+};
+
 export const AUTHENTICATION_STATUS = {
 	Unauthenticated: Symbol("Unauthenticated"),
 	Authenticated: Symbol("Authenticated"),

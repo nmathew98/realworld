@@ -6,7 +6,7 @@ export const useArticles = ({
 	articlesPerPage: limit = 10,
 	filters,
 }) => {
-	const previousFilters = useRef({ ...filters });
+	const previousValues = useRef({ type, filters });
 	const queryClient = useQueryClient();
 	const matchAccordingToType = makeMatch(type);
 
@@ -140,14 +140,20 @@ export const useArticles = ({
 	};
 
 	useEffect(() => {
-		if (previousFilters.current.tag !== filters.tag) {
+		if (previousValues.current.filters.tag !== filters.tag) {
 			setCurrentPage(1);
 			appendSearchParam({ offset: 0 });
 			refetchArticles();
 
-			previousFilters.current = filters;
+			previousValues.current.filters = filters;
 		}
-	}, [filters]);
+
+		if (previousValues.current.type !== type) {
+			refetchArticles();
+
+			previousValues.current.type = type;
+		}
+	}, [filters, type]);
 
 	return {
 		currentPage,

@@ -70,16 +70,26 @@ const unauthenticatedRoutes = [
 const unauthenticatedArticleTabs = [
 	{
 		title: "Global Feed",
+		href: `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
+		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
 	},
 ];
 
-const authenticatedArticleTabs = [
+const authenticatedArticleTabs: ArticleTab[] = [
 	{
 		title: "Your Feed",
-		href: "/",
+		href: `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`,
+		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower],
 	},
 	{
 		title: "Global Feed",
-		href: "/",
+		href: `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
+		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
 	},
 ];
+
+interface ArticleTab {
+	title: string;
+	href: string;
+	hash?: string;
+}

@@ -43,24 +43,34 @@ const ArticleTagTabItems = () => {
 	const tag = searchParams.has("tag") ? searchParams.get("tag") : null;
 	const { articleTabs } = useNavigation();
 
-	if (!tag) return null;
+	const hash = location.hash;
 
 	return (
 		<>
 			{articleTabs?.map(item => (
 				<ArticleTabItem
-					key={item.href}
+					key={item.hash}
 					as={Link}
 					to={item.href}
-					isActive={typeof tag === "string" ? false : true}>
+					isActive={isTabActive(item, hash, tag)}>
 					{item.title}
 				</ArticleTabItem>
 			))}
-			<ArticleTabItem as={Link} to={`/?tag=${tag}`} key={tag} isActive>
-				#{tag}
-			</ArticleTabItem>
+			{!tag ? null : (
+				<ArticleTabItem as={Link} to={`/?tag=${tag}`} key={tag} isActive>
+					#{tag}
+				</ArticleTabItem>
+			)}
 		</>
 	);
+};
+
+const isTabActive = (item, hash, tag) => {
+	if (typeof tag === "string") return false;
+
+	if (item.hash === hash) return true;
+
+	return false;
 };
 
 const Sidebar = () => {
