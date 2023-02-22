@@ -1,5 +1,4 @@
 import React from "react";
-import { redirect } from "react-router-dom";
 
 export const AuthContext = React.createContext(Object.create(null));
 
@@ -23,7 +22,9 @@ export const AuthProvider = ({ children }) => {
 				window.location.pathname === "/login" ||
 				window.location.pathname === "/register"
 			)
-				redirect(`/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`);
+				window.location.pathname = `/${
+					ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]
+				}`;
 		},
 		[setToken, setStatus],
 	);
