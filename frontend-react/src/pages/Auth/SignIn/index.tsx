@@ -8,7 +8,14 @@ import { FormErrorItem } from "../../../components/Form/Error/Item";
 import { ButtonSubmit } from "../../../components/Button/Submit";
 import { useAuthorization } from "../../../hooks/auth/useAuthorization";
 
-export const SignIn = () => {
+export const SignIn = () => (
+	<LayoutAuth>
+		<Title>Sign in - {BRAND_NAME}</Title>
+		<Body />
+	</LayoutAuth>
+);
+
+const Body = () => {
 	const {
 		authenticate,
 		isErrorLogin,
@@ -31,8 +38,7 @@ export const SignIn = () => {
 	});
 
 	return (
-		<LayoutAuth>
-			<Title>Sign in - {BRAND_NAME}</Title>
+		<>
 			<FormHeader
 				title="Sign in"
 				subtitle="Need an account?"
@@ -40,7 +46,7 @@ export const SignIn = () => {
 			/>
 			{!isErrorLogin ? null : (
 				<FormErrorContainer>
-					{formErrors.map(([key, value]) => (
+					{formErrors?.map(([key, value]) => (
 						<FormErrorItem key={key}>{value}</FormErrorItem>
 					))}
 					{!(errorLogin instanceof AggregateError)
@@ -73,6 +79,6 @@ export const SignIn = () => {
 				/>
 				<ButtonSubmit onClick={onSubmitForm}>Sign in</ButtonSubmit>
 			</form>
-		</LayoutAuth>
+		</>
 	);
 };

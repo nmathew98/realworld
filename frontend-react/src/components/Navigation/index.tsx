@@ -7,7 +7,7 @@ export const Navigation = () => {
 
 	return (
 		<NavigationContainer brandName={BRAND_NAME}>
-			{allowedRoutes.map(item => (
+			{allowedRoutes?.map(item => (
 				// @ts-expect-error: type stuff
 				<NavigationItem
 					key={item.title}
