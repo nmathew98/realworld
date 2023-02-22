@@ -19,6 +19,11 @@ const Body = () => {
 	const [searchParams] = useSearchParams();
 	const filters = Object.fromEntries(searchParams);
 
+	const hash = location.hash;
+
+	const type =
+		ARTICLES_TYPES_HASH[hash?.toLowerCase()] ?? ARTICLES_TYPES.Global;
+
 	const {
 		currentPage,
 		currentPageArticles,
@@ -28,7 +33,7 @@ const Body = () => {
 		isRefetchingArticles,
 		isChangingPageArticles,
 		isErrorArticles,
-	} = useArticles({ filters });
+	} = useArticles({ type, filters });
 
 	return (
 		<>

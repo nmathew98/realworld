@@ -5,6 +5,7 @@
 export {}
 declare global {
 	const ARTICLES_TYPES: typeof import("./src/utilities/constants")["ARTICLES_TYPES"];
+	const ARTICLES_TYPES_HASH: typeof import("./src/utilities/constants")["ARTICLES_TYPES_HASH"];
 	const AUTHENTICATION_STATUS: typeof import("./src/utilities/constants")["AUTHENTICATION_STATUS"];
 	const AUTHORIZATION_REDUCER_TYPES: typeof import("./src/utilities/constants")["AUTHORIZATION_REDUCER_TYPES"];
 	const ArticleContext: typeof import("./src/context/Article/index")["ArticleContext"];
