@@ -10,6 +10,7 @@ export const useTags = () => {
 		queryFnGetTags,
 		{
 			refetchInterval: minutesToMilliseconds(5),
+			refetchOnWindowFocus: false,
 		},
 	);
 
