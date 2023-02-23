@@ -41,4 +41,4 @@ interface ArticleActionBarProps {
 	favoriteCount: number;
 }
 
-const formatDate = (date: Date) => format(date, "LLLL wo");
+const formatDate = (date: Date) => format(date, "PPP");

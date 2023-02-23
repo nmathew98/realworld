@@ -65,4 +65,4 @@ interface ArticleCard {
 	tags: string[];
 }
 
-const formatDate = (date: Date) => format(date, "LLLL wo");
+const formatDate = (date: Date) => format(date, "PPP");

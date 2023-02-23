@@ -1,16 +1,20 @@
 import React from "react";
 
 export const ArticlePaginationContainer = ({ children }) => {
-	const [activePage, setActivePage] = useState(null);
+	const [activePage, setActivePage] = useState<number | null>(null);
 
 	useEffect(() => {
 		const activeChild = React.Children.toArray(children)
-			.map((child, index) => [!!child.props?.isActive, index])
+			.filter(child => typeof child !== "object")
+			.map((child, index) => [
+				!!(child as Record<string, any>).props?.isActive,
+				index,
+			])
 			.filter(([isActive]) => Boolean(isActive))
 			.flat()
 			.pop();
 
-		setActivePage(activeChild);
+		if (activeChild) setActivePage(activeChild as number);
 	}, []);
 
 	return (

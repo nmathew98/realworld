@@ -35,4 +35,4 @@ export const CommentCard = ({
 	</div>
 );
 
-const formatDate = (date: Date) => format(date, "LLL wo");
+const formatDate = (date: Date) => format(date, "PPP");
