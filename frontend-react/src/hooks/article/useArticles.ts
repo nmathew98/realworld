@@ -18,7 +18,6 @@ export const useArticles = () => {
 
 	const matchAccordingToType = makeMatch(type);
 
-	const { isAuthenticated } = useContext(AuthContext);
 	const {
 		getAllFollowerArticles: _getAllFollowerArticles,
 		getAllGlobalArticles: _getAllGlobalArticles,
@@ -172,11 +171,11 @@ export const useArticles = () => {
 
 			// If we have changed pages then there will already be a fetch in progress
 			// If not we go from changing tags to global but with an offset of zero
-			// we will refetch
+			// so we will refetch
 			if (isFetchingArticles) return undefined;
 
 			// We run into this case when clicking on the conduit logo, it wont be fetching
-			// but the offset zero so we have to trigger a pagination item click
+			// but the offset is zero so we have to trigger a pagination item click
 			if (!isFetchingArticles) {
 				if (toSearch.has("offset")) {
 					const toPage = convertOffsetToPage(
