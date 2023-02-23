@@ -29,6 +29,37 @@ export const useNavigation = () => {
 	};
 };
 
+export const createProfileArticleTab = (
+	username: string,
+	searchParams: URLSearchParams,
+) => {
+	const myArticlesParams = new URLSearchParams({
+		author: username,
+	});
+	const favoritedArticlesParams = new URLSearchParams({
+		favorited: username,
+	});
+
+	return [
+		{
+			title: "My Articles",
+			href: `/profile/@${username}/?${myArticlesParams.toString()}${
+				ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]
+			}`,
+			hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
+			isActive: !searchParams.has("favorited"),
+		},
+		{
+			title: "Favorited Articles",
+			href: `/profile/@${username}/?${favoritedArticlesParams.toString()}${
+				ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]
+			}`,
+			hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
+			isActive: searchParams.has("favorited"),
+		},
+	];
+};
+
 const authenticatedRoutes = [
 	{
 		title: "Home",
@@ -53,7 +84,7 @@ const createAvatarRoute = (username: string) => {
 
 	return {
 		title: username,
-		href: `/@${username}/?${myArticlesParams.toString()}${
+		href: `/profile/@${username}/?${myArticlesParams.toString()}${
 			ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]
 		}`,
 		avatar: "https://api.realworld.io/images/smiley-cyrus.jpeg",

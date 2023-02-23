@@ -3,6 +3,7 @@ import {
 	createRoutesFromElements,
 	Route,
 	Navigate,
+	Routes,
 	useLocation,
 } from "react-router-dom";
 
@@ -45,13 +46,15 @@ const SignUp = hideIfAuth(_SignUp);
 
 export const router = createBrowserRouter(
 	createRoutesFromElements(
-		<>
+		<Route path="/">
 			<Route index element={<Home />} />
-			<Route path={`/${REDIRECT_PATH}`} element={<Redirect />} />
-			<Route path="/login" element={<SignIn />} />
-			<Route path="/register" element={<SignUp />} />
-			<Route path="/:username" element={<Profile />} />
+			<Route path={`${REDIRECT_PATH}`} element={<Redirect />} />
+			<Route path="login" element={<SignIn />} />
+			<Route path="register" element={<SignUp />} />
+			<Route path="profile">
+				<Route path=":username" element={<Profile />} />
+			</Route>
 			<Route path="*" element={<NoMatch />} />
-		</>,
+		</Route>,
 	),
 );
