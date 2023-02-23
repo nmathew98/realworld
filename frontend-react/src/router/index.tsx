@@ -10,7 +10,7 @@ import { SignIn as _SignIn } from "../pages/Auth/SignIn";
 import { SignUp as _SignUp } from "../pages/Auth/SignUp";
 import { Home as _Home } from "../pages/Home";
 import { Profile as _Profile } from "../pages/Profile";
-import { ifAuthenticated, ifIncorrectParams } from "./hooks";
+import { ifAuthenticated, ifIncorrectLocation } from "./hooks";
 
 const REDIRECT_PATH = Date.now();
 
@@ -36,10 +36,10 @@ export const redirect = hook => Component =>
 	};
 
 const hideIfAuth = redirect(ifAuthenticated);
-const checkValidity = redirect(ifIncorrectParams);
+const checkLocationValidity = redirect(ifIncorrectLocation);
 
-const Home = checkValidity(_Home);
-const Profile = checkValidity(_Profile);
+const Home = checkLocationValidity(_Home);
+const Profile = checkLocationValidity(_Profile);
 const SignIn = hideIfAuth(_SignIn);
 const SignUp = hideIfAuth(_SignUp);
 

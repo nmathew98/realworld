@@ -19,31 +19,28 @@ export const ifAuthenticated = () => {
 	};
 };
 
-// When this loads its always before `isAuthenticated` is determined
-// so it always comes out as global
-export const ifIncorrectParams = from => {
+export const ifIncorrectLocation = from => {
+	const { isAuthenticated } = useContext(AuthContext);
+
 	const validHashes = [
 		ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower],
 		ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
 	];
 
-	if (!validHashes.includes(from.hash)) {
-		return {
-			redirect: true,
-			to: `/?offset=0#global`,
-		};
-	}
+	const isHashValid = validHashes.includes(from.hash);
 
 	const searchParams = [...from.searchParams.keys()];
-
 	const validSearchParams = ["tag", "author", "favorited", "limit", "offset"];
 
-	if (
-		searchParams.filter(param => !validSearchParams.includes(param)).length > 0
-	) {
-		return {
-			redirect: true,
-			to: `/?offset=0#global`,
-		};
-	}
+	const isSearchParamsInvalid =
+		searchParams.filter(param => !validSearchParams.includes(param)).length > 0;
+
+	useEffect(() => {
+		if (isAuthenticated) window.location.hash = validHashes.at(0) as string;
+	}, [isAuthenticated]);
+
+	return {
+		redirect: !isHashValid || isSearchParamsInvalid,
+		to: `/?offset=0${isAuthenticated ? validHashes.at(0) : validHashes.at(1)}`,
+	};
 };
