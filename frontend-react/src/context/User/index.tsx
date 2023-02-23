@@ -26,6 +26,7 @@ export const UserProvider = ({ children }) => {
 		QUERY_KEYS.CurrentUser,
 		getProfile,
 		{
+			refetchOnWindowFocus: false,
 			onError: onAuthenticationError,
 			enabled: isAuthenticated,
 		},

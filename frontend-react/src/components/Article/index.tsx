@@ -1,19 +1,9 @@
-import { useSearchParams } from "react-router-dom";
-
 import { ArticleCard } from "./Card";
 import { ArticlePaginationContainer } from "./Pagination/Container";
 import { ArticlePaginationItem } from "./Pagination/Item";
 import { useArticles } from "../../hooks/article/useArticles";
 
 export const Articles = () => {
-	const [searchParams] = useSearchParams();
-	const filters = Object.fromEntries(searchParams);
-
-	const hash = location.hash;
-
-	const type =
-		ARTICLES_TYPES_HASH[hash?.toLowerCase()] ?? ARTICLES_TYPES.Global;
-
 	const {
 		currentPage,
 		currentPageArticles,
@@ -23,7 +13,7 @@ export const Articles = () => {
 		isRefetchingArticles,
 		isChangingPageArticles,
 		isErrorArticles,
-	} = useArticles({ type, filters });
+	} = useArticles();
 
 	return (
 		<>
