@@ -191,10 +191,6 @@ export const useArticles = () => {
 		refetchArticles();
 	}, location);
 
-	usePreviousValueEffect((from, to) => {
-		if (from !== to) refetchArticles();
-	}, type);
-
 	return {
 		currentPage,
 		currentPageArticles: transformArticlesData(data?.pages, currentPage),
