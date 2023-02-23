@@ -17,14 +17,6 @@ export const AuthProvider = ({ children }) => {
 			}
 
 			setStatus(AUTHENTICATION_STATUS.Authenticated);
-
-			if (
-				window.location.pathname === "/login" ||
-				window.location.pathname === "/register"
-			)
-				window.location.pathname = `/${
-					ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]
-				}`;
 		},
 		[setToken, setStatus],
 	);
