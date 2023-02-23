@@ -1,4 +1,4 @@
-export const lisbon = () => {
+export const ifUnauthenticated = () => {
 	const { isAuthenticated } = useContext(AuthContext);
 
 	return {
@@ -7,45 +7,38 @@ export const lisbon = () => {
 	};
 };
 
-export const cho = () => {
+export const ifAuthenticated = () => {
 	const { isAuthenticated } = useContext(AuthContext);
 
 	return {
 		redirect: isAuthenticated,
-		to: "/#global",
+		to: "/?offset=0#global",
 	};
 };
 
-export const rigsby = from => {
-	/* eslint-disable */
-	const url = new URL(from);
+export const ifIncorrectParams = from => {
+	const validHashes = [
+		ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower],
+		ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
+	];
 
-	url.pathname = "/login";
-	url.searchParams.set("hello", "world");
-
-	console.log(url);
-
-	// Check that hashes are valid, search params are valid
-	return {
-		redirect: true,
-	};
-};
-
-export const grace = () => {
-	// Check metrics
-	const start = Date.now();
-
-	useEffect(() => {
-		/* eslint-disable */
-		console.info(`Start: ${start}`);
-
-		return () => {
-			const end = Date.now();
-
-			if (end - start > 1000) {
-				console.info(`End: ${end}`);
-				console.info(`Time at page: ${end - start}`);
-			}
+	if (!validHashes.includes(from.hash)) {
+		return {
+			redirect: true,
+			to: "/?offset=0#global",
 		};
-	}, []);
+	}
+
+	const searchParams = Object.keys(Object.fromEntries(from.searchParams));
+
+	const validSearchParams = ["tag", "author", "favorited", "limit", "offset"];
+
+	if (
+		searchParams.filter(param => !validSearchParams.includes(param)).length > 0
+	) {
+		return {
+			redirect: true,
+			to: "/?offset=0#global",
+		};
+	}
 };

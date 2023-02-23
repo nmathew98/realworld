@@ -30,9 +30,10 @@ export const Articles = () => {
 			{!isLoadingArticles ? null : <span>Loading!!</span>}
 			{!isErrorArticles ? null : <span>Big F</span>}
 
-			{isLoadingArticles || isErrorArticles
-				? null
-				: currentPageArticles.map(article => (
+			{(isRefetchingArticles && !isChangingPageArticles) ||
+			isErrorArticles ? null : (
+				<>
+					{currentPageArticles.map(article => (
 						<ArticleCard
 							key={article.slug}
 							profileLink={`/profile/${article.author.username}`}
@@ -46,24 +47,24 @@ export const Articles = () => {
 							description={article.description}
 							tags={article.tagList}
 						/>
-				  ))}
-			{isRefetchingArticles && !isChangingPageArticles ? null : (
-				<ArticlePaginationContainer>
-					{new Array(totalNumberOfPages).fill(null).map((_, i) => {
-						const onClickPaginationItem = makeOnClickPaginationItem(i + 1);
+					))}
+					<ArticlePaginationContainer>
+						{new Array(totalNumberOfPages).fill(null).map((_, i) => {
+							const onClickPaginationItem = makeOnClickPaginationItem(i + 1);
 
-						const isActive = currentPage === i + 1;
+							const isActive = currentPage === i + 1;
 
-						return (
-							<ArticlePaginationItem
-								key={i}
-								onClick={onClickPaginationItem}
-								isActive={isActive}>
-								{i + 1}
-							</ArticlePaginationItem>
-						);
-					})}
-				</ArticlePaginationContainer>
+							return (
+								<ArticlePaginationItem
+									key={i}
+									onClick={onClickPaginationItem}
+									isActive={isActive}>
+									{i + 1}
+								</ArticlePaginationItem>
+							);
+						})}
+					</ArticlePaginationContainer>
+				</>
 			)}
 		</>
 	);

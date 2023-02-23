@@ -3,6 +3,16 @@ import React from "react";
 export const ArticleTabContainer = ({ type = "feed", children }) => {
 	const [activeTabIdx, setActiveTabIdx] = useState(0);
 
+	useEffect(() => {
+		const activeChild = React.Children.toArray(children)
+			.map((child, index) => [!!child.props?.isActive, index])
+			.filter(([isActive]) => Boolean(isActive))
+			.flat()
+			.pop();
+
+		setActiveTabIdx(activeChild);
+	}, []);
+
 	return (
 		<div className={`${type}-toggle`}>
 			<ul className="nav nav-pills outline-active">

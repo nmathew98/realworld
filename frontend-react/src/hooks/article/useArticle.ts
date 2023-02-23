@@ -20,6 +20,7 @@ export const useArticle = ({ slug }) => {
 		isError: isErrorGetArticle,
 		error: errorGetArticles,
 	} = useQuery([QUERY_KEYS.Article, slug], queryFnGetArticle, {
+		refetchOnWindowFocus: false,
 		select: transformArticle,
 	});
 
@@ -34,6 +35,7 @@ export const useArticle = ({ slug }) => {
 	} = useQuery([QUERY_KEYS.Comments, slug], queryFnGetComments, {
 		refetchInterval: minutesToMilliseconds(2.5),
 		refetchIntervalInBackground: true,
+		refetchOnWindowFocus: false,
 		select: comments => comments.map(transformComment),
 	});
 

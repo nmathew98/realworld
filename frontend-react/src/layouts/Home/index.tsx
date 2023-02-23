@@ -83,7 +83,7 @@ const Sidebar = () => {
 			<SidebarContainer title="Popular Tags">
 				<TagContainer as="div">
 					{tags?.map(tag => (
-						<TagPill as={Link} to={`/?tag=${tag}`} key={tag}>
+						<TagPill as={Link} to={`/?tag=${tag}#global`} key={tag}>
 							{tag}
 						</TagPill>
 					))}
