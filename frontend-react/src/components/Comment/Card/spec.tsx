@@ -1,6 +1,5 @@
 import React from "react";
 import { screen, cleanup } from "@testing-library/react";
-import { format } from "date-fns";
 
 import { CommentCard } from ".";
 
@@ -9,13 +8,11 @@ describe("<CommentCard />", () => {
 		cleanup();
 	});
 
-	it("createdAt is formatted like 'Jan 29th'", () => {
-		const currentDate = new Date();
+	it("createdAt is formatted like 'January 29th, 2023'", () => {
+		const currentDate = new Date(1677136760660);
 
 		render(<CommentCard createdAt={currentDate} />);
 
-		const expectedFormat = format(currentDate, "LLL wo");
-
-		expect(screen.getByText(expectedFormat)).toBeTruthy();
+		expect(screen.getByText("February 23rd, 2023")).toBeTruthy();
 	});
 });

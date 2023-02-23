@@ -19,7 +19,7 @@ export const useArticles = ({
 	} = useContext(ArticleContext);
 
 	const [currentPage, setCurrentPage] = useState(
-		convertOffsetToPage(filters.offset, limit),
+		convertOffsetToPage(Number(filters.offset), limit),
 	);
 
 	const _getAllArticles = matchAccordingToType(
@@ -30,13 +30,15 @@ export const useArticles = ({
 	// We don't need `pageParam` or `filters`
 	const queryFnGetAllArticles = async () => {
 		const url = new URL(window.location.href);
+		const searchParams = Object.fromEntries(url.searchParams);
+
+		const offset = Number(searchParams.offset || 0);
 
 		const result = await _getAllArticles({
-			...Object.fromEntries(url.searchParams),
+			...searchParams,
+			offset,
 			limit,
 		})({ body: null });
-
-		const offset = Number(url.searchParams.get("offset") || 0);
 
 		return {
 			page: convertOffsetToPage(offset, limit),
@@ -90,6 +92,7 @@ export const useArticles = ({
 	} = useInfiniteQuery([QUERY_KEYS.Articles, type], queryFnGetAllArticles, {
 		refetchInterval: minutesToMilliseconds(2.5),
 		refetchIntervalInBackground: true,
+		refetchOnWindowFocus: false,
 		getNextPageParam,
 		getPreviousPageParam,
 		enabled: matchAccordingToType(isAuthenticated, true),

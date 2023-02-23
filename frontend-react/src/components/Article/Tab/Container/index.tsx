@@ -1,7 +1,21 @@
 import React from "react";
 
 export const ArticleTabContainer = ({ type = "feed", children }) => {
-	const [activeTabIdx, setActiveTabIdx] = useState(0);
+	const [activeTabIdx, setActiveTabIdx] = useState<number | null>(null);
+
+	useEffect(() => {
+		const activeChild = React.Children.toArray(children)
+			.filter(child => typeof child !== "object")
+			.map((child, index) => [
+				!!(child as Record<string, any>).props?.isActive,
+				index,
+			])
+			.filter(([isActive]) => Boolean(isActive))
+			.flat()
+			.pop();
+
+		if (activeChild) setActiveTabIdx(activeChild as number);
+	}, []);
 
 	return (
 		<div className={`${type}-toggle`}>

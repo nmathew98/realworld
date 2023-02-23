@@ -22,9 +22,7 @@ export const useNavigation = () => {
 	}, [profile]);
 
 	return {
-		homeHref: profile
-			? `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`
-			: `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
+		homeHref: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
 		articleTabs,
 		allowedRoutes,
 		isRouteActive,
@@ -81,21 +79,21 @@ const unauthenticatedRoutes = [
 const unauthenticatedArticleTabs = [
 	{
 		title: "Global Feed",
-		href: `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
+		href: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
 		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
 	},
 ];
 
 const authenticatedArticleTabs: ArticleTab[] = [
 	{
-		title: "Your Feed",
-		href: `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`,
-		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower],
+		title: "Global Feed",
+		href: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
+		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
 	},
 	{
-		title: "Global Feed",
-		href: `/${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
-		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
+		title: "Your Feed",
+		href: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`,
+		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower],
 	},
 ];
 

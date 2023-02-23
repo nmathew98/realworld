@@ -3,15 +3,24 @@ import {
 	createRoutesFromElements,
 	Route,
 	Navigate,
+	useLocation,
 } from "react-router-dom";
 
 import { SignIn as _SignIn } from "../pages/Auth/SignIn";
 import { SignUp as _SignUp } from "../pages/Auth/SignUp";
 import { Home as _Home } from "../pages/Home";
 import { Profile as _Profile } from "../pages/Profile";
-import { grace, cho, rigsby } from "./hooks";
+import { ifAuthenticated, ifIncorrectParams } from "./hooks";
+
+const REDIRECT_PATH = Date.now();
 
 const NoMatch = () => <div>Ahhh!!!</div>;
+
+const Redirect = () => {
+	const location = useLocation();
+
+	return <Navigate to={location.state.to} replace />;
+};
 
 export const redirect = hook => Component =>
 	function ComponentWithRedirect(props) {
@@ -19,16 +28,17 @@ export const redirect = hook => Component =>
 		const details = hook(from, props);
 
 		if (details?.redirect && details?.to)
-			return <Navigate to={details.to} replace />;
+			return (
+				<Navigate to={`/${REDIRECT_PATH}`} state={{ to: details.to }} replace />
+			);
 
 		return <Component {...props} />;
 	};
 
-const hideIfAuth = redirect(cho);
-const checkValidity = redirect(rigsby);
-const analytics = redirect(grace);
+const hideIfAuth = redirect(ifAuthenticated);
+const checkValidity = redirect(ifIncorrectParams);
 
-const Home = analytics(checkValidity(_Home));
+const Home = checkValidity(_Home);
 const Profile = checkValidity(_Profile);
 const SignIn = hideIfAuth(_SignIn);
 const SignUp = hideIfAuth(_SignUp);
@@ -37,6 +47,7 @@ export const router = createBrowserRouter(
 	createRoutesFromElements(
 		<>
 			<Route index element={<Home />} />
+			<Route path={`/${REDIRECT_PATH}`} element={<Redirect />} />
 			<Route path="/login" element={<SignIn />} />
 			<Route path="/register" element={<SignUp />} />
 			<Route path="/:username" element={<Profile />} />
