@@ -3,7 +3,6 @@ import {
 	createRoutesFromElements,
 	Route,
 	Navigate,
-	Routes,
 	useLocation,
 } from "react-router-dom";
 
@@ -26,7 +25,7 @@ const Redirect = () => {
 export const redirect = hook => Component =>
 	function ComponentWithRedirect(props) {
 		const from = new URL(window.location.href);
-		const details = hook(from, props);
+		const details = hook(from);
 
 		if (details?.redirect && details?.to)
 			return (

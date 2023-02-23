@@ -21,8 +21,11 @@ export const useNavigation = () => {
 		}
 	}, [profile]);
 
+	const followerHash = ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower];
+	const globalHash = ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global];
+
 	return {
-		homeHref: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
+		homeHref: `/?offset=0${profile ? followerHash : globalHash}`,
 		articleTabs,
 		allowedRoutes,
 		isRouteActive,
@@ -117,14 +120,14 @@ const unauthenticatedArticleTabs = [
 
 const authenticatedArticleTabs: ArticleTab[] = [
 	{
-		title: "Global Feed",
-		href: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
-		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
-	},
-	{
 		title: "Your Feed",
 		href: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`,
 		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower],
+	},
+	{
+		title: "Global Feed",
+		href: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]}`,
+		hash: ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
 	},
 ];
 

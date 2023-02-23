@@ -20,9 +20,9 @@ export const ARTICLES_TYPES = {
 };
 
 export const ARTICLES_TYPES_HASH = {
-	"#personal": ARTICLES_TYPES.Follower,
+	"#follower": ARTICLES_TYPES.Follower,
 	"#global": ARTICLES_TYPES.Global,
-	[ARTICLES_TYPES.Follower]: "#personal",
+	[ARTICLES_TYPES.Follower]: "#follower",
 	[ARTICLES_TYPES.Global]: "#global",
 };
 

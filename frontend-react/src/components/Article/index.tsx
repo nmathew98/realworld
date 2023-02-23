@@ -23,6 +23,9 @@ export const Articles = () => {
 			{(isRefetchingArticles && !isChangingPageArticles) ||
 			isErrorArticles ? null : (
 				<>
+					{currentPageArticles.length > 0 ? null : (
+						<span>No articles are here... yet</span>
+					)}
 					{currentPageArticles.map(article => (
 						<ArticleCard
 							key={article.slug}

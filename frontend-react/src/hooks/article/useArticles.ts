@@ -167,7 +167,7 @@ export const useArticles = () => {
 
 		// `setSearchParams` modifies the hash to remove it
 		if (fromSearch.get("offset") !== toSearch.get("offset")) {
-			window.location.hash = from.hash;
+			if (!to.hash) window.location.hash = from.hash;
 
 			// If we have changed pages then there will already be a fetch in progress
 			// If not we go from changing tags to global but with an offset of zero
