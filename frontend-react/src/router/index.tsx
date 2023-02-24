@@ -6,11 +6,16 @@ import {
 	useLocation,
 } from "react-router-dom";
 
+import {
+	ifAuthenticated,
+	ifIncorrectLocation,
+	ifUnauthenticated,
+} from "./hooks";
 import { SignIn as _SignIn } from "../pages/Auth/SignIn";
 import { SignUp as _SignUp } from "../pages/Auth/SignUp";
 import { Home as _Home } from "../pages/Home";
 import { Profile as _Profile } from "../pages/Profile";
-import { ifAuthenticated, ifIncorrectLocation } from "./hooks";
+import { Settings as _Settings } from "../pages/Settings";
 
 const REDIRECT_PATH = Date.now();
 
@@ -35,6 +40,7 @@ export const redirect = hook => Component =>
 		return <Component {...props} />;
 	};
 
+const hideIfUnauth = redirect(ifUnauthenticated);
 const hideIfAuth = redirect(ifAuthenticated);
 const checkLocationValidity = redirect(ifIncorrectLocation);
 
@@ -42,6 +48,7 @@ const Home = checkLocationValidity(_Home);
 const Profile = checkLocationValidity(_Profile);
 const SignIn = hideIfAuth(_SignIn);
 const SignUp = hideIfAuth(_SignUp);
+const Settings = hideIfUnauth(_Settings);
 
 export const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -53,6 +60,7 @@ export const router = createBrowserRouter(
 			<Route path="profile">
 				<Route path=":username" element={<Profile />} />
 			</Route>
+			<Route path="settings" element={<Settings />} />
 			<Route path="*" element={<NoMatch />} />
 		</Route>,
 	),

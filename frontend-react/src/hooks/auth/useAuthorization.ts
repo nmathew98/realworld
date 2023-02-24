@@ -3,8 +3,13 @@ import { useMutation } from "react-query";
 export const useAuthorization = () => {
 	const [form, dispatchFormUpdate] = useReducer(reducer, initialForm);
 	const [formErrors, setFormErrors] = useState<[string, string][] | null>(null);
-	const { onAuthenticationSuccess, onAuthenticationError } =
-		useContext(AuthContext);
+	const {
+		register: _register,
+		authenticate: _authenticate,
+		onAuthenticationSuccess,
+		onAuthenticationError,
+		onAuthenticationSettled,
+	} = useContext(AuthContext);
 
 	const onChangeUsername = event =>
 		dispatchFormUpdate({
@@ -21,13 +26,16 @@ export const useAuthorization = () => {
 			type: AUTHORIZATION_REDUCER_TYPES.UpdateEmail,
 			email: event.target.value,
 		});
-	const makeOnSubmitForm = f => event => {
+	const makeOnSubmitForm = (f, isOptional?: boolean) => event => {
 		event.preventDefault();
 
-		if (Object.values(form).length === 0)
-			return setFormErrors([["form", "Form is incomplete"]]);
+		if (!isOptional && Object.values(form).length === 0) {
+			setFormErrors([["form", "Form is incomplete"]]);
 
-		f(event, form);
+			return form;
+		}
+
+		return f(form, event);
 	};
 
 	const validators = {
@@ -49,9 +57,10 @@ export const useAuthorization = () => {
 		isLoading: isLoadingRegister,
 		isError: isErrorRegister,
 		error: errorRegister,
-	} = useMutation(Resources.User.create, {
+	} = useMutation<any, any, any>(_register, {
 		onSuccess: onAuthenticationSuccess,
 		onError: onAuthenticationError,
+		onSettled: onAuthenticationSettled,
 	});
 
 	const {
@@ -59,9 +68,10 @@ export const useAuthorization = () => {
 		isLoading: isLoadingLogin,
 		isError: isErrorLogin,
 		error: errorLogin,
-	} = useMutation(Resources.User.read.login, {
+	} = useMutation<any, any, any>(_authenticate, {
 		onSuccess: onAuthenticationSuccess,
 		onError: onAuthenticationError,
+		onSettled: onAuthenticationSettled,
 	});
 
 	useEffect(() => {
@@ -89,19 +99,27 @@ export const useAuthorization = () => {
 	};
 };
 
-const makeAuthorizationMatch = buildMakeMatch(
-	AUTHORIZATION_REDUCER_TYPES.UpdateUsername,
-	AUTHORIZATION_REDUCER_TYPES.UpdateEmail,
-	AUTHORIZATION_REDUCER_TYPES.UpdatePassword,
-);
-const reducer = (state, action) => {
-	const match = makeAuthorizationMatch(action.type, state);
+const AUTHORIZATION_REDUCER_TYPES = {
+	UpdateUsername: Symbol("UpdateUsername"),
+	UpdateEmail: Symbol("UpdateEmail"),
+	UpdatePassword: Symbol("UpdatePassword"),
+};
 
-	return match(
-		{ ...state, username: action.username?.toLowerCase() },
-		{ ...state, email: action.email?.toLowerCase() },
-		{ ...state, password: action.password },
-	);
+const reducer = (state, action) => {
+	switch (action.type) {
+		case AUTHORIZATION_REDUCER_TYPES.UpdateUsername: {
+			return { ...state, username: action.username.toLowerCase() };
+		}
+		case AUTHORIZATION_REDUCER_TYPES.UpdateEmail: {
+			return { ...state, email: action.email.toLowerCase() };
+		}
+		case AUTHORIZATION_REDUCER_TYPES.UpdatePassword: {
+			return { ...state, password: action.password };
+		}
+		default: {
+			return state;
+		}
+	}
 };
 
 const initialForm = Object.create(null);

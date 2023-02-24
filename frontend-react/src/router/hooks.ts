@@ -20,14 +20,16 @@ export const ifAuthenticated = () => {
 };
 
 export const ifIncorrectLocation = from => {
-	const { isAuthenticated } = useContext(AuthContext);
+	const { hasAuthenticationSettled, isAuthenticated } = useContext(AuthContext);
 
 	const validHashes = [
 		ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower],
 		ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global],
 	];
 
-	const isHashValid = validHashes.includes(from.hash);
+	const isHashValid =
+		validHashes.includes(from.hash) &&
+		((!isAuthenticated && from.hash === validHashes.at(1)) || isAuthenticated);
 
 	const searchParams = [...from.searchParams.keys()];
 	const validSearchParams = ["tag", "author", "favorited", "limit", "offset"];
@@ -35,12 +37,9 @@ export const ifIncorrectLocation = from => {
 	const isSearchParamsInvalid =
 		searchParams.filter(param => !validSearchParams.includes(param)).length > 0;
 
-	useEffect(() => {
-		if (isAuthenticated) window.location.hash = validHashes.at(0) as string;
-	}, [isAuthenticated]);
-
 	return {
-		redirect: !isHashValid || isSearchParamsInvalid,
+		redirect:
+			hasAuthenticationSettled && (!isHashValid || isSearchParamsInvalid),
 		to: `/?offset=0${isAuthenticated ? validHashes.at(0) : validHashes.at(1)}`,
 	};
 };

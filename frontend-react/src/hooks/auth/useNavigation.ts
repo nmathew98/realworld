@@ -1,4 +1,5 @@
 export const useNavigation = () => {
+	const { isAuthenticated } = useContext(AuthContext);
 	const { profile } = useContext(UserContext);
 	const [allowedRoutes, setAllowedRoutes] = useState<
 		Record<string, any>[] | null
@@ -10,12 +11,14 @@ export const useNavigation = () => {
 	const isRouteActive = item => window.location.pathname === item.href;
 
 	useEffect(() => {
-		if (!profile) {
+		if (!profile || !isAuthenticated) {
 			setAllowedRoutes(unauthenticatedRoutes);
 			setArticleTabs(unauthenticatedArticleTabs);
 		} else {
 			setAllowedRoutes(
-				authenticatedRoutes.concat(createAvatarRoute(profile.username)),
+				authenticatedRoutes.concat(
+					createAvatarRoute(profile.username, profile?.image),
+				),
 			);
 			setArticleTabs(authenticatedArticleTabs);
 		}
@@ -66,7 +69,7 @@ export const createProfileArticleTab = (
 const authenticatedRoutes = [
 	{
 		title: "Home",
-		href: "/",
+		href: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`,
 	},
 	{
 		title: "New Post",
@@ -80,7 +83,7 @@ const authenticatedRoutes = [
 	},
 ];
 
-const createAvatarRoute = (username: string) => {
+const createAvatarRoute = (username: string, avatar: string) => {
 	const myArticlesParams = new URLSearchParams({
 		author: username,
 	});
@@ -90,7 +93,7 @@ const createAvatarRoute = (username: string) => {
 		href: `/profile/@${username}/?${myArticlesParams.toString()}${
 			ARTICLES_TYPES_HASH[ARTICLES_TYPES.Global]
 		}`,
-		avatar: "https://api.realworld.io/images/smiley-cyrus.jpeg",
+		avatar: avatar ?? "https://api.realworld.io/images/smiley-cyrus.jpeg",
 		username: username,
 	};
 };

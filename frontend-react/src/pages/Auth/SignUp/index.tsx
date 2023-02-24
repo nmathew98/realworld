@@ -27,7 +27,7 @@ const Body = () => {
 		makeOnSubmitForm,
 	} = useAuthorization();
 
-	const onSubmitForm = makeOnSubmitForm((event, form) => {
+	const onSubmitForm = makeOnSubmitForm(form => {
 		register({
 			body: {
 				user: {
@@ -78,12 +78,14 @@ const Body = () => {
 					size="lg"
 					type="email"
 					placeholder="Email"
+					autoComplete="email"
 				/>
 				<FormInput
 					onChange={onChangePassword}
 					size="lg"
 					type="password"
 					placeholder="Password"
+					autoComplete="new-password"
 				/>
 				<ButtonSubmit onClick={onSubmitForm}>Sign up</ButtonSubmit>
 			</form>

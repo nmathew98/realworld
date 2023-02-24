@@ -3,6 +3,8 @@ import React from "react";
 export const AuthContext = React.createContext(Object.create(null));
 
 export const AuthProvider = ({ children }) => {
+	const [hasAuthenticationSettled, setHasAuthenticationSettled] =
+		useState(false);
 	const [status, setStatus] = useState(AUTHENTICATION_STATUS.Unauthenticated);
 	const [token, setToken] = useState<string | null>(null);
 
@@ -18,12 +20,17 @@ export const AuthProvider = ({ children }) => {
 
 			setStatus(AUTHENTICATION_STATUS.Authenticated);
 		},
-		[setToken, setStatus],
+		[setHasAuthenticationSettled, setToken, setStatus],
 	);
 	const onAuthenticationError = useCallback(() => {
 		setToken(null);
 		setStatus(AUTHENTICATION_STATUS.Unauthenticated);
-	}, [setToken, setStatus]);
+
+		window.localStorage.removeItem(STORAGE_KEYS.Token);
+	}, [setHasAuthenticationSettled, setToken, setStatus]);
+	const onAuthenticationSettled = () => {
+		setHasAuthenticationSettled(true);
+	};
 
 	const register = Resources.User.create;
 	const authenticate = Resources.User.read.login;
@@ -34,12 +41,14 @@ export const AuthProvider = ({ children }) => {
 
 			if (token) onAuthenticationSuccess({ token });
 			else onAuthenticationError();
-		} else {
+
+			onAuthenticationSettled();
+		} else
 			Resources.Auth.read
 				.verify({ body: null })
 				.then(onAuthenticationSuccess)
-				.catch(onAuthenticationError);
-		}
+				.catch(onAuthenticationError)
+				.finally(onAuthenticationSettled);
 	};
 
 	useEffect(verify, []);
@@ -56,6 +65,7 @@ export const AuthProvider = ({ children }) => {
 					onAuthenticationError,
 					isAuthenticated:
 						!!token || status === AUTHENTICATION_STATUS.Authenticated,
+					hasAuthenticationSettled,
 				}),
 				[
 					register,
@@ -65,6 +75,7 @@ export const AuthProvider = ({ children }) => {
 					onAuthenticationError,
 					token,
 					status,
+					hasAuthenticationSettled,
 				],
 			)}>
 			{children}
