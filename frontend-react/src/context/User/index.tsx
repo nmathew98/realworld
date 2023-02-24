@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 
 export interface User {
 	username: string;
@@ -11,15 +11,21 @@ export interface User {
 export const UserContext = React.createContext(Object.create(null));
 
 export const UserProvider = ({ children }) => {
-	const queryClient = useQueryClient();
 	const { onAuthenticationError, isAuthenticated } = useContext(AuthContext);
 
 	const getProfile = async () => {
+		// TODO:
+		// There is a bug here if updating the username the refetch fails,
+		// The error is cannot read email undefined, swagger does not say anything about it
+		// The other fields seem to be fine
 		const currentUser = await Resources.User.read.current({ body: null });
 
-		return Resources.User.read.username({
+		return {
+			email: currentUser.email,
 			username: currentUser.username,
-		})({ body: null });
+			bio: currentUser.bio,
+			image: currentUser.image,
+		};
 	};
 
 	const { data: profile, refetch: refetchProfile } = useQuery(
@@ -32,12 +38,7 @@ export const UserProvider = ({ children }) => {
 		},
 	);
 
-	const updateProfile = useMutation(Resources.User.update.profile, {
-		onSuccess: () => {
-			queryClient.invalidateQueries(QUERY_KEYS.CurrentUser);
-			refetchProfile();
-		},
-	});
+	const updateProfile = Resources.User.update.profile;
 
 	const followUser = useCallback(
 		({ username }) =>

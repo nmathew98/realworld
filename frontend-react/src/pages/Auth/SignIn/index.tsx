@@ -26,7 +26,7 @@ const Body = () => {
 		makeOnSubmitForm,
 	} = useAuthorization();
 
-	const onSubmitForm = makeOnSubmitForm((event, form) => {
+	const onSubmitForm = makeOnSubmitForm(form => {
 		authenticate({
 			body: {
 				user: {
@@ -70,12 +70,14 @@ const Body = () => {
 					size="lg"
 					type="email"
 					placeholder="Email"
+					autoComplete="email"
 				/>
 				<FormInput
 					onChange={onChangePassword}
 					size="lg"
 					type="password"
 					placeholder="Password"
+					autoComplete="current-password"
 				/>
 				<ButtonSubmit onClick={onSubmitForm}>Sign in</ButtonSubmit>
 			</form>
