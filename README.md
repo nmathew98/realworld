@@ -16,3 +16,5 @@ Implementations of [realworld](https://github.com/gothinkster/realworld) built t
 - **backend-scala**: built with Sprint Boot and Scala
 - **backend-node**: built with Node
 - **backend-serverless**: Serverless backend
+
+**_"I made it, but I hate once I build it, I break it; That might just break me down"_**

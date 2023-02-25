@@ -32,7 +32,7 @@ const Body = () => {
 		errorUpdateUser,
 	} = useUser({ username: null });
 
-	const onSubmitForm = makeOnSubmitForm(async form => {
+	const onSubmitForm = makeOnSubmitForm(form => {
 		updateUser(
 			{
 				body: {
