@@ -1,4 +1,4 @@
-import { LayoutArticle } from "../../../layouts/Article";
+import { LayoutArticle } from "../../layouts/Article";
 
 export const Article = () => (
 	<LayoutArticle>
