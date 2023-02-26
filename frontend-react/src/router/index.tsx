@@ -16,6 +16,7 @@ import { SignUp as _SignUp } from "../pages/Auth/SignUp";
 import { Home as _Home } from "../pages/Home";
 import { Profile as _Profile } from "../pages/Profile";
 import { Settings as _Settings } from "../pages/Settings";
+import { Article as _Article } from "../pages/Article";
 
 const REDIRECT_PATH = Date.now();
 
@@ -49,6 +50,7 @@ const Profile = checkLocationValidity(_Profile);
 const SignIn = hideIfAuth(_SignIn);
 const SignUp = hideIfAuth(_SignUp);
 const Settings = hideIfUnauth(_Settings);
+const Article = _Article;
 
 export const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -59,6 +61,9 @@ export const router = createBrowserRouter(
 			<Route path="register" element={<SignUp />} />
 			<Route path="profile">
 				<Route path=":username" element={<Profile />} />
+			</Route>
+			<Route path="article">
+				<Route path=":slug" element={<Article />} />
 			</Route>
 			<Route path="settings" element={<Settings />} />
 			<Route path="*" element={<NoMatch />} />

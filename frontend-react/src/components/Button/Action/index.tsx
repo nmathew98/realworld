@@ -11,7 +11,7 @@ export const ButtonAction = ({
 		onClick={onClick}
 		className={joinClasses(
 			!!isActive,
-			`btn btn-sm btn-outline-${type} pull-xs-right`,
+			`btn btn-sm btn-outline-${type}`,
 			"btn-outline-active",
 		)}>
 		<Icon name={icon} />
@@ -20,7 +20,7 @@ export const ButtonAction = ({
 );
 
 interface ButtonActionProps {
-	type?: "primary" | "secondary";
+	type?: "primary" | "secondary" | "danger";
 	onClick?: () => any;
 	icon: string;
 	isActive?: boolean;

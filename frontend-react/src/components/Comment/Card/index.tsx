@@ -11,7 +11,8 @@ export const CommentCard = ({
 	createdAt,
 	onClickEdit,
 	onClickDelete,
-}) => (
+	isAuthor,
+}: CommentCardProps) => (
 	<div className="card">
 		<div className="card-block">
 			<p className="card-text">{text}</p>
@@ -25,14 +26,33 @@ export const CommentCard = ({
 				{author}
 			</Link>
 			<span className="date-posted">{formatDate(createdAt)}</span>
-			{!(onClickEdit || onClickDelete) ? null : (
+			{!(!!isAuthor && (onClickEdit || onClickDelete)) ? null : (
 				<span className="mod-options">
-					{onClickEdit && <Icon name="ion-edit" />}
-					{onClickDelete && <Icon name="ion-trash-a" />}
+					{onClickEdit && (
+						<button onClick={onClickEdit}>
+							<Icon name="ion-edit" />
+						</button>
+					)}
+					{onClickDelete && (
+						<span onClick={onClickDelete}>
+							<Icon name="ion-trash-a" />
+						</span>
+					)}
 				</span>
 			)}
 		</div>
 	</div>
 );
+
+interface CommentCardProps {
+	text: string;
+	profileLink: string;
+	profileImage: string;
+	author: string;
+	createdAt: Date;
+	onClickEdit?: () => any;
+	onClickDelete?: () => any;
+	isAuthor?: boolean;
+}
 
 const formatDate = (date: Date) => format(date, "PPP");
