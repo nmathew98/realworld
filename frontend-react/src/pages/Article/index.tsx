@@ -163,8 +163,8 @@ const CommentForm = () => {
 	if (!isAuthenticated || !profile || isLoadingGetArticle)
 		return (
 			<p>
-				<Link to="/login">Sign in</Link> or <Link to="/register">sign up</Link>{" "}
-				to add comments on this article.
+				<Link to="/login">Sign in</Link> or <Link to="/register">sign up</Link>
+				&nbsp; to add comments on this article.
 			</p>
 		);
 
