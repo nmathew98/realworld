@@ -10,6 +10,7 @@ specifiers:
   "@typescript-eslint/parser": ^5.52.0
   "@vitejs/plugin-react-swc": ^3.0.0
   date-fns: ^2.29.3
+  dompurify: ^3.0.0
   eslint: ^8.34.0
   eslint-config-prettier: ^8.6.0
   eslint-plugin-prettier: ^4.2.1
@@ -32,6 +33,7 @@ specifiers:
 
 dependencies:
   date-fns: 2.29.3
+  dompurify: 3.0.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-head: 3.4.2_biqbaboplfbrettd7655fr4n2y
@@ -2042,6 +2044,13 @@ packages:
         integrity: sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==,
       }
     dev: true
+
+  /dompurify/3.0.0:
+    resolution:
+      {
+        integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==,
+      }
+    dev: false
 
   /dotenv/16.0.3:
     resolution:

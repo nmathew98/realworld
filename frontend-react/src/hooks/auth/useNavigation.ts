@@ -72,8 +72,8 @@ const authenticatedRoutes = [
 		href: `/?offset=0${ARTICLES_TYPES_HASH[ARTICLES_TYPES.Follower]}`,
 	},
 	{
-		title: "New Post",
-		href: "/new-post",
+		title: "New Article",
+		href: "/article/create",
 		icon: "ion-compose",
 	},
 	{

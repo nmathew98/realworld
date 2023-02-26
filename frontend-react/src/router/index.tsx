@@ -17,6 +17,8 @@ import { Home as _Home } from "../pages/Home";
 import { Profile as _Profile } from "../pages/Profile";
 import { Settings as _Settings } from "../pages/Settings";
 import { Article as _Article } from "../pages/Article";
+import { ArticleCreate as _ArticleCreate } from "../pages/Article/Create";
+import { ArticleEdit as _ArticleEdit } from "../pages/Article/Edit";
 
 const REDIRECT_PATH = Date.now();
 
@@ -51,6 +53,8 @@ const SignIn = hideIfAuth(_SignIn);
 const SignUp = hideIfAuth(_SignUp);
 const Settings = hideIfUnauth(_Settings);
 const Article = _Article;
+const ArticleCreate = hideIfUnauth(_ArticleCreate);
+const ArticleEdit = hideIfUnauth(_ArticleEdit);
 
 export const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -64,11 +68,9 @@ export const router = createBrowserRouter(
 			</Route>
 			<Route path="article">
 				<Route path=":slug" element={<Article />} />
-				<Route path="create">
-					<Route path=":slug" element={<></>} />
-				</Route>
+				<Route path="create" element={<ArticleCreate />} />
 				<Route path="edit">
-					<Route path=":slug" element={<></>} />
+					<Route path=":slug" element={<ArticleEdit />} />
 				</Route>
 			</Route>
 			<Route path="settings" element={<Settings />} />

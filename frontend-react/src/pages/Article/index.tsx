@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { Title } from "react-head";
 import { useParams, Link } from "react-router-dom";
 
 import { LayoutArticle } from "../../layouts/Article";
@@ -53,23 +54,28 @@ const ArticleHeader = () => {
 	if (!article) return null;
 
 	return (
-		<_ArticleHeader
-			title={article.title}
-			profileImage={article.author.image}
-			profileLink={`/profile/@${article.author.username}/?author=${article.author.username}#global`}
-			author={article.author.username}
-			createdAt={article.createdAt}
-			favoritesCount={article.favoritesCount}
-			isAuthor={profile?.username === article.author.username}
-			onClickFavorite={onClickFavorite}
-			onClickFollowAuthor={onClickFollowAuthor}
-			onClickDeleteArticle={onClickDeleteArticle}
-			onClickEditArticle={onClickEditArticle}
-			isFollowingAuthor={article.author.following}
-			isLoadingFavoriteArticle={isLoadingFavoriteArticle}
-			isLoadingDeleteArticle={isLoadingDeleteArticle}
-			isLoadingFollowAuthor={isLoadingFollowUser}
-		/>
+		<>
+			<Title>
+				{article.title} - {BRAND_NAME}
+			</Title>
+			<_ArticleHeader
+				title={article.title}
+				profileImage={article.author.image}
+				profileLink={`/profile/@${article.author.username}/?author=${article.author.username}#global`}
+				author={article.author.username}
+				createdAt={article.createdAt}
+				favoritesCount={article.favoritesCount}
+				isAuthor={profile?.username === article.author.username}
+				onClickFavorite={onClickFavorite}
+				onClickFollowAuthor={onClickFollowAuthor}
+				onClickDeleteArticle={onClickDeleteArticle}
+				onClickEditArticle={onClickEditArticle}
+				isFollowingAuthor={article.author.following}
+				isLoadingFavoriteArticle={isLoadingFavoriteArticle}
+				isLoadingDeleteArticle={isLoadingDeleteArticle}
+				isLoadingFollowAuthor={isLoadingFollowUser}
+			/>
+		</>
 	);
 };
 
