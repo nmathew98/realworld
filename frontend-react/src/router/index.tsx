@@ -64,6 +64,12 @@ export const router = createBrowserRouter(
 			</Route>
 			<Route path="article">
 				<Route path=":slug" element={<Article />} />
+				<Route path="create">
+					<Route path=":slug" element={<></>} />
+				</Route>
+				<Route path="edit">
+					<Route path=":slug" element={<></>} />
+				</Route>
 			</Route>
 			<Route path="settings" element={<Settings />} />
 			<Route path="*" element={<NoMatch />} />

@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import { minutesToMilliseconds } from "date-fns";
 
 export const useArticle = ({ slug }) => {
+	const navigate = useNavigate();
+
 	const [form, dispatchFormUpdate] = useReducer(reducer, initialForm);
 	const [formErrors, setFormErrors] = useState<[string, string][] | null>(null);
 
@@ -26,6 +29,9 @@ export const useArticle = ({ slug }) => {
 		refetchOnWindowFocus: false,
 		select: transformArticle,
 		enabled: !!slug,
+		onError: () => {
+			navigate("/");
+		},
 	});
 
 	const queryFnGetComments = () => _getComments({ slug })({ body: null });
@@ -41,7 +47,7 @@ export const useArticle = ({ slug }) => {
 		refetchIntervalInBackground: true,
 		refetchOnWindowFocus: false,
 		select: comments => comments.map(transformComment),
-		enabled: !!slug,
+		enabled: !!article && !!slug,
 	});
 
 	const queryFnCreateComment = _createComment({ slug });

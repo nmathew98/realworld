@@ -37,10 +37,12 @@ const _fetch =
 			headers,
 		});
 
-		const result = await response.json();
+		const result = response.status === 200 ? await response.json() : null;
 
-		if (result.errors) throw new AggregateError(Object.entries(result.errors));
-		if (!response.ok || response.status !== 200) throw new HTTPError(response);
+		if (result?.errors)
+			throw new AggregateError(Object.entries(result?.errors));
+		if (!response.ok || !(response.status >= 200 && response.status <= 299))
+			throw new HTTPError(response);
 
 		const unwrapped = unwrap?.(result) ?? result;
 
