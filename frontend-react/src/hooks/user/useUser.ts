@@ -1,8 +1,17 @@
+import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 
 import { useAuthorization } from "../auth/useAuthorization";
+import { useArticle } from "../article/useArticle";
 
-export const useUser = ({ username }) => {
+export const useUser = ({
+	username,
+	slug,
+}: {
+	username?: string | null;
+	slug?: string | null;
+}) => {
+	const navigate = useNavigate();
 	const [form, dispatchFormUpdate] = useReducer(reducer, initialForm);
 	const [formErrors, setFormErrors] = useState<[string, string][] | null>(null);
 
@@ -16,6 +25,8 @@ export const useUser = ({ username }) => {
 		formErrors: authorizationFieldErrors,
 		makeOnSubmitForm: makeOnSubmitAuthorizationFields,
 	} = useAuthorization();
+
+	const { article, refetchArticle } = useArticle({ slug });
 
 	const {
 		createArticle: _createArticle,
@@ -34,47 +45,76 @@ export const useUser = ({ username }) => {
 		isLoading: isLoadingCreateArticle,
 		isError: isErrorCreateArticle,
 		error: errorCreateArticle,
-	} = useMutation(_createArticle);
+	} = useMutation<any, any, any>(_createArticle);
 
-	const onArticleMutated = (_, { slug }) => {
-		queryClient.invalidateQueries([QUERY_KEYS.Article, slug]);
-		queryClient.invalidateQueries([QUERY_KEYS.Articles, ARTICLES_TYPES.Global]);
+	const onArticleMutated = () => {
+		if (article) refetchArticle();
 	};
+
+	const queryFnDeleteArticle = ({ slug }) =>
+		_deleteArticle({ slug })({ body: null });
 	const {
 		mutate: deleteArticle,
 		isLoading: isLoadingDeleteArticle,
 		isError: isErrorDeleteArticle,
 		error: errorDeleteArticle,
-	} = useMutation(_deleteArticle, {
-		onSuccess: onArticleMutated,
+	} = useMutation<any, any, any>(queryFnDeleteArticle, {
+		onSuccess: () => {
+			queryClient.invalidateQueries([QUERY_KEYS.Article, slug]);
+			queryClient.invalidateQueries([
+				QUERY_KEYS.Articles,
+				ARTICLES_TYPES.Global,
+			]);
+
+			navigate(`/profile/@${username}/?author=${username}#global`);
+		},
 	});
+
+	const queryFnUpdateArticle = ({ slug, body }) =>
+		_updateArticle({ slug })({ body });
 	const {
 		mutate: updateArticle,
 		isLoading: isLoadingUpdateArticle,
 		isError: isErrorUpdateArticle,
 		error: errorUpdateArticle,
-	} = useMutation(_updateArticle, {
+	} = useMutation<any, any, any>(queryFnUpdateArticle, {
 		onSuccess: onArticleMutated,
 	});
+
+	const queryFnFavoriteArticle = ({ slug }) =>
+		_favoriteArticle({ slug })({ body: null });
 	const {
 		mutate: favoriteArticle,
 		isLoading: isLoadingFavoriteArticle,
 		isError: isErrorFavoriteArticle,
 		error: errorFavoriteArticle,
-	} = useMutation(_favoriteArticle, {
+	} = useMutation<any, any, any>(queryFnFavoriteArticle, {
 		onSuccess: onArticleMutated,
 	});
+
+	const queryFnUnfavoriteArticle = ({ slug }) =>
+		_unfavoriteArticle({ slug })({ body: null });
 	const {
 		mutate: unfavoriteArticle,
 		isLoading: isLoadingUnfavoriteArticle,
 		isError: isErrorUnfavoriteArticle,
 		error: errorUnfavoriteArticle,
-	} = useMutation(_unfavoriteArticle, {
+	} = useMutation<any, any, any>(queryFnUnfavoriteArticle, {
 		onSuccess: onArticleMutated,
 	});
 
-	const { mutate: followUser } = useMutation<any, any, any>(_followUser);
-	const { mutate: unfollowUser } = useMutation<any, any, any>(_unfollowUser);
+	const { mutate: followUser, isLoading: isLoadingFollowUser } = useMutation<
+		any,
+		any,
+		any
+	>(_followUser, { onSuccess: onArticleMutated });
+	const { mutate: unfollowUser, isLoading: isLoadingUnfollowUser } =
+		useMutation<any, any, any>(_unfollowUser, {
+			onSuccess: () => {
+				if (article) onArticleMutated();
+				else refetchUserProfile();
+			},
+		});
 
 	const {
 		mutate: updateUser,
@@ -97,13 +137,6 @@ export const useUser = ({ username }) => {
 			enabled: !!isAuthenticated && !!username,
 		},
 	);
-
-	const makeOnClickFollow = (username: string) => () => {
-		if (profile.following) unfollowUser({ username });
-		else followUser({ username });
-
-		refetchUserProfile();
-	};
 
 	const validators = {
 		// https://regexr.com/39nr7
@@ -154,6 +187,34 @@ export const useUser = ({ username }) => {
 			type: PROFILE_UPDATE_TYPES.UpdateImage,
 			image: event.target.value,
 		});
+	const makeOnClickFavorite = () => () => {
+		if (!isAuthenticated) return navigate("/login");
+
+		if (!article.favorited) favoriteArticle({ slug });
+		else unfavoriteArticle({ slug });
+	};
+	const makeOnClickDeleteArticle = () => () => {
+		if (!isAuthenticated) return navigate("/login");
+
+		deleteArticle({ slug });
+	};
+	const makeOnClickEditArticle = () => () => {
+		if (!isAuthenticated) return navigate("/login");
+
+		navigate(`/article/edit/${slug}`);
+	};
+	const makeOnClickFollow = () => () => {
+		if (!isAuthenticated) return navigate("/login");
+
+		if (article) {
+			if (article.author.following)
+				unfollowUser({ username: article.author.username });
+			else followUser({ username: article.author.username });
+		} else {
+			if (profile.following) unfollowUser({ username: profile.username });
+			else followUser({ username: profile.username });
+		}
+	};
 
 	useEffect(() => {
 		const formErrors = Object.entries(form)
@@ -172,18 +233,18 @@ export const useUser = ({ username }) => {
 		onChangeBio,
 		onChangeAvatar,
 		makeOnSubmitForm,
-		updateUser,
+		makeOnClickFavorite,
+		makeOnClickDeleteArticle,
+		makeOnClickEditArticle,
 		makeOnClickFollow,
+		updateUser,
 		createArticle,
-		deleteArticle,
-		updateArticle,
-		favoriteArticle,
-		unfavoriteArticle,
 		isLoadingCreateArticle,
 		isLoadingDeleteArticle,
 		isLoadingUpdateArticle,
-		isLoadingFavoriteArticle,
-		isLoadingUnfavoriteArticle,
+		isLoadingFavoriteArticle:
+			isLoadingFavoriteArticle || isLoadingUnfavoriteArticle,
+		isLoadingFollowUser: isLoadingFollowUser || isLoadingUnfollowUser,
 		isLoadingUpdateUser,
 		isErrorCreateArticle,
 		isErrorDeleteArticle,

@@ -3,6 +3,8 @@ import { ArticleActionBar } from "../ActionBar";
 export const ArticleHeader = ({
 	onClickFavorite,
 	onClickFollowAuthor,
+	onClickEditArticle,
+	onClickDeleteArticle,
 	title,
 	profileImage,
 	profileLink,
@@ -10,6 +12,10 @@ export const ArticleHeader = ({
 	createdAt,
 	favoritesCount,
 	isAuthor,
+	isFollowingAuthor,
+	isLoadingFavoriteArticle,
+	isLoadingDeleteArticle,
+	isLoadingFollowAuthor,
 }: ArticleHeaderProps) => (
 	<>
 		<h1>{title}</h1>
@@ -17,12 +23,18 @@ export const ArticleHeader = ({
 			<ArticleActionBar
 				onClickFollowAuthor={onClickFollowAuthor}
 				onClickFavorite={onClickFavorite}
+				onClickEditArticle={onClickEditArticle}
+				onClickDeleteArticle={onClickDeleteArticle}
 				profileLink={profileLink}
 				profileImage={profileImage}
 				author={author}
 				createdAt={createdAt}
 				favoritesCount={favoritesCount}
 				isAuthor={isAuthor}
+				isFollowingAuthor={isFollowingAuthor}
+				isLoadingFavoriteArticle={isLoadingFavoriteArticle}
+				isLoadingDeleteArticle={isLoadingDeleteArticle}
+				isLoadingFollowAuthor={isLoadingFollowAuthor}
 			/>
 		</div>
 	</>
@@ -31,6 +43,8 @@ export const ArticleHeader = ({
 interface ArticleHeaderProps {
 	onClickFavorite?: () => any;
 	onClickFollowAuthor?: () => any;
+	onClickEditArticle?: () => any;
+	onClickDeleteArticle?: () => any;
 	title: string;
 	profileImage: string;
 	profileLink: string;
@@ -38,4 +52,8 @@ interface ArticleHeaderProps {
 	createdAt: Date;
 	favoritesCount: number;
 	isAuthor?: boolean;
+	isFollowingAuthor?: boolean;
+	isLoadingFavoriteArticle?: boolean;
+	isLoadingDeleteArticle?: boolean;
+	isLoadingFollowAuthor?: boolean;
 }

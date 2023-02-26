@@ -14,6 +14,10 @@ export const ArticleActionBar = ({
 	createdAt,
 	favoritesCount,
 	isAuthor,
+	isFollowingAuthor,
+	isLoadingFavoriteArticle,
+	isLoadingDeleteArticle,
+	isLoadingFollowAuthor,
 }: ArticleActionBarProps) => (
 	<>
 		<Link to={profileLink}>
@@ -30,11 +34,16 @@ export const ArticleActionBar = ({
 				<ButtonAction
 					type="secondary"
 					icon="ion-plus-round"
-					onClick={onClickFollowAuthor}>
-					Follow {author}
+					onClick={onClickFollowAuthor}
+					disabled={isLoadingFollowAuthor}>
+					{isFollowingAuthor ? `Unfollow ${author}` : `Follow ${author}`}
 				</ButtonAction>
 				&nbsp;
-				<ButtonAction type="primary" icon="ion-heart" onClick={onClickFavorite}>
+				<ButtonAction
+					type="primary"
+					icon="ion-heart"
+					onClick={onClickFavorite}
+					disabled={isLoadingFavoriteArticle}>
 					Favorite Article <span className="counter">({favoritesCount})</span>
 				</ButtonAction>
 			</>
@@ -51,7 +60,8 @@ export const ArticleActionBar = ({
 				<ButtonAction
 					type="danger"
 					icon="ion-trash-a"
-					onClick={onClickDeleteArticle}>
+					onClick={onClickDeleteArticle}
+					disabled={isLoadingDeleteArticle}>
 					Delete Article
 				</ButtonAction>
 			</>
@@ -70,6 +80,10 @@ interface ArticleActionBarProps {
 	createdAt: Date;
 	favoritesCount: number;
 	isAuthor?: boolean;
+	isFollowingAuthor?: boolean;
+	isLoadingFavoriteArticle?: boolean;
+	isLoadingDeleteArticle?: boolean;
+	isLoadingFollowAuthor?: boolean;
 }
 
 const formatDate = (date: Date) => format(date, "PPP");

@@ -29,7 +29,7 @@ export const Articles = () => {
 					{currentPageArticles.map(article => (
 						<ArticleCard
 							key={article.slug}
-							profileLink={`/profile/${article.author.username}`}
+							profileLink={`/profile/@${article.author.username}/?author=${article.author.username}#global`}
 							profileImage={article.author.image}
 							author={article.author.username}
 							createdAt={article.createdAt}

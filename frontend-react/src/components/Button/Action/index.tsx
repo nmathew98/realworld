@@ -6,6 +6,7 @@ export const ButtonAction = ({
 	icon,
 	isActive,
 	children,
+	disabled,
 }: ButtonActionProps) => (
 	<button
 		onClick={onClick}
@@ -13,7 +14,8 @@ export const ButtonAction = ({
 			!!isActive,
 			`btn btn-sm btn-outline-${type}`,
 			"btn-outline-active",
-		)}>
+		)}
+		disabled={disabled}>
 		<Icon name={icon} />
 		&nbsp;{children}
 	</button>
@@ -25,4 +27,5 @@ interface ButtonActionProps {
 	icon: string;
 	isActive?: boolean;
 	children?: any;
+	disabled?: boolean;
 }
