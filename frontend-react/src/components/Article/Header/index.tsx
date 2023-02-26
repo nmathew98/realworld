@@ -8,8 +8,9 @@ export const ArticleHeader = ({
 	profileLink,
 	author,
 	createdAt,
-	favoriteCount,
-}) => (
+	favoritesCount,
+	isAuthor,
+}: ArticleHeaderProps) => (
 	<>
 		<h1>{title}</h1>
 		<div className="article-meta">
@@ -20,8 +21,21 @@ export const ArticleHeader = ({
 				profileImage={profileImage}
 				author={author}
 				createdAt={createdAt}
-				favoriteCount={favoriteCount}
+				favoritesCount={favoritesCount}
+				isAuthor={isAuthor}
 			/>
 		</div>
 	</>
 );
+
+interface ArticleHeaderProps {
+	onClickFavorite?: () => any;
+	onClickFollowAuthor?: () => any;
+	title: string;
+	profileImage: string;
+	profileLink: string;
+	author: string;
+	createdAt: Date;
+	favoritesCount: number;
+	isAuthor?: boolean;
+}

@@ -2,6 +2,9 @@ import { useQuery, useMutation } from "react-query";
 import { minutesToMilliseconds } from "date-fns";
 
 export const useArticle = ({ slug }) => {
+	const [form, dispatchFormUpdate] = useReducer(reducer, initialForm);
+	const [formErrors, setFormErrors] = useState<[string, string][] | null>(null);
+
 	const { transformArticle } = useContext(ArticleContext);
 	const { getArticle: _getArticle } = useContext(UserContext);
 	const {
@@ -22,6 +25,7 @@ export const useArticle = ({ slug }) => {
 	} = useQuery([QUERY_KEYS.Article, slug], queryFnGetArticle, {
 		refetchOnWindowFocus: false,
 		select: transformArticle,
+		enabled: !!slug,
 	});
 
 	const queryFnGetComments = () => _getComments({ slug })({ body: null });
@@ -37,35 +41,80 @@ export const useArticle = ({ slug }) => {
 		refetchIntervalInBackground: true,
 		refetchOnWindowFocus: false,
 		select: comments => comments.map(transformComment),
+		enabled: !!slug,
 	});
 
+	const queryFnCreateComment = _createComment({ slug });
 	const {
 		mutate: createComment,
 		isLoading: isLoadingCreateComment,
 		isError: isErrorCreateComment,
 		error: errorCreateComment,
-	} = useMutation(_createComment, {
+	} = useMutation<any, any, any>(queryFnCreateComment, {
 		// The types don't match but all we need is a reference
 		onSuccess: refetchComments as any,
 	});
 
+	const queryFnDeleteComment = ({ id }) =>
+		_deleteComment({ slug, id })({ body: null });
 	const {
 		mutate: deleteComment,
 		isLoading: isLoadingDeleteComment,
 		isError: isErrorDeleteComment,
 		error: errorDeleteComment,
-	} = useMutation(_deleteComment, {
+	} = useMutation<any, any, any>(queryFnDeleteComment, {
 		// The types don't match but all we need is a reference
 		onSuccess: refetchComments as any,
 	});
+	const makeOnClickDeleteComment =
+		({ id }) =>
+		() =>
+			deleteComment({ id });
+
+	const validators = {
+		comment: /[\w\d]/,
+	};
+
+	const errors = {
+		comment: "Comment can only contain words and numbers",
+	};
+
+	const onChangeComment = event =>
+		dispatchFormUpdate({
+			type: ARTICLE_REDUCER_TYPES.UpdateComment,
+			comment: event.target.value,
+		});
+
+	const makeOnSubmitForm = (f, isOptional?: boolean) => event => {
+		event.preventDefault();
+
+		if (!isOptional && Object.values(form).length === 0) {
+			setFormErrors([["form", "Form is incomplete"]]);
+
+			return form;
+		}
+
+		return f(form, event);
+	};
+
+	useEffect(() => {
+		const formErrors = Object.entries(form)
+			.filter(([key, value]) => value && !validators[key].test(value))
+			.map(([key]) => [key, errors[key]]) as [string, string][];
+
+		setFormErrors(formErrors);
+	}, [form]);
 
 	return {
 		article,
 		comments,
+		onChangeComment,
+		makeOnSubmitForm,
+		formErrors,
 		refetchArticle,
 		refetchComments,
 		createComment,
-		deleteComment,
+		makeOnClickDeleteComment,
 		isRefetchingGetArticle,
 		isRefetchingGetComments,
 		isLoadingGetArticle,
@@ -82,3 +131,20 @@ export const useArticle = ({ slug }) => {
 		errorDeleteComment,
 	};
 };
+
+const ARTICLE_REDUCER_TYPES = {
+	UpdateComment: Symbol("UpdateComment"),
+};
+
+const reducer = (state, action) => {
+	switch (action.type) {
+		case ARTICLE_REDUCER_TYPES.UpdateComment: {
+			return { ...state, comment: action.comment };
+		}
+		default: {
+			return state;
+		}
+	}
+};
+
+const initialForm = Object.create(null);
