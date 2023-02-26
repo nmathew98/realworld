@@ -145,13 +145,15 @@ export const useUser = ({
 
 	const validators = {
 		// https://regexr.com/39nr7
-		image:
-			/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
-		bio: /[\w\d]/,
-		description: /[\w\d]/,
-		title: /[\w\d]/,
-		body: /[\w\d]/,
-		tags: /[\w\d]/,
+		image: url =>
+			!/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(
+				url,
+			),
+		bio: /[^a-zA-Z0-9\s]/,
+		description: /[^a-zA-Z0-9\s]/,
+		title: /[^a-zA-Z0-9\s]/,
+		body: /[^a-zA-Z0-9\s]/,
+		tags: /[^a-zA-Z0-9,\s]/,
 	};
 
 	const errors = {
@@ -273,7 +275,11 @@ export const useUser = ({
 
 	useEffect(() => {
 		const formErrors = Object.entries(form)
-			.filter(([key, value]) => value && !validators[key].test(value))
+			.filter(([key, value]) => {
+				if (validators[key] instanceof RegExp)
+					return value && validators[key].test(value);
+				else return value && validators[key](value);
+			})
 			.map(([key]) => [key, errors[key]]) as [string, string][];
 
 		setFormErrors(formErrors.concat(authorizationFieldErrors ?? []));
