@@ -25,14 +25,14 @@ const Body = () => {
 		onChangeUsername,
 		onChangeBio,
 		onChangeAvatar,
-		makeOnSubmitForm,
+		makeOnSubmitProfileForm,
 		updateUser,
 		isErrorUpdateUser,
 		isLoadingUpdateUser,
 		errorUpdateUser,
 	} = useUser({ username: null });
 
-	const onSubmitForm = makeOnSubmitForm(form => {
+	const onSubmitForm = makeOnSubmitProfileForm(form => {
 		updateUser(
 			{
 				body: {

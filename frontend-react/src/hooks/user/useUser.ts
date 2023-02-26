@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "react-query";
+import DOMPurify from "dompurify";
 
 import { useAuthorization } from "../auth/useAuthorization";
 import { useArticle } from "../article/useArticle";
@@ -45,7 +46,11 @@ export const useUser = ({
 		isLoading: isLoadingCreateArticle,
 		isError: isErrorCreateArticle,
 		error: errorCreateArticle,
-	} = useMutation<any, any, any>(_createArticle);
+	} = useMutation<any, any, any>(_createArticle, {
+		onSuccess: article => {
+			navigate(`/article/${article.slug}`);
+		},
+	});
 
 	const onArticleMutated = () => {
 		if (article) refetchArticle();
@@ -143,19 +148,37 @@ export const useUser = ({
 		image:
 			/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
 		bio: /[\w\d]/,
+		description: /[\w\d]/,
+		title: /[\w\d]/,
+		body: /[\w\d]/,
+		tags: /[\w\d]/,
 	};
 
 	const errors = {
 		image: "Avatar URL must be a valid HTTP link",
 		bio: "Bio can only contain words and numbers",
+		description: "Description can only contain words and numbers",
+		title: "Title can only contain words and numbers",
+		body: "Body can only contain words and numbers",
+		tags: "Tags can only contain words and numbers",
 	};
 
+	const onChangeBio = event =>
+		dispatchFormUpdate({
+			type: PROFILE_UPDATE_TYPES.UpdateBio,
+			bio: event.target.value,
+		});
+
+	const onChangeAvatar = event =>
+		dispatchFormUpdate({
+			type: PROFILE_UPDATE_TYPES.UpdateImage,
+			image: event.target.value,
+		});
 	const onSubmitAuthorizationFields = makeOnSubmitAuthorizationFields(
 		form => form,
 		true,
 	);
-
-	const makeOnSubmitForm = (f, isOptional?: boolean) => event => {
+	const makeOnSubmitProfileForm = (f, isOptional?: boolean) => event => {
 		event.preventDefault();
 
 		const authorizationFields = onSubmitAuthorizationFields(event);
@@ -176,17 +199,49 @@ export const useUser = ({
 
 		return f(merged, event);
 	};
-	const onChangeBio = event =>
-		dispatchFormUpdate({
-			type: PROFILE_UPDATE_TYPES.UpdateBio,
-			bio: event.target.value,
-		});
 
-	const onChangeAvatar = event =>
+	const onChangeArticleTitle = event =>
 		dispatchFormUpdate({
-			type: PROFILE_UPDATE_TYPES.UpdateImage,
-			image: event.target.value,
+			type: UPSERT_ARTICLE_TYPES.UpsertTitle,
+			title: event.target.value,
 		});
+	const onChangeArticleDescription = event =>
+		dispatchFormUpdate({
+			type: UPSERT_ARTICLE_TYPES.UpsertDescription,
+			description: event.target.value,
+		});
+	const onChangeArticleBody = event =>
+		dispatchFormUpdate({
+			type: UPSERT_ARTICLE_TYPES.UpsertBody,
+			body: event.target.value,
+		});
+	const onChangeArticleTags = event =>
+		dispatchFormUpdate({
+			type: UPSERT_ARTICLE_TYPES.UpsertTags,
+			tags: event.target.value,
+		});
+	const transformArticleForm = form => ({
+		title: DOMPurify.sanitize(form.title, { html: true }),
+		description: DOMPurify.sanitize(form.description, { html: true }),
+		body: DOMPurify.sanitize(form.body, { html: true }),
+		tagList: DOMPurify.sanitize(form.tags, { html: true })
+			.split(/,\s*/)
+			.map(tag => tag.trim().toLowerCase()),
+	});
+	const makeOnSubmitArticleForm = (f, isOptional?: boolean) => event => {
+		event.preventDefault();
+
+		if (!isOptional && Object.values(form).length === 0) {
+			setFormErrors([["form", "Form is incomplete"]]);
+
+			return form;
+		}
+
+		dispatchFormUpdate({ type: UPSERT_ARTICLE_TYPES.Reset });
+
+		return f(transformArticleForm(form), event);
+	};
+
 	const makeOnClickFavorite = () => () => {
 		if (!isAuthenticated) return navigate("/login");
 
@@ -232,13 +287,19 @@ export const useUser = ({
 		onChangePassword,
 		onChangeBio,
 		onChangeAvatar,
-		makeOnSubmitForm,
+		makeOnSubmitProfileForm,
+		onChangeArticleTitle,
+		onChangeArticleDescription,
+		onChangeArticleBody,
+		onChangeArticleTags,
+		makeOnSubmitArticleForm,
 		makeOnClickFavorite,
 		makeOnClickDeleteArticle,
 		makeOnClickEditArticle,
 		makeOnClickFollow,
 		updateUser,
 		createArticle,
+		updateArticle,
 		isLoadingCreateArticle,
 		isLoadingDeleteArticle,
 		isLoadingUpdateArticle,
@@ -246,9 +307,11 @@ export const useUser = ({
 			isLoadingFavoriteArticle || isLoadingUnfavoriteArticle,
 		isLoadingFollowUser: isLoadingFollowUser || isLoadingUnfollowUser,
 		isLoadingUpdateUser,
-		isErrorCreateArticle,
+		isErrorCreateArticle:
+			isErrorCreateArticle || (formErrors && formErrors.length > 0),
 		isErrorDeleteArticle,
-		isErrorUpdateArticle,
+		isErrorUpdateArticle:
+			isErrorUpdateArticle || (formErrors && formErrors.length > 0),
 		isErrorFavoriteArticle,
 		isErrorUnfavoriteArticle,
 		isErrorUpdateUser:
@@ -268,6 +331,14 @@ const PROFILE_UPDATE_TYPES = {
 	Reset: Symbol("Reset"),
 };
 
+const UPSERT_ARTICLE_TYPES = {
+	UpsertTitle: Symbol("UpsertTitle"),
+	UpsertDescription: Symbol("UpsertDescription"),
+	UpsertBody: Symbol("UpsertBody"),
+	UpsertTags: Symbol("UpsertTags"),
+	Reset: Symbol("Reset"),
+};
+
 const reducer = (state, action) => {
 	switch (action.type) {
 		case PROFILE_UPDATE_TYPES.UpdateImage: {
@@ -277,6 +348,21 @@ const reducer = (state, action) => {
 			return { ...state, bio: action.bio };
 		}
 		case PROFILE_UPDATE_TYPES.Reset: {
+			return Object.create(null);
+		}
+		case UPSERT_ARTICLE_TYPES.UpsertTitle: {
+			return { ...state, title: action.title.trim() };
+		}
+		case UPSERT_ARTICLE_TYPES.UpsertDescription: {
+			return { ...state, description: action.description.trim() };
+		}
+		case UPSERT_ARTICLE_TYPES.UpsertBody: {
+			return { ...state, body: action.body.trim() };
+		}
+		case UPSERT_ARTICLE_TYPES.UpsertTags: {
+			return { ...state, tags: action.tags.trim() };
+		}
+		case UPSERT_ARTICLE_TYPES.Reset: {
 			return Object.create(null);
 		}
 		default: {
