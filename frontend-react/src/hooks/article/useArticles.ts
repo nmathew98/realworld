@@ -4,6 +4,7 @@ import { minutesToMilliseconds } from "date-fns";
 import { useLocation, useSearchParams } from "react-router-dom";
 
 import { usePreviousValueEffect } from "../usePreviousValueEffect";
+import { useUser } from "../user/useUser";
 
 export const useArticles = () => {
 	const queryClient = useQueryClient();
@@ -15,6 +16,7 @@ export const useArticles = () => {
 		limit: 10,
 		...Object.fromEntries(searchParams),
 	};
+	const [isArticleBeingMutated, setIsArticleBeingMutated] = useState(false);
 
 	const matchAccordingToType = makeMatch(type);
 
@@ -23,6 +25,12 @@ export const useArticles = () => {
 		getAllGlobalArticles: _getAllGlobalArticles,
 		transformArticle,
 	} = useContext(ArticleContext);
+	const { profile, isAuthenticated } = useContext(AuthContext);
+
+	const { favoriteArticle, unfavoriteArticle } = useUser({
+		username: profile?.username,
+		slug: null,
+	});
 
 	const [currentPage, setCurrentPage] = useState(
 		convertOffsetToPage(filters.offset, filters.limit),
@@ -152,6 +160,33 @@ export const useArticles = () => {
 		}
 	};
 
+	const makeOnClickFavorite = article => () => {
+		if (!isAuthenticated) return navigate("/login");
+
+		if (!article.favorited)
+			favoriteArticle(
+				{ slug: article.slug },
+				{
+					onSuccess: async () => {
+						setIsArticleBeingMutated(true);
+						await refetchArticles();
+						setIsArticleBeingMutated(false);
+					},
+				},
+			);
+		else
+			unfavoriteArticle(
+				{ slug: article.slug },
+				{
+					onSuccess: async () => {
+						setIsArticleBeingMutated(true);
+						await refetchArticles();
+						setIsArticleBeingMutated(false);
+					},
+				},
+			);
+	};
+
 	usePreviousValueEffect((from, to) => {
 		// When clicking the conduit logo
 		// When we trigger a pagination item click directly,
@@ -199,10 +234,11 @@ export const useArticles = () => {
 			data?.pages?.at(0),
 			filters.limit,
 		),
+		makeOnClickFavorite,
 		totalNumberOfFetchedPages: data?.pages?.length ?? 0,
 		refetchArticles,
 		isLoadingArticles: isLoadingArticles,
-		isRefetchingArticles: isRefetchingArticles,
+		isRefetchingArticles: isRefetchingArticles && !isArticleBeingMutated,
 		isChangingPageArticles:
 			isFetchingNextPageArticles || isFetchingPreviousPageArticles,
 		isErrorArticles,

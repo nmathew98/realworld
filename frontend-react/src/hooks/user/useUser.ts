@@ -75,15 +75,22 @@ export const useUser = ({
 		},
 	});
 
-	const queryFnUpdateArticle = ({ slug, body }) =>
-		_updateArticle({ slug })({ body });
+	const queryFnUpdateArticle = ({ body }) => _updateArticle({ slug })({ body });
 	const {
 		mutate: updateArticle,
 		isLoading: isLoadingUpdateArticle,
 		isError: isErrorUpdateArticle,
 		error: errorUpdateArticle,
 	} = useMutation<any, any, any>(queryFnUpdateArticle, {
-		onSuccess: onArticleMutated,
+		onSuccess: () => {
+			queryClient.invalidateQueries([QUERY_KEYS.Article, slug]);
+			queryClient.invalidateQueries([
+				QUERY_KEYS.Articles,
+				ARTICLES_TYPES.Global,
+			]);
+
+			navigate(`/profile/@${username}/?author=${username}#global`);
+		},
 	});
 
 	const queryFnFavoriteArticle = ({ slug }) =>
@@ -306,6 +313,8 @@ export const useUser = ({
 		updateUser,
 		createArticle,
 		updateArticle,
+		favoriteArticle,
+		unfavoriteArticle,
 		isLoadingCreateArticle,
 		isLoadingDeleteArticle,
 		isLoadingUpdateArticle,
