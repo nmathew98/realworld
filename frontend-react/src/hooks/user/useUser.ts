@@ -146,7 +146,8 @@ export const useUser = ({
 		[QUERY_KEYS.Profile, username],
 		queryFnGetProfile,
 		{
-			enabled: !!isAuthenticated && !!username,
+			enabled: !!username,
+			onError: () => navigate("/"),
 		},
 	);
 

@@ -1,5 +1,5 @@
 import { Title } from "react-head";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useParams } from "react-router-dom";
 
 import { Articles } from "../../components/Article";
 import { LayoutProfile } from "../../layouts/Profile";
@@ -14,12 +14,13 @@ export const Profile = () => (
 );
 
 const Body = () => {
-	const { profile } = useContext(UserContext);
+	const params = useParams();
+	const username = params?.username?.replace("@", "");
 
 	return (
 		<>
-			<Title>{profile?.username} - Conduit</Title>
-			<ArticleNavigation username={profile?.username} />
+			<Title>{username} - Conduit</Title>
+			<ArticleNavigation username={username} />
 			<Articles />
 		</>
 	);

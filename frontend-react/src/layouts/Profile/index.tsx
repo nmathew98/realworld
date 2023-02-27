@@ -1,5 +1,8 @@
+import { useParams } from "react-router-dom";
+
 import { LayoutBase } from "../";
 import { ProfileHeader } from "../../components/Profile/Header";
+import { useUser } from "../../hooks/user/useUser";
 
 // ArticleNavigation = ArticleTabContainer + ArticleTabItem
 export const LayoutProfile = ({ children }) => (
@@ -24,7 +27,10 @@ export const LayoutProfile = ({ children }) => (
 );
 
 const Header = () => {
-	const { profile } = useContext(UserContext);
+	const params = useParams();
+
+	const username = params?.username?.replace("@", "");
+	const { profile } = useUser({ username, slug: null });
 
 	if (!profile) return null;
 
