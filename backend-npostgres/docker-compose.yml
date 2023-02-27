@@ -1,0 +1,25 @@
+---
+version: "3.8"
+
+services:
+  postgres:
+    container_name: "postgres"
+    image: "postgres:latest"
+    restart: "always"
+    environment:
+      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_USER=postgres"
+    volumes:
+      - "./docker/init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh"
+  api:
+    container_name: "api"
+    build:
+      context: .
+      dockerfile: "Dockerfile"
+    environment:
+      - "PORT"
+      - "REFRESH_COUNT=0"
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - "./src:/srv/api/src"

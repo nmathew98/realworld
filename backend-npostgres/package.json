@@ -1,0 +1,39 @@
+{
+	"name": "backend-npostgres",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.ts",
+	"scripts": {
+		"build": "tsup-node src/index.ts --dts --format esm",
+		"lint": "eslint --ext .ts --ignore-path .gitignore . --fix",
+		"format": "prettier .  --write",
+		"test": "vitest",
+		"test.watch": "vitest --watch",
+		"start": "corepack pnpm build && node dist/index.mjs"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@graficos/pipe-js": "^0.0.3",
+		"@nozomuikuta/h3-cors": "^0.2.1",
+		"@types/node": "^18.14.2",
+		"@typescript-eslint/eslint-plugin": "^5.53.0",
+		"@typescript-eslint/parser": "^5.53.0",
+		"defu": "^6.1.2",
+		"eslint": "^8.35.0",
+		"eslint-config-prettier": "^8.6.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"h3": "^1.5.0",
+		"h3-zod": "^0.3.10",
+		"passport": "^0.6.0",
+		"pg": "^8.9.0",
+		"prettier": "^2.8.4",
+		"tsup": "^6.6.3",
+		"typescript": "^4.9.5",
+		"ulid": "^2.3.0",
+		"unplugin-auto-import": "^0.15.0",
+		"vitest": "^0.29.1",
+		"zod": "^3.20.6"
+	}
+}
