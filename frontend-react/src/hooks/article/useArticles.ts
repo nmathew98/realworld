@@ -2,11 +2,13 @@ import type { URLSearchParamsInit } from "react-router-dom";
 import { useQueryClient, useInfiniteQuery } from "react-query";
 import { minutesToMilliseconds } from "date-fns";
 import { useLocation, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { usePreviousValueEffect } from "../usePreviousValueEffect";
 import { useUser } from "../user/useUser";
 
 export const useArticles = () => {
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const location = useLocation();
 	const [searchParams, setSearchParams] = useSearchParams();
