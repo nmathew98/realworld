@@ -9,6 +9,7 @@ export const Articles = () => {
 		currentPageArticles,
 		totalNumberOfPages,
 		makeOnClickPaginationItem,
+		makeOnClickFavorite,
 		isLoadingArticles,
 		isRefetchingArticles,
 		isChangingPageArticles,
@@ -26,21 +27,26 @@ export const Articles = () => {
 					{currentPageArticles.length > 0 ? null : (
 						<span>No articles are here... yet</span>
 					)}
-					{currentPageArticles.map(article => (
-						<ArticleCard
-							key={article.slug}
-							profileLink={`/profile/@${article.author.username}/?author=${article.author.username}#global`}
-							profileImage={article.author.image}
-							author={article.author.username}
-							createdAt={article.createdAt}
-							favorited={article.favorited}
-							favoritesCount={article.favoritesCount}
-							articleLink={`/article/${article.slug}`}
-							title={article.title}
-							description={article.description}
-							tags={article.tagList}
-						/>
-					))}
+					{currentPageArticles.map(article => {
+						const onClickFavorite = makeOnClickFavorite(article);
+
+						return (
+							<ArticleCard
+								key={article.slug}
+								profileLink={`/profile/@${article.author.username}/?author=${article.author.username}#global`}
+								profileImage={article.author.image}
+								author={article.author.username}
+								createdAt={article.createdAt}
+								favorited={article.favorited}
+								favoritesCount={article.favoritesCount}
+								articleLink={`/article/${article.slug}`}
+								title={article.title}
+								description={article.description}
+								tags={article.tagList}
+								onClickFavorite={onClickFavorite}
+							/>
+						);
+					})}
 					<ArticlePaginationContainer>
 						{new Array(totalNumberOfPages).fill(null).map((_, i) => {
 							const onClickPaginationItem = makeOnClickPaginationItem(i + 1);
