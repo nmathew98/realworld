@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { hoursToMilliseconds } from "date-fns";
 
-export const makeUser = async (
+export async function makeUser(
 	this: Context,
-	{ username, email, password, token, generateTokens }: Partial<MakeUserArgs>,
-) => {
+	{ username, email, password, token, generateTokens }: MakeUserArgs,
+) {
 	if (!process.env.JWT_ACCESS_EXPIRES)
 		throw new Error("Environment variable `JWT_ACCESS_EXPIRES` is not defined");
 	if (!process.env.JWT_REFRESH_EXPIRES)
@@ -28,7 +28,7 @@ export const makeUser = async (
 
 		return new User({
 			...result.rows[0],
-			tokens: await makeTokens.bind(this)(),
+			tokens: await makeTokens.bind(this)(result.rows[0].uuid),
 		});
 	} else if (token) {
 		const verificationResult = await this.jwt.verify(
@@ -63,20 +63,24 @@ export const makeUser = async (
 	}
 
 	throw new Error("makeUser: invalid arguments");
-};
+}
 
-const makeTokens = async (uuid: string) => ({
-	accessToken: await this.jwt.sign(
-		{ sub: uuid },
-		process.env.JWT_ACCESS_SECRET,
-		hoursToMilliseconds(process.env.JWT_ACCESS_EXPIRES),
-	),
-	refreshToken: await this.jwt.sign(
-		{ sub: uuid },
-		process.env.JWT_REFRESH_SECRET,
-		hoursToMilliseconds(process.env.JWT_REFRESH_EXPIRES),
-	),
-});
+async function makeTokens(this: Context, uuid: string) {
+	return {
+		accessToken: await this.jwt.sign(
+			{ sub: uuid },
+			process.env.JWT_ACCESS_SECRET,
+			hoursToMilliseconds(Number(process.env.JWT_ACCESS_EXPIRES) || 1),
+		),
+		refreshToken: await this.jwt.sign(
+			{ sub: uuid },
+			process.env.JWT_REFRESH_SECRET,
+			hoursToMilliseconds(
+				Number(process.env.JWT_REFRESH_EXPIRES) || 1 * 24 * 7,
+			),
+		),
+	};
+}
 
 interface MakeUserArgs {
 	username: string;

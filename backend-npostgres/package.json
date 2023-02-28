@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "server.ts",
 	"scripts": {
-		"build": "tsup-node src/index.ts --dts --format esm",
+		"build": "tsup-node src/index.ts --dts --format esm && tsc --noEmit",
+		"typecheck": "tsc --noEmit",
 		"lint": "eslint --ext .ts --ignore-path .gitignore . --fix",
 		"format": "prettier .  --write",
 		"test": "vitest",

@@ -1,8 +1,8 @@
-export const updateUser = async (
+export async function updateUser(
 	this: Context,
 	updates: Partial<UpdateUserArgs>,
 	valueObjects: any[],
-) => {
+) {
 	const user = valueObjects.find(user => user instanceof User);
 
 	if (!user) throw new Error("User not found");
@@ -16,7 +16,7 @@ export const updateUser = async (
 			setStatement + `SET ${key}=$${index + 1}]` + delimit(index, array),
 			[...parameters, value],
 		],
-		["", []],
+		["", [] as any[]],
 	);
 
 	const STATEMENT = `UPDATE USERS ${setStatement}
@@ -35,7 +35,7 @@ export const updateUser = async (
 	const result = { ...allResults.rows[0] };
 
 	return new User(result);
-};
+}
 
 interface UpdateUserArgs {
 	email: string;

@@ -3,10 +3,11 @@ export class HTTPError extends Error {
 	public statusText: string;
 	public body?: string;
 
-	constructor(status: string, statusText: string, body?: string) {
+	constructor(status: number, statusText: string, body?: string) {
+		super();
+
 		this.status = Number(status);
 		this.statusText = `${statusText}`;
-
-		if (body) this.body = body;
+		this.body = body;
 	}
 }
