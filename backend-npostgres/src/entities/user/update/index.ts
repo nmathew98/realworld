@@ -10,9 +10,10 @@ export const updateUser = async (
 	const filteredUpdates = Object.entries(updates).filter(
 		([, value]) => !!value,
 	);
+	const delimit = (index, array) => (index === array.length - 1 ? "" : ", ");
 	const [setStatement, parameters] = filteredUpdates.reduce(
-		([setStatement, parameters], [key, value], index) => [
-			setStatement + `SET ${key} = $${index + 1}], `,
+		([setStatement, parameters], [key, value], index, array) => [
+			setStatement + `SET ${key}=$${index + 1}]` + delimit(index, array),
 			[...parameters, value],
 		],
 		["", []],
