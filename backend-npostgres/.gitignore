@@ -3,3 +3,4 @@ coverage/
 node_modules/
 .DS_Store
 .auto-imports.d.ts
+.eslintrc-auto-import.json

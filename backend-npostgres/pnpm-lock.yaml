@@ -6,12 +6,14 @@ specifiers:
   "@types/node": ^18.14.2
   "@typescript-eslint/eslint-plugin": ^5.53.0
   "@typescript-eslint/parser": ^5.53.0
+  date-fns: ^2.29.3
   defu: ^6.1.2
   eslint: ^8.35.0
   eslint-config-prettier: ^8.6.0
   eslint-plugin-prettier: ^4.2.1
   h3: ^1.5.0
   h3-zod: ^0.3.10
+  jsonwebtoken: ^9.0.0
   passport: ^0.6.0
   pg: ^8.9.0
   prettier: ^2.8.4
@@ -28,12 +30,14 @@ devDependencies:
   "@types/node": 18.14.2
   "@typescript-eslint/eslint-plugin": 5.53.0_cjo54hduev4bqhpjw5znwiokqu
   "@typescript-eslint/parser": 5.53.0_ycpbpc6yetojsgtrx3mwntkhsu
+  date-fns: 2.29.3
   defu: 6.1.2
   eslint: 8.35.0
   eslint-config-prettier: 8.6.0_eslint@8.35.0
   eslint-plugin-prettier: 4.2.1_u2zha4kiojzs42thzpgwygphmy
   h3: 1.5.0
   h3-zod: 0.3.10_h3@1.5.0+zod@3.20.6
+  jsonwebtoken: 9.0.0
   passport: 0.6.0
   pg: 8.9.0
   prettier: 2.8.4
@@ -1536,6 +1540,13 @@ packages:
       update-browserslist-db: 1.0.10_browserslist@4.21.5
     dev: true
 
+  /buffer-equal-constant-time/1.0.1:
+    resolution:
+      {
+        integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==,
+      }
+    dev: true
+
   /buffer-writer/2.0.0:
     resolution:
       {
@@ -1783,6 +1794,14 @@ packages:
       which: 2.0.2
     dev: true
 
+  /date-fns/2.29.3:
+    resolution:
+      {
+        integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==,
+      }
+    engines: { node: ">=0.11" }
+    dev: true
+
   /debug/4.3.4:
     resolution:
       {
@@ -1870,6 +1889,15 @@ packages:
       {
         integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==,
       }
+    dev: true
+
+  /ecdsa-sig-formatter/1.0.11:
+    resolution:
+      {
+        integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==,
+      }
+    dependencies:
+      safe-buffer: 5.1.2
     dev: true
 
   /electron-to-chromium/1.4.311:
@@ -2826,6 +2854,40 @@ packages:
       }
     dev: true
 
+  /jsonwebtoken/9.0.0:
+    resolution:
+      {
+        integrity: sha512-tuGfYXxkQGDPnLJ7SibiQgVgeDgfbPq2k2ICcbgqW8WxWLBAxKQM/ZCu/IT8SOSwmaYl4dpTFCW5xZv7YbbWUw==,
+      }
+    engines: { node: ">=12", npm: ">=6" }
+    dependencies:
+      jws: 3.2.2
+      lodash: 4.17.21
+      ms: 2.1.2
+      semver: 7.3.8
+    dev: true
+
+  /jwa/1.4.1:
+    resolution:
+      {
+        integrity: sha512-qiLX/xhEEFKUAJ6FiBMbes3w9ATzyk5W7Hvzpa/SLYdxNtng+gcurvrI7TbACjIXlsJyr05/S1oUhZrc63evQA==,
+      }
+    dependencies:
+      buffer-equal-constant-time: 1.0.1
+      ecdsa-sig-formatter: 1.0.11
+      safe-buffer: 5.1.2
+    dev: true
+
+  /jws/3.2.2:
+    resolution:
+      {
+        integrity: sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA==,
+      }
+    dependencies:
+      jwa: 1.4.1
+      safe-buffer: 5.1.2
+    dev: true
+
   /knitwork/1.0.0:
     resolution:
       {
@@ -2923,6 +2985,13 @@ packages:
       }
     dependencies:
       lodash._reinterpolate: 3.0.0
+    dev: true
+
+  /lodash/4.17.21:
+    resolution:
+      {
+        integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==,
+      }
     dev: true
 
   /loupe/2.3.6:
