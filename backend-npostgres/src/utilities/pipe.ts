@@ -1,10 +1,10 @@
-import { pipe as _pipe } from "@graficos/pipe-js";
+import { asyncPipe } from "@graficos/pipe-js";
 
 export const makePipe =
 	(context: Context) =>
 	(...fns: any[]) =>
-		_pipe(
-			...fns.flatMap(
+		asyncPipe(
+			...fns.map(
 				fn =>
 					(...args: any[]) =>
 						fn(null, ...args).bind(context),

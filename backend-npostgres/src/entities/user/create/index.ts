@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { hoursToMilliseconds } from "date-fns";
 
-export const makeUser = (
+export const makeUser = async (
 	this: Context,
 	{ username, email, password, token, generateTokens }: Partial<MakeUserArgs>,
 ) => {
@@ -36,19 +36,11 @@ export const makeUser = (
 			process.env.JWT_REFRESH_SECRET,
 		);
 
-		const STATEMENT = "SELECT uuid, username, email FROM USERS WHERE email=$1";
-
-		const allResults = await this.pg.query(STATEMENT, [verificationResult.sub]);
-
-		if (allResults.rows.length !== 1)
-			throw new HTTPError(401, "Unauthorized", "Credentials are invalid");
-
-		const result = { ...allResults.rows[0] };
-
-		return new User(result);
+		return new User({ uuid: verificationResult.sub });
 	} else if (email && password) {
-		const STATEMENT =
-			"SELECT uuid, username, email, password FROM USERS WHERE email=$1";
+		const STATEMENT = `SELECT uuid, username, email, password
+			FROM USERS WHERE email=$1
+			RETURNING uuid, email, password`;
 
 		const allResults = await this.pg.query(STATEMENT, [email]);
 
@@ -66,21 +58,21 @@ export const makeUser = (
 
 		return new User({
 			...result,
-			tokens: await makeTokens.bind(this)(),
+			tokens: await makeTokens.bind(this)(result.uuid),
 		});
 	}
 
 	throw new Error("makeUser: invalid arguments");
 };
 
-const makeTokens = (email: string) => ({
+const makeTokens = async (uuid: string) => ({
 	accessToken: await this.jwt.sign(
-		{ sub: email },
+		{ sub: uuid },
 		process.env.JWT_ACCESS_SECRET,
 		hoursToMilliseconds(process.env.JWT_ACCESS_EXPIRES),
 	),
 	refreshToken: await this.jwt.sign(
-		{ sub: email },
+		{ sub: uuid },
 		process.env.JWT_REFRESH_SECRET,
 		hoursToMilliseconds(process.env.JWT_REFRESH_EXPIRES),
 	),
