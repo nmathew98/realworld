@@ -1,6 +1,6 @@
 export async function unfollowUser(
 	this: Context,
-	{ username }: FollowUserArgs,
+	{ username }: UnfollowUserArgs,
 	...valueObjects: any[]
 ) {
 	const userWhoIsFollowing = valueObjects.find(
@@ -32,6 +32,6 @@ export async function unfollowUser(
 	]);
 }
 
-interface FollowUserArgs {
+interface UnfollowUserArgs {
 	username: string;
 }
