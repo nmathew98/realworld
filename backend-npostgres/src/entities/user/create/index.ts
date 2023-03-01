@@ -38,9 +38,7 @@ export async function makeUser(
 
 		return new User({ uuid: verificationResult.sub });
 	} else if (email && password) {
-		const STATEMENT = `SELECT uuid, username, email, password
-			FROM USERS WHERE email=$1
-			RETURNING uuid, email, password`;
+		const STATEMENT = `SELECT uuid, username, password FROM USERS WHERE email=$1`;
 
 		const allResults = await this.pg.query(STATEMENT, [email]);
 
@@ -58,11 +56,12 @@ export async function makeUser(
 
 		return new User({
 			...result,
+			email,
 			tokens: await makeTokens.bind(this)(result.uuid),
 		});
 	}
 
-	throw new Error("makeUser: invalid arguments");
+	throw new Error("Invalid arguments");
 }
 
 async function makeTokens(this: Context, uuid: string) {

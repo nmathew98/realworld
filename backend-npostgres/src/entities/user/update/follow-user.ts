@@ -1,4 +1,4 @@
-export async function unfollowUser(
+export async function followUser(
 	this: Context,
 	{ username }: FollowUserArgs,
 	...valueObjects: any[]
@@ -19,16 +19,16 @@ export async function unfollowUser(
 
 	if (allFollowsToResult.length !== 1) throw new Error("Invalid username");
 
-	const userToUnfollow = new User(allFollowsToResult.rows[0]);
+	const userToFollow = new User(allFollowsToResult.rows[0]);
 
-	if (!userToUnfollow) throw new Error(`Unable to find user \`${username}\``);
+	if (!userToFollow) throw new Error(`Unable to find user \`${username}\``);
 
-	const STATEMENT_UNFOLLOWS = `UPDATE USERS_FOLLOWS SET isActive=$1 WHERE (from=$2 AND to=$3)`;
+	const STATEMENT_FOLLOWS = `INSERT INTO USERS_FOLLOWS(from, to, isActive) VALUES($1, $2, $3)`;
 
-	await this.pg.query(STATEMENT_UNFOLLOWS, [
-		false,
+	await this.pg.query(STATEMENT_FOLLOWS, [
 		userWhoIsFollowing.uuid,
-		userToUnfollow.uuid,
+		userToFollow.uuid,
+		true,
 	]);
 }
 
