@@ -7,10 +7,9 @@ export async function makeTag(this: Context, _: never, ...valueObjects: any[]) {
 
 	const tags = article.tags.map(tag => new Tag(tag, article.ulid));
 
-	const delimit = (index, array) => (index === array.length - 1 ? "" : ", ");
 	const [VALUES, parameters] = tags.reduce(
-		(values, tag, index, array) => [
-			values + `($${index + 1}, $${index + 2})` + delimit(index, array),
+		(VALUES, tag, index, array) => [
+			VALUES + `($${index + 1}, $${index + 2})` + delimit(index, array),
 			[...parameters, tag.name, tag.article],
 		],
 		["", [] as any[]],

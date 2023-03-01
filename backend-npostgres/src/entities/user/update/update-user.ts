@@ -10,16 +10,15 @@ export async function updateUser(
 	const filteredUpdates = Object.entries(updates).filter(
 		([, value]) => !!value,
 	);
-	const delimit = (index, array) => (index === array.length - 1 ? "" : ", ");
-	const [setStatement, parameters] = filteredUpdates.reduce(
-		([setStatement, parameters], [key, value], index, array) => [
-			setStatement + `SET ${key}=$${index + 1}]` + delimit(index, array),
+	const [SET, parameters] = filteredUpdates.reduce(
+		([SET, parameters], [key, value], index, array) => [
+			SET + `SET ${key}=$${index + 1}]` + delimit(index, array),
 			[...parameters, value],
 		],
 		["", [] as any[]],
 	);
 
-	const STATEMENT = `UPDATE USERS ${setStatement}
+	const STATEMENT = `UPDATE USERS ${SET}
 		WHERE uuid=$${filteredUpdates.length + 1}
 		RETURNING uuid, username, email, password, image, bio`;
 
