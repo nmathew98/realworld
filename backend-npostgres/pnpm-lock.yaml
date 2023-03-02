@@ -6,6 +6,7 @@ specifiers:
   "@types/node": ^18.14.2
   "@typescript-eslint/eslint-plugin": ^5.53.0
   "@typescript-eslint/parser": ^5.53.0
+  consola: ^2.15.3
   date-fns: ^2.29.3
   defu: ^6.1.2
   eslint: ^8.35.0
@@ -30,6 +31,7 @@ devDependencies:
   "@types/node": 18.14.2
   "@typescript-eslint/eslint-plugin": 5.53.0_cjo54hduev4bqhpjw5znwiokqu
   "@typescript-eslint/parser": 5.53.0_ycpbpc6yetojsgtrx3mwntkhsu
+  consola: 2.15.3
   date-fns: 2.29.3
   defu: 6.1.2
   eslint: 8.35.0

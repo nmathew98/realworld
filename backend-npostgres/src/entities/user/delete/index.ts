@@ -1,9 +1,9 @@
 export async function unfollowUser(
 	this: Context,
 	{ username }: UnfollowUserArgs,
-	...valueObjects: any[]
+	...records: any[]
 ) {
-	const userWhoIsFollowing = valueObjects.find(
+	const userWhoIsFollowing = records.find(
 		user => user instanceof User,
 	) as InstanceType<typeof User>;
 

@@ -1,17 +1,12 @@
 import { createRouter } from "h3";
-//import { Client } from "pg";
 
-/*
+import { Articles } from "./articles";
+import { Profiles } from "./profiles";
+import { Tags } from "./tags";
+import { Users } from "./users";
 
-const client = new Client();
-await client.connect();
-
-const context: Context = {
-	pg: client,
-} as any;
-
-const pipe = makePipe(context);
-
-*/
-
-export const Router = createRouter();
+export const Router = createRouter()
+	.use("/users", Users.handler)
+	.use("/profiles", Profiles.handler)
+	.use("/tags", Tags.handler)
+	.use("/articles", Articles.handler);

@@ -1,9 +1,5 @@
-export async function deleteTag(
-	this: Context,
-	_: never,
-	...valueObjects: any[]
-) {
-	const article = valueObjects.find(
+export async function deleteTag(this: Context, _: never, ...records: any[]) {
+	const article = records.find(
 		article => article instanceof Article,
 	) as InstanceType<typeof Article>;
 

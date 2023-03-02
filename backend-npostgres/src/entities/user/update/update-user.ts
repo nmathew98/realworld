@@ -1,9 +1,9 @@
 export async function updateUser(
 	this: Context,
 	updates: Partial<UpdateUserArgs>,
-	...valueObjects: any[]
+	...records: any[]
 ) {
-	const user = valueObjects.find(user => user instanceof User);
+	const user = records.find(user => user instanceof User);
 
 	if (!user) throw new Error("User not found");
 

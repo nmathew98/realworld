@@ -1,9 +1,9 @@
 export async function getProfile(
 	this: Context,
 	{ username }: GetProfileArgs,
-	...valueObjects: any[]
+	...records: any[]
 ) {
-	const user = valueObjects.find(user => user instanceof User);
+	const user = records.find(user => user instanceof User);
 
 	if (!user || !username) throw new Error("No user specified");
 
