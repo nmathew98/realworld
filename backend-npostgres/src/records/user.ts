@@ -21,7 +21,7 @@ export class User {
 export const toUserResponse = (user: InstanceType<typeof User>) => ({
 	user: {
 		email: user.email,
-		token: user.tokens?.accessToken,
+		token: user.tokens?.accessToken?.value,
 		username: user.username,
 		bio: user.bio || null,
 		image: user.image || null,

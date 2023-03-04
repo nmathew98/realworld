@@ -4,7 +4,7 @@ import AutoImport from "unplugin-auto-import/esbuild";
 export default defineConfig({
 	esbuildPlugins: [
 		AutoImport({
-			dirs: ["./src/records", "./src/utilities", "./src/types"],
+			dirs: ["./src/records/**", "./src/utilities/**", "./src/types"],
 			eslintrc: {
 				enabled: true,
 			},

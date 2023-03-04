@@ -14,6 +14,8 @@ import consola from "consola";
 import { Router } from "./routes";
 import apiInformation from "../package.json";
 
+consola.wrapAll();
+
 const app = createApp({ debug: process.env.NODE_ENV !== "production" });
 app.use(
 	defineCorsEventHandler({
@@ -39,4 +41,4 @@ app.use(`/api/${apiInformation.version}`, Router.handler);
 
 const PORT = process.env.PORT || 3000;
 createServer(toNodeListener(app)).listen(PORT);
-consola.info(`Listening on port ${PORT}`);
+consola.info(`[api] listening on port ${PORT}`);

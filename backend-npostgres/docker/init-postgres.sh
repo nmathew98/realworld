@@ -2,14 +2,11 @@
 set -e
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-	CREATE DATABASE realworld;
-	\c realworld
-
 	CREATE TABLE IF NOT EXISTS USERS(
 		uuid UUID NOT NULL UNIQUE PRIMARY KEY,
 		username VARCHAR(20) NOT NULL UNIQUE,
 		email VARCHAR(320) NOT NULL UNIQUE,
-		password VARCHAR(20) NOT NULL,
+		password VARCHAR(80) NOT NULL UNIQUE,
 		bio TEXT
 	);
 

@@ -7,8 +7,9 @@ services:
     image: "postgres:latest"
     restart: "always"
     environment:
-      - "POSTGRES_PASSWORD=password"
-      - "POSTGRES_USER=postgres"
+      - "POSTGRES_USER"
+      - "POSTGRES_PASSWORD"
+      - "POSTGRES_DB"
     volumes:
       - "./docker/init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh"
   api:
@@ -16,10 +17,27 @@ services:
     build:
       context: .
       dockerfile: "Dockerfile"
+    command: "corepack pnpm dev"
     environment:
       - "PORT"
       - "REFRESH_COUNT=0"
+      - "JWT_ACCESS_EXPIRES"
+      - "JWT_REFRESH_EXPIRES"
+      - "JWT_ACCESS_SECRET=/run/secrets/jwt_access_secret"
+      - "JWT_REFRESH_SECRET=/run/secrets/jwt_refresh_secret"
+      - "POSTGRES_USER"
+      - "POSTGRES_PASSWORD"
+      - "POSTGRES_DB"
     ports:
       - "${PORT}:${PORT}"
     volumes:
       - "./src:/srv/api/src"
+    secrets:
+      - "jwt_access_secret"
+      - "jwt_refresh_secret"
+
+secrets:
+  jwt_access_secret:
+    file: ".jwt_access_secret"
+  jwt_refresh_secret:
+    file: ".jwt_refresh_secret"

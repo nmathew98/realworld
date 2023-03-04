@@ -3,10 +3,13 @@ lockfileVersion: 5.4
 specifiers:
   "@graficos/pipe-js": ^0.0.3
   "@nozomuikuta/h3-cors": ^0.2.1
+  "@types/bcryptjs": ^2.4.2
+  "@types/jsonwebtoken": ^9.0.1
   "@types/node": ^18.14.2
   "@types/passport": ^1.0.12
   "@typescript-eslint/eslint-plugin": ^5.53.0
   "@typescript-eslint/parser": ^5.53.0
+  bcryptjs: ^2.4.3
   consola: ^2.15.3
   date-fns: ^2.29.3
   defu: ^6.1.2
@@ -30,10 +33,13 @@ specifiers:
 devDependencies:
   "@graficos/pipe-js": 0.0.3
   "@nozomuikuta/h3-cors": 0.2.1_defu@6.1.2+h3@1.5.0
+  "@types/bcryptjs": 2.4.2
+  "@types/jsonwebtoken": 9.0.1
   "@types/node": 18.14.2
   "@types/passport": 1.0.12
   "@typescript-eslint/eslint-plugin": 5.53.0_cjo54hduev4bqhpjw5znwiokqu
   "@typescript-eslint/parser": 5.53.0_ycpbpc6yetojsgtrx3mwntkhsu
+  bcryptjs: 2.4.3
   consola: 2.15.3
   date-fns: 2.29.3
   defu: 6.1.2
@@ -1102,6 +1108,13 @@ packages:
       picomatch: 2.3.1
     dev: true
 
+  /@types/bcryptjs/2.4.2:
+    resolution:
+      {
+        integrity: sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==,
+      }
+    dev: true
+
   /@types/body-parser/1.19.2:
     resolution:
       {
@@ -1172,6 +1185,15 @@ packages:
       {
         integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==,
       }
+    dev: true
+
+  /@types/jsonwebtoken/9.0.1:
+    resolution:
+      {
+        integrity: sha512-c5ltxazpWabia/4UzhIoaDcIza4KViOQhdbjRlfcIGVnsE3c3brkz9Z+F/EeJIECOQP7W7US2hNE930cWWkPiw==,
+      }
+    dependencies:
+      "@types/node": 18.14.2
     dev: true
 
   /@types/mime/3.0.1:
@@ -1574,6 +1596,13 @@ packages:
     resolution:
       {
         integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==,
+      }
+    dev: true
+
+  /bcryptjs/2.4.3:
+    resolution:
+      {
+        integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==,
       }
     dev: true
 
