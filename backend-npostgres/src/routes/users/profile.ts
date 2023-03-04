@@ -5,7 +5,10 @@ import { makeUser } from "../../entities/user/create";
 import { getProfile } from "../../entities/user/read";
 
 export async function profile(this: Context, event: H3Event) {
-	const refreshToken = getCookie(event, "refresh");
+	const refreshToken = getCookie(
+		event,
+		AUTHENTICATION_COOKIE_KEYS.RefreshToken,
+	);
 
 	return toProfileResponse(
 		await pipe(makeUser, getProfile, pop)({ token: refreshToken }),
