@@ -9,7 +9,11 @@ export default defineConfig({
 	plugins: [
 		AutoImport({
 			imports: ["vitest"],
-			dts: "./src/.auto-imports.d.ts", // generate TypeScript declaration
+			dirs: ["./src/value-objects", "./src/utilities", "./src/types"],
+			eslintrc: {
+				enabled: true,
+			},
+			dts: "./src/auto-imports.d.ts", // generate TypeScript declaration
 		}),
 	],
 } as any);
