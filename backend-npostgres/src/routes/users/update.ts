@@ -5,7 +5,10 @@ import { zh, z } from "h3-zod";
 import { makeUser } from "../../entities/user/create";
 import { updateUser as _updateUser } from "../../entities/user/update";
 
-export async function update(this: Context, event: H3Event) {
+export default eventHandler(async function update(
+	this: Context,
+	event: H3Event,
+) {
 	const body = await zh.useValidatedBody(
 		event,
 		z.object({
@@ -30,4 +33,4 @@ export async function update(this: Context, event: H3Event) {
 	return toUserResponse(
 		await pipe(makeUser, updateUser)({ token: refreshToken }),
 	);
-}
+});

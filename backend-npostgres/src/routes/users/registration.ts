@@ -1,10 +1,13 @@
 import type { H3Event } from "h3";
 import { zh, z } from "h3-zod";
 
-import { usePassport } from "../middleware/passport";
+import { usePassport } from "../passport";
 
-export async function registration(this: Context, event: H3Event) {
-	await zh.useValidatedBody(
+export default eventHandler(async function registration(
+	this: Context,
+	event: H3Event,
+) {
+	const body = await zh.useValidatedBody(
 		event,
 		z.object({
 			user: z.object({
@@ -15,11 +18,7 @@ export async function registration(this: Context, event: H3Event) {
 		}),
 	);
 
-	try {
-		const user = await usePassport(event);
+	const user = await usePassport(event, body);
 
-		return toUserResponse(user);
-	} catch (error: any) {
-		return sendError(event, error);
-	}
-}
+	return toUserResponse(user);
+});

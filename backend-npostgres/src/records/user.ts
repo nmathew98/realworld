@@ -1,20 +1,20 @@
 export class User {
 	public uuid: string;
-	public username?: string;
-	public email?: string;
-	public image?: string;
-	public bio?: string;
-	public tokens?: UserTokens;
-	public isFollowing?: boolean;
+	public username: string | null = null;
+	public email: string | null = null;
+	public image: string | null = null;
+	public bio: string | null = null;
+	public tokens: UserTokens | null = null;
+	public isFollowing: boolean | null = null;
 
-	constructor(data) {
+	constructor(data: UserDBSchema & AdditionalData) {
 		this.uuid = data.uuid;
-		this.username = data.username;
-		this.email = data.email;
-		this.image = data.image;
-		this.bio = data.bio;
-		this.tokens = data.tokens;
-		this.isFollowing = data.isFollowing;
+		this.username = data.username || null;
+		this.email = data.email || null;
+		this.image = data.image || null;
+		this.bio = data.bio || null;
+		this.tokens = data.tokens || null;
+		this.isFollowing = data.isFollowing || null;
 	}
 }
 
@@ -23,19 +23,33 @@ export const toUserResponse = (user: InstanceType<typeof User>) => ({
 		email: user.email,
 		token: user.tokens?.accessToken?.value,
 		username: user.username,
-		bio: user.bio || null,
-		image: user.image || null,
+		bio: user.bio,
+		image: user.image,
 	},
 });
 
 export const toProfileResponse = (user: InstanceType<typeof User>) => ({
 	profile: {
 		username: user.username,
-		bio: user.bio || null,
-		image: user.image || null,
+		bio: user.bio,
+		image: user.image,
 		following: !!user.isFollowing,
 	},
 });
+
+interface UserDBSchema {
+	uuid: string;
+	username?: string;
+	email?: string;
+	password?: string;
+	bio?: string;
+	image?: string;
+}
+
+interface AdditionalData {
+	tokens?: UserTokens;
+	isFollowing?: boolean;
+}
 
 export interface UserTokens {
 	accessToken: {
