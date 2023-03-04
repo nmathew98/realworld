@@ -4,13 +4,14 @@ import type {
 } from "passport-local";
 import type { H3Event } from "h3";
 import { readBody } from "h3";
-import { eventHandler, getCookie, setCookie } from "h3";
+import { getCookie, setCookie } from "h3";
 import { Strategy as LocalStrategy } from "passport-local";
 import _passport from "passport";
 
 import { makeUser } from "../../entities/user/create";
 
-export const passport = eventHandler(e => authenticate(e));
+export const usePassport = e =>
+	authenticate(e) as Promise<InstanceType<typeof User>>;
 
 export async function verify(
 	this: Context,

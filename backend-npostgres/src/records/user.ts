@@ -5,6 +5,7 @@ export class User {
 	public image?: string;
 	public bio?: string;
 	public tokens?: UserTokens;
+	public isFollowing?: boolean;
 
 	constructor(data) {
 		this.uuid = data.uuid;
@@ -13,6 +14,7 @@ export class User {
 		this.image = data.image;
 		this.bio = data.bio;
 		this.tokens = data.tokens;
+		this.isFollowing = data.isFollowing;
 	}
 }
 

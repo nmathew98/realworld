@@ -5,6 +5,7 @@ import { registration } from "./registration";
 
 export const Users = createRouter()
 	.post("/users", eventHandler(registration))
+	.post("/users/login", eventHandler(login))
 	.get(
 		"/users",
 		eventHandler(() => "Hi"),
@@ -12,5 +13,4 @@ export const Users = createRouter()
 	.put(
 		"/users",
 		eventHandler(() => "Hello"),
-	)
-	.post("/users/login", eventHandler(login));
+	);
