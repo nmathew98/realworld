@@ -1,5 +1,5 @@
 ---
-version: "3.8"
+version: "3.9"
 
 services:
   postgres:
@@ -19,15 +19,15 @@ services:
       dockerfile: "Dockerfile"
     command: "corepack pnpm dev"
     environment:
-      - "PORT"
-      - "REFRESH_COUNT=0"
-      - "JWT_ACCESS_EXPIRES"
-      - "JWT_REFRESH_EXPIRES"
-      - "JWT_ACCESS_SECRET=/run/secrets/jwt_access_secret"
-      - "JWT_REFRESH_SECRET=/run/secrets/jwt_refresh_secret"
-      - "POSTGRES_USER"
-      - "POSTGRES_PASSWORD"
-      - "POSTGRES_DB"
+      PORT: "${PORT}"
+      REFRESH_COUNT: "0"
+      JWT_ACCESS_EXPIRES: "${JWT_ACCESS_EXPIRES}"
+      JWT_REFRESH_EXPIRES: "${JWT_REFRESH_EXPIRES}"
+      JWT_ACCESS_SECRET_FILE: "/run/secrets/jwt_access_secret"
+      JWT_REFRESH_SECRET_FILE: "/run/secrets/jwt_refresh_secret"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
     ports:
       - "${PORT}:${PORT}"
     volumes:
