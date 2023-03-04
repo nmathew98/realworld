@@ -1,7 +1,9 @@
+import type { Collection } from "../../../utilities/pipe";
+
 export async function unfollowUser(
 	this: Context,
 	{ username }: UnfollowUserArgs,
-	...records: any[]
+	...records: Collection[]
 ) {
 	const userWhoIsFollowing = records.find(
 		user => user instanceof User,

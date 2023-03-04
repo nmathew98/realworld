@@ -1,7 +1,9 @@
+import type { Collection } from "../../../utilities/pipe";
+
 export async function updateUser(
 	this: Context,
 	updates: Partial<UpdateUserArgs>,
-	...records: any[]
+	...records: Collection[]
 ) {
 	const user = records.find(user => user instanceof User) as InstanceType<
 		typeof User

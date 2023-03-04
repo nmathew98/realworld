@@ -7,7 +7,7 @@ import { setCookie } from "h3";
 import { Strategy as LocalStrategy } from "passport-local";
 import _passport from "passport";
 
-import { makeUser } from "../../entities/user/create";
+import { makeUser } from "../entities/user/create";
 
 // Setup passport
 use(verify);

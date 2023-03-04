@@ -1,8 +1,6 @@
 import type { H3Event } from "h3";
 import { zh, z } from "h3-zod";
 
-import { usePassport } from "../passport";
-
 export default eventHandler(async function registration(
 	this: Context,
 	event: H3Event,

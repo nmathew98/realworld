@@ -1,7 +1,9 @@
+import type { Collection } from "../../../utilities/pipe";
+
 export async function getProfile(
 	this: Context,
 	{ username }: GetProfileArgs = DEFAULT_VALUES,
-	...records: any[]
+	...records: Collection[]
 ) {
 	const user = records.find(user => user instanceof User);
 
@@ -10,6 +12,9 @@ export async function getProfile(
 	const STATEMENT = `SELECT uuid, username, bio, image FROM USERS WHERE (uuid=$1 OR username=$2)`;
 
 	const allResults = await this.pg.query(STATEMENT, [user?.uuid, username]);
+
+	if (allResults.rows.length === 0) throw new Error("Invalid user specified");
+
 	const randomUserProfile = allResults.rows.find(
 		row => row.username === username,
 	);
