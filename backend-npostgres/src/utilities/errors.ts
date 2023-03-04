@@ -1,3 +1,6 @@
+import type { H3Event } from "h3";
+import { sendError as _sendError } from "h3";
+
 export class HTTPError extends Error {
 	public status: number;
 	public statusText: string;
@@ -11,3 +14,6 @@ export class HTTPError extends Error {
 		this.body = body;
 	}
 }
+
+export const sendError = (e: H3Event, error) =>
+	_sendError(e, error, process.env.NODE_ENV !== "production");

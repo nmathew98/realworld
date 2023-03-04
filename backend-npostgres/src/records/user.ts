@@ -2,10 +2,9 @@ export class User {
 	public uuid: string;
 	public username?: string;
 	public email?: string;
-	public accessToken?: string;
-	public refreshToken?: string;
 	public image?: string;
 	public bio?: string;
+	public tokens?: UserTokens;
 
 	constructor(data) {
 		this.uuid = data.uuid;
@@ -13,7 +12,27 @@ export class User {
 		this.email = data.email;
 		this.image = data.image;
 		this.bio = data.bio;
-		this.accessToken = data.tokens?.accessToken;
-		this.refreshToken = data.tokens?.refreshToken;
+		this.tokens = data.tokens;
 	}
+}
+
+export const toUserResponse = (user: InstanceType<typeof User>) => ({
+	user: {
+		email: user.email,
+		token: user.tokens?.accessToken,
+		username: user.username,
+		bio: user.bio || null,
+		image: user.image || null,
+	},
+});
+
+export interface UserTokens {
+	accessToken: {
+		value: string;
+		expiresIn: number;
+	};
+	refreshToken: {
+		value: string;
+		expiresIn: number;
+	};
 }

@@ -14,7 +14,7 @@ import consola from "consola";
 import { Router } from "./routes";
 import apiInformation from "../package.json";
 
-const app = createApp();
+const app = createApp({ debug: process.env.NODE_ENV !== "production" });
 app.use(
 	defineCorsEventHandler({
 		/* ... */
@@ -31,11 +31,7 @@ app.use(
 			`[${url}] query params: ${JSON.stringify(getQuery(e), null, 2)}`,
 		);
 		consola.info(
-			`[${url}] route params: ${JSON.stringify(
-				getRouterParams(e),
-				null,
-				2,
-			)}`,
+			`[${url}] route params: ${JSON.stringify(getRouterParams(e), null, 2)}`,
 		);
 	}),
 );
