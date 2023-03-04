@@ -20,7 +20,6 @@ export async function registration(this: Context, event: H3Event) {
 
 		return toUserResponse(user);
 	} catch (error: any) {
-		console.log(error);
 		return sendError(event, error);
 	}
 }
