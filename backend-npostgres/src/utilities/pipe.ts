@@ -1,12 +1,12 @@
 import { asyncPipe } from "@graficos/pipe-js";
 
-export const makePipe =
-	(context: Context) =>
-	(...fns: any[]) =>
-		asyncPipe(
-			...fns.map(
-				fn =>
-					(...args: any[]) =>
-						fn(null, ...args).bind(context),
-			),
-		);
+import { CONTEXT } from "./context";
+
+export const pipe = (...fns: any[]) =>
+	asyncPipe(
+		...fns.map((fn, index, array) => {
+			if (index === 0) return (...args: any[]) => fn.bind(CONTEXT)(...args);
+
+			return (...args: any[]) => fn.bind(CONTEXT)(undefined, ...args);
+		}),
+	);

@@ -78,6 +78,7 @@ const authenticate = (event: H3Event) =>
 							{
 								secure: process.env.NODE_ENV === "production",
 								maxAge: user?.tokens?.refreshToken.expiresIn,
+								httpOnly: true,
 							},
 						);
 

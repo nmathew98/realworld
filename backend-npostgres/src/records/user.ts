@@ -28,6 +28,15 @@ export const toUserResponse = (user: InstanceType<typeof User>) => ({
 	},
 });
 
+export const toProfileResponse = (user: InstanceType<typeof User>) => ({
+	profile: {
+		username: user.username,
+		bio: user.bio || null,
+		image: user.image || null,
+		following: !!user.isFollowing,
+	},
+});
+
 export interface UserTokens {
 	accessToken: {
 		value: string;

@@ -7,9 +7,13 @@ if (!process.env.JWT_ACCESS_EXPIRES)
 if (!process.env.JWT_REFRESH_EXPIRES)
 	throw new Error("Environment variable `JWT_REFRESH_EXPIRES` is not defined");
 if (!process.env.JWT_ACCESS_SECRET_FILE)
-	throw new Error("Environment variable `JWT_ACCESS_SECRET_FILE` is not defined");
+	throw new Error(
+		"Environment variable `JWT_ACCESS_SECRET_FILE` is not defined",
+	);
 if (!process.env.JWT_REFRESH_SECRET_FILE)
-	throw new Error("Environment variable `JWT_REFRESH_SECRET_FILE` is not defined");
+	throw new Error(
+		"Environment variable `JWT_REFRESH_SECRET_FILE` is not defined",
+	);
 
 process.env.JWT_ACCESS_SECRET = readFileSync(
 	process.env.JWT_ACCESS_SECRET_FILE,
