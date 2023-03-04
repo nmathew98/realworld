@@ -1,22 +1,51 @@
 export async function getProfile(
 	this: Context,
-	{ username }: GetProfileArgs,
+	{ username }: GetProfileArgs = DEFAULT_VALUES,
 	...records: any[]
 ) {
 	const user = records.find(user => user instanceof User);
 
-	if (!user || !username) throw new Error("No user specified");
+	if (!user && !username) throw new Error("No user specified");
 
-	const WHERE = user ? "uuid=$1" : "username=$1";
-	const STATEMENT = `SELECT uuid, username, bio, image, following FROM USERS WHERE ${WHERE}`;
+	const STATEMENT = `SELECT uuid, username, bio, image FROM USERS WHERE (uuid=$1 OR username=$2)`;
 
-	const allResults = await this.pg.query(STATEMENT, [user?.uuid ?? username]);
+	const allResults = await this.pg.query(STATEMENT, [user?.uuid, username]);
+	const randomUserProfile = allResults.rows.find(
+		row => row.username === username,
+	);
+	const currentUserProfile = allResults.rows.find(
+		row => row.uuid === user?.uuid,
+	);
 
-	const result = allResults.rows[0];
+	if (user && username) {
+		const STATEMENT = `SELECT isActive FROM USERS_FOLLOWS WHERE (origin=$1 AND destination=$2)`;
 
-	return new User(result);
+		const allFollowingResults = await this.pg.query(STATEMENT, [
+			currentUserProfile.uuid,
+			randomUserProfile.uuid,
+		]);
+
+		if (allResults.length > 1)
+			throw new Error("Unexpected error: More than 1 relationship found");
+
+		const isFollowing = allFollowingResults.rows[0];
+
+		return new User({
+			...randomUserProfile,
+			isFollowing: !!isFollowing.isActive,
+		});
+	}
+
+	return new User({
+		...currentUserProfile,
+		isFollowing: false,
+	});
 }
 
+const DEFAULT_VALUES = {
+	username: null,
+};
+
 interface GetProfileArgs {
-	username?: string;
+	username?: string | null;
 }

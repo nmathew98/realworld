@@ -1,1 +1,1 @@
-export const pop = args => args.pop();
+export const pop = (...args: any[]) => args.pop();

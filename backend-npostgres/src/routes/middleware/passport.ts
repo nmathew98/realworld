@@ -4,13 +4,14 @@ import type {
 } from "passport-local";
 import type { H3Event } from "h3";
 import { readBody } from "h3";
-import { eventHandler, getCookie, setCookie } from "h3";
+import { setCookie } from "h3";
 import { Strategy as LocalStrategy } from "passport-local";
 import _passport from "passport";
 
 import { makeUser } from "../../entities/user/create";
 
-export const passport = eventHandler(e => authenticate(e));
+export const usePassport = e =>
+	authenticate(e) as Promise<InstanceType<typeof User>>;
 
 export async function verify(
 	this: Context,
@@ -55,30 +56,26 @@ const authenticate = (event: H3Event) =>
 				(error?: Error, user?: InstanceType<typeof User>) => {
 					if (error) return reject(error);
 
-					const existingAccessToken = getCookie(event, "authorization");
-					const existingRefreshToken = getCookie(event, "refresh");
+					setCookie(
+						event,
+						AUTHENTICATION_COOKIE_KEYS.AccessToken,
+						user?.tokens?.accessToken.value as string,
+						{
+							secure: process.env.NODE_ENV === "production",
+							maxAge: user?.tokens?.accessToken.expiresIn,
+						},
+					);
 
-					if (!existingAccessToken)
-						setCookie(
-							event,
-							"authorization",
-							user?.tokens?.accessToken.value as string,
-							{
-								secure: process.env.NODE_ENV === "production",
-								maxAge: user?.tokens?.accessToken.expiresIn,
-							},
-						);
-
-					if (!existingRefreshToken)
-						setCookie(
-							event,
-							"refresh",
-							user?.tokens?.refreshToken.value as string,
-							{
-								secure: process.env.NODE_ENV === "production",
-								maxAge: user?.tokens?.refreshToken.expiresIn,
-							},
-						);
+					setCookie(
+						event,
+						AUTHENTICATION_COOKIE_KEYS.RefreshToken,
+						user?.tokens?.refreshToken.value as string,
+						{
+							secure: process.env.NODE_ENV === "production",
+							maxAge: user?.tokens?.refreshToken.expiresIn,
+							httpOnly: true,
+						},
+					);
 
 					return resolve(user);
 				},

@@ -1,7 +1,7 @@
 import type { H3Event } from "h3";
 import { zh, z } from "h3-zod";
 
-import { passport } from "../middleware/passport";
+import { usePassport } from "../middleware/passport";
 
 export async function login(this: Context, event: H3Event) {
 	await zh.useValidatedBody(
@@ -15,7 +15,7 @@ export async function login(this: Context, event: H3Event) {
 	);
 
 	try {
-		const user = (await passport(event)) as InstanceType<typeof User>;
+		const user = await usePassport(event);
 
 		return toUserResponse(user);
 	} catch (error: any) {

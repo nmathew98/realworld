@@ -7,13 +7,6 @@ export async function makeUser(
 	this: Context,
 	{ username, email, password, token, generateTokens }: Partial<MakeUserArgs>,
 ) {
-	if (!process.env.JWT_ACCESS_EXPIRES)
-		throw new Error("Environment variable `JWT_ACCESS_EXPIRES` is not defined");
-	if (!process.env.JWT_REFRESH_EXPIRES)
-		throw new Error(
-			"Environment variable `JWT_REFRESH_EXPIRES` is not defined",
-		);
-
 	if (username && email && password) {
 		const STATEMENT = `INSERT INTO USERS(uuid, username, email, password) 
 			VALUES($1, $2, $3, $4) 
@@ -28,9 +21,11 @@ export async function makeUser(
 			hashedPassword,
 		]);
 
+		const tokens = await makeTokens.bind(this)(result.rows[0].uuid);
+
 		return new User({
 			...result.rows[0],
-			tokens: await makeTokens.bind(this)(result.rows[0].uuid),
+			tokens,
 		});
 	} else if (token) {
 		const verificationResult = await this.jwt.verify(
@@ -76,18 +71,16 @@ async function makeTokens(this: Context, uuid: string): Promise<UserTokens> {
 
 	return {
 		accessToken: {
-			value: await this.jwt.sign(
-				{ sub: uuid },
-				process.env.JWT_ACCESS_SECRET,
-				accessTokenExpiresIn,
-			),
+			value: await this.jwt.sign({ sub: uuid }, process.env.JWT_ACCESS_SECRET, {
+				expiresIn: accessTokenExpiresIn,
+			}),
 			expiresIn: accessTokenExpiresIn,
 		},
 		refreshToken: {
 			value: await this.jwt.sign(
 				{ sub: uuid },
 				process.env.JWT_REFRESH_SECRET,
-				refreshTokenExpiresIn,
+				{ expiresIn: refreshTokenExpiresIn },
 			),
 			expiresIn: refreshTokenExpiresIn,
 		},

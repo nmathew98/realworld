@@ -9,7 +9,7 @@ export default defineConfig({
 	plugins: [
 		AutoImport({
 			imports: ["vitest"],
-			dirs: ["./src/value-objects", "./src/utilities", "./src/types"],
+			dirs: ["./src/records/**", "./src/utilities/**", "./src/types"],
 			eslintrc: {
 				enabled: true,
 			},
