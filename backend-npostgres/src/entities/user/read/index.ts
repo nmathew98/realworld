@@ -1,6 +1,6 @@
 export async function getProfile(
 	this: Context,
-	{ username }: GetProfileArgs = { username: null },
+	{ username }: GetProfileArgs = DEFAULT_VALUES,
 	...records: any[]
 ) {
 	const user = records.find(user => user instanceof User);
@@ -41,6 +41,10 @@ export async function getProfile(
 		isFollowing: false,
 	});
 }
+
+const DEFAULT_VALUES = {
+	username: null,
+};
 
 interface GetProfileArgs {
 	username?: string | null;

@@ -1,4 +1,5 @@
-import { getCookie, H3Event } from "h3";
+import type { H3Event } from "h3";
+import { getCookie } from "h3";
 
 import { makeUser } from "../../entities/user/create";
 import { getProfile } from "../../entities/user/read";

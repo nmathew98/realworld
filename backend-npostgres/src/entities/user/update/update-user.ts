@@ -3,26 +3,40 @@ export async function updateUser(
 	updates: Partial<UpdateUserArgs>,
 	...records: any[]
 ) {
-	const user = records.find(user => user instanceof User);
+	const user = records.find(user => user instanceof User) as InstanceType<
+		typeof User
+	>;
 
 	if (!user) throw new Error("User not found");
 
-	const filteredUpdates = Object.entries(updates).filter(
-		([, value]) => !!value,
-	);
-	const [SET, parameters] = filteredUpdates.reduce(
-		([SET, parameters], [key, value], index, array) => [
-			SET + `SET ${key}=$${index + 1}]` + delimit(index, array),
-			[...parameters, value],
-		],
-		["", [] as any[]],
+	const filteredUpdates = await Promise.all(
+		Object.entries(updates)
+			.filter(([, value]) => !!value)
+			.map(async ([key, value]) => {
+				if (key === "password") {
+					const hashedPassword = await this.hasher.hash(value);
+
+					return [key, hashedPassword];
+				}
+
+				return [key, value];
+			}),
 	);
 
-	const STATEMENT = `UPDATE USERS ${SET}
+	const [SET, parameters] = filteredUpdates.reduce(
+		([SET, parameters], [key, value], index, array) => [
+			SET + `${key}=$${index + 1}` + delimit(index, array),
+			[...parameters, value],
+		],
+		["SET ", [] as any[]],
+	);
+
+	const STATEMENT = `UPDATE USERS 
+		${SET}
 		WHERE uuid=$${filteredUpdates.length + 1}
 		RETURNING uuid, username, email, password, image, bio`;
 
-	const allResults = await this.pg.query(STATEMENT, parameters);
+	const allResults = await this.pg.query(STATEMENT, [...parameters, user.uuid]);
 
 	if (allResults.rows.length !== 1)
 		throw new HTTPError(
