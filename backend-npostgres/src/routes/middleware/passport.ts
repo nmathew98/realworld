@@ -82,6 +82,6 @@ const authenticate = (event: H3Event) =>
 
 					return resolve(user);
 				},
-			)({ body: body.user, ...event.node.req }, event.node.res),
+			)({ ...event.node.req, body: body.user }, event.node.res),
 		),
 	);
