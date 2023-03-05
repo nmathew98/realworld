@@ -18,7 +18,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 		FOREIGN KEY (origin)
 			REFERENCES USERS(uuid),
 		FOREIGN KEY(destination)
-			REFERENCES USERS(uuid)
+			REFERENCES USERS(uuid),
+		UNIQUE(origin, destination)
 	);
 
 	\d USERS

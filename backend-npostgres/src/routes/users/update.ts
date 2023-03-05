@@ -2,7 +2,6 @@ import type { H3Event } from "h3";
 import { getCookie } from "h3";
 import { zh, z } from "h3-zod";
 
-import type { Collection } from "../../utilities/pipe";
 import { makeUser } from "../../entities/user/create";
 import { updateUser as _updateUser } from "../../entities/user/update";
 
@@ -28,10 +27,10 @@ export default eventHandler(async function update(
 		AUTHENTICATION_COOKIE_KEYS.RefreshToken,
 	);
 
-	const updateUser = (...records: Collection[]) =>
-		_updateUser.call(this, body.user, ...records);
-
 	return toUserResponse(
-		await pipe(makeUser, updateUser)({ token: refreshToken }),
+		await pipe(
+			makeUser,
+			toPipeable(_updateUser, body.user),
+		)({ token: refreshToken }),
 	);
 });

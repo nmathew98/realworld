@@ -17,13 +17,19 @@ const makePipe =
 		return asyncPipe(...boundFns);
 	};
 
+const makeToPipeable =
+	(context: Context) =>
+	(f: FnWithContext, args?: Parameters<typeof f>[0]) =>
+	(...records: Collection[]) =>
+		f.call(context, args, ...records);
+
 export const pipe = makePipe(CONTEXT);
-export const pop = (...args: Collection[]) => args.pop();
+export const toPipeable = makeToPipeable(CONTEXT);
 
 export type FnWithContext = (
 	this: Context,
 	args?: any,
 	...records: Collection[]
-) => Promise<Collection | Collection[]>;
+) => Promise<Collection | Collection[] | void>;
 
 export type Collection<T = any> = Record<string, any>;
