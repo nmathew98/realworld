@@ -27,10 +27,10 @@ export default eventHandler(async function update(
 		AUTHENTICATION_COOKIE_KEYS.RefreshToken,
 	);
 
-	const updateUser = (...records: any[]) =>
-		_updateUser.bind(this)(body.user, ...records);
-
 	return toUserResponse(
-		await pipe(makeUser, updateUser)({ token: refreshToken }),
+		await pipe(
+			makeUser,
+			toPipeable(_updateUser, body.user),
+		)({ token: refreshToken }),
 	);
 });

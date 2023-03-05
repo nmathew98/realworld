@@ -19,13 +19,13 @@ export async function unfollowUser(
 		username,
 	]);
 
-	if (allFollowsToResult.length !== 1) throw new Error("Invalid username");
+	if (allFollowsToResult.rows.length !== 1) throw new Error("Invalid username");
 
 	const userToUnfollow = new User(allFollowsToResult.rows[0]);
 
 	if (!userToUnfollow) throw new Error(`Unable to find user \`${username}\``);
 
-	const STATEMENT_UNFOLLOWS = `UPDATE USERS_FOLLOWS SET isActive=$1 WHERE (from=$2 AND to=$3)`;
+	const STATEMENT_UNFOLLOWS = `UPDATE USERS_FOLLOWS SET isActive=$1 WHERE (origin=$2 AND destination=$3)`;
 
 	await this.pg.query(STATEMENT_UNFOLLOWS, [
 		false,

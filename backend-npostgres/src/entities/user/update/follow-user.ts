@@ -19,13 +19,16 @@ export async function followUser(
 		username,
 	]);
 
-	if (allFollowsToResult.length !== 1) throw new Error("Invalid username");
+	if (allFollowsToResult.rows.length !== 1) throw new Error("Invalid username");
 
 	const userToFollow = new User(allFollowsToResult.rows[0]);
 
 	if (!userToFollow) throw new Error(`Unable to find user \`${username}\``);
 
-	const STATEMENT_FOLLOWS = `INSERT INTO USERS_FOLLOWS(origin, destination, isActive) VALUES($1, $2, $3)`;
+	const STATEMENT_FOLLOWS = `INSERT INTO USERS_FOLLOWS(origin, destination, isActive)
+		VALUES($1, $2, $3)
+		ON CONFLICT (origin, destination)
+		DO UPDATE SET isActive=$3`;
 
 	await this.pg.query(STATEMENT_FOLLOWS, [
 		userWhoIsFollowing.uuid,

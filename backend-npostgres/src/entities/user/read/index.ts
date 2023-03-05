@@ -30,14 +30,16 @@ export async function getProfile(
 			randomUserProfile.uuid,
 		]);
 
-		if (allResults.length > 1)
-			throw new Error("Unexpected error: More than 1 relationship found");
+		if (allFollowingResults.rows.length > 1)
+			throw new Error(
+				"Unexpected error: More than 1 following relationship found",
+			);
 
 		const isFollowing = allFollowingResults.rows[0];
 
 		return new User({
 			...randomUserProfile,
-			isFollowing: !!isFollowing.isActive,
+			isFollowing: !!isFollowing?.isactive,
 		});
 	}
 
