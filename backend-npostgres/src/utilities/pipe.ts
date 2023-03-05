@@ -19,7 +19,7 @@ const makePipe =
 
 const makeToPipeable =
 	(context: Context) =>
-	(f: FnWithContext, args?: Parameters<typeof f>[0]) =>
+	<F extends FnWithContext>(f: F, args?: Parameters<F>[0]) =>
 	(...records: Collection[]) =>
 		f.call(context, args, ...records);
 

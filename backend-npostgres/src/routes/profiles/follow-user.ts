@@ -20,7 +20,7 @@ export default eventHandler(async function followUser(
 
 	await pipe(
 		makeUser,
-		toPipeable(_followUser, params),
+		toPipeable<typeof _followUser>(_followUser, params),
 	)({ token: refreshToken });
 
 	return send(event, null);

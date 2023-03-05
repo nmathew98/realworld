@@ -30,7 +30,7 @@ export default eventHandler(async function update(
 	return toUserResponse(
 		await pipe(
 			makeUser,
-			toPipeable(_updateUser, body.user),
+			toPipeable<typeof _updateUser>(_updateUser, body.user),
 		)({ token: refreshToken }),
 	);
 });
