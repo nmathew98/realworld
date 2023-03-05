@@ -1,5 +1,5 @@
-import { randomUUID } from "node:crypto";
 import { hoursToMilliseconds } from "date-fns";
+import { v6 } from "uuid-v6";
 
 import type { UserTokens } from "../../../records/user";
 
@@ -15,7 +15,7 @@ export async function makeUser(
 		const hashedPassword = await this.hasher.hash(password);
 
 		const result = await this.pg.query(STATEMENT, [
-			randomUUID(),
+			v6(),
 			username,
 			email,
 			hashedPassword,

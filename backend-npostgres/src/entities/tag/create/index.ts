@@ -5,7 +5,7 @@ export async function makeTag(this: Context, _: never, ...records: any[]) {
 
 	if (!article) throw new Error("Article not specified");
 
-	const tags = article.tags.map(tag => new Tag(tag, article.ulid));
+	const tags = article.tags.map(tag => new Tag(tag, article.uuid));
 
 	const [VALUES, parameters] = tags.reduce(
 		(VALUES, tag, index, array) => [

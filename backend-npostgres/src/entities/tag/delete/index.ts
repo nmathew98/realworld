@@ -7,5 +7,5 @@ export async function deleteTag(this: Context, _: never, ...records: any[]) {
 
 	const STATEMENT = "DELETE FROM ARTICLE_TAGS WHERE article=$1";
 
-	await this.pg.query(STATEMENT, [article.ulid]);
+	await this.pg.query(STATEMENT, [article.uuid]);
 }

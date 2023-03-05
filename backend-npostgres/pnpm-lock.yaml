@@ -25,8 +25,8 @@ specifiers:
   prettier: ^2.8.4
   tsup: ^6.6.3
   typescript: ^4.9.5
-  ulid: ^2.3.0
   unplugin-auto-import: ^0.15.0
+  uuid-v6: ^1.1.2
   vitest: ^0.29.1
   zod: ^3.20.6
 
@@ -55,8 +55,8 @@ devDependencies:
   prettier: 2.8.4
   tsup: 6.6.3_typescript@4.9.5
   typescript: 4.9.5
-  ulid: 2.3.0
   unplugin-auto-import: 0.15.0
+  uuid-v6: 1.1.2
   vitest: 0.29.1
   zod: 3.20.6
 
@@ -3866,6 +3866,15 @@ packages:
       }
     dev: true
 
+  /randombytes/2.1.0:
+    resolution:
+      {
+        integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==,
+      }
+    dependencies:
+      safe-buffer: 5.1.2
+    dev: true
+
   /rc9/2.0.1:
     resolution:
       {
@@ -4448,14 +4457,6 @@ packages:
       }
     dev: true
 
-  /ulid/2.3.0:
-    resolution:
-      {
-        integrity: sha512-keqHubrlpvT6G2wH0OEfSW4mquYRcbe/J8NMmveoQOjUqmo+hXtO+ORCpWhdbZ7k72UtY61BL7haGxW6enBnjw==,
-      }
-    hasBin: true
-    dev: true
-
   /uncrypto/0.1.2:
     resolution:
       {
@@ -4604,6 +4605,26 @@ packages:
         integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==,
       }
     engines: { node: ">= 0.4.0" }
+    dev: true
+
+  /uuid-v6/1.1.2:
+    resolution:
+      {
+        integrity: sha512-TmOBZdxkjgick+q0k6gcEvIqEouLC+TuGIiX1siQrnpMenqlDMWzMitT7KEmL7zmJpmgJl9wR+Ly+rboqfZFTQ==,
+      }
+    engines: { node: ">4.x" }
+    dependencies:
+      randombytes: 2.1.0
+      uuid: 3.1.0
+    dev: true
+
+  /uuid/3.1.0:
+    resolution:
+      {
+        integrity: sha512-DIWtzUkw04M4k3bf1IcpS2tngXEL26YUD2M0tMDUpnUrz2hgzUBlD55a4FjdLGPvfHxS6uluGWvaVEqgBcVa+g==,
+      }
+    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    hasBin: true
     dev: true
 
   /vite-node/0.29.1_@types+node@18.14.2:
