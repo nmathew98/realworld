@@ -1,6 +1,8 @@
 const makePipe =
 	(context: Context) =>
-	<F extends FnWithContext>(...fns: FnWithContext[]) => {
+	<I extends FnWithContext, F extends FnWithContext>(
+		...fns: FnWithContext[]
+	) => {
 		const toFnWithContext = (fn, index) => {
 			if (index === 0) return fn.bind(context);
 
@@ -10,12 +12,12 @@ const makePipe =
 				fn.call(context, undefined, ...records.flat());
 		};
 
-		return (initial: Parameters<F>[0]) =>
+		return (initial: Parameters<I>[0]) =>
 			fns.reduce(
 				async (runningResult: any, fn, index) =>
 					toFnWithContext(fn, index).call(undefined, await runningResult),
 				initial,
-			);
+			) as unknown as Promise<ReturnType<F>>;
 	};
 
 const makeToPipeable =

@@ -19,7 +19,7 @@ export default eventHandler(async function getProfile(
 	})) as { username: string };
 
 	return toProfileResponse(
-		await pipe(
+		await pipe<typeof makeUser, typeof _getProfile>(
 			makeUser,
 			toPipeable<typeof _getProfile>(_getProfile, params),
 		)({ token: refreshToken }),

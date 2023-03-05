@@ -14,6 +14,9 @@ export default eventHandler(async function profile(
 	);
 
 	return toProfileResponse(
-		await pipe(makeUser, getProfile)({ token: refreshToken }),
+		await pipe<typeof makeUser, typeof getProfile>(
+			makeUser,
+			getProfile,
+		)({ token: refreshToken }),
 	);
 });
