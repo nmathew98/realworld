@@ -23,7 +23,7 @@ export async function getProfile(
 	);
 
 	if (user && username) {
-		const STATEMENT = `SELECT isActive FROM USERS_FOLLOWS WHERE (origin=$1 AND destination=$2)`;
+		const STATEMENT = `SELECT is_active FROM USERS_FOLLOWS WHERE (origin=$1 AND destination=$2)`;
 
 		const allFollowingResults = await this.pg.query(STATEMENT, [
 			currentUserProfile.uuid,
@@ -39,7 +39,7 @@ export async function getProfile(
 
 		return new User({
 			...randomUserProfile,
-			isFollowing: !!isFollowing?.isactive,
+			isFollowing: !!isFollowing?.is_active,
 		});
 	}
 

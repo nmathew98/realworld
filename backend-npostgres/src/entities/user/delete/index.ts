@@ -25,7 +25,7 @@ export async function unfollowUser(
 
 	if (!userToUnfollow) throw new Error(`Unable to find user \`${username}\``);
 
-	const STATEMENT_UNFOLLOWS = `UPDATE USERS_FOLLOWS SET isActive=$1 WHERE (origin=$2 AND destination=$3)`;
+	const STATEMENT_UNFOLLOWS = `UPDATE USERS_FOLLOWS SET is_active=$1 WHERE (origin=$2 AND destination=$3)`;
 
 	await this.pg.query(STATEMENT_UNFOLLOWS, [
 		false,

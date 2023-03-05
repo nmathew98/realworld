@@ -14,7 +14,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 	CREATE TABLE IF NOT EXISTS USERS_FOLLOWS(
 		origin UUID NOT NULL,
 		destination UUID NOT NULL,
-		isActive BOOLEAN NOT NULL,
+		is_active BOOLEAN NOT NULL,
 		FOREIGN KEY (origin)
 			REFERENCES USERS(uuid),
 		FOREIGN KEY(destination)
@@ -38,13 +38,13 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 	CREATE TABLE IF NOT EXISTS ARTICLE_FAVORITES(
 		ulid UUID NOT NULL UNIQUE PRIMARY KEY,
 		article UUID NOT NULL,
-		favoritedBy UUID NOT NULL,
-		isActive BOOLEAN NOT NULL,
+		favorited_by UUID NOT NULL,
+		is_active BOOLEAN NOT NULL,
 		FOREIGN KEY(article)
 			REFERENCES ARTICLES(ulid),
-		FOREIGN KEY(favoritedBy)
+		FOREIGN KEY(favorited_by)
 			REFERENCES USERS(uuid),
-		UNIQUE(article, favoritedBy)
+		UNIQUE(article, favorited_by)
 	);
 
 	CREATE TABLE IF NOT EXISTS ARTICLES_COMMENTS(

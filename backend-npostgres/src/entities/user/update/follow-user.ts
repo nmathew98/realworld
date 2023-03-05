@@ -25,10 +25,10 @@ export async function followUser(
 
 	if (!userToFollow) throw new Error(`Unable to find user \`${username}\``);
 
-	const STATEMENT_FOLLOWS = `INSERT INTO USERS_FOLLOWS(origin, destination, isActive)
+	const STATEMENT_FOLLOWS = `INSERT INTO USERS_FOLLOWS(origin, destination, is_active)
 		VALUES($1, $2, $3)
 		ON CONFLICT (origin, destination)
-		DO UPDATE SET isActive=$3`;
+		DO UPDATE SET is_active=$3`;
 
 	await this.pg.query(STATEMENT_FOLLOWS, [
 		userWhoIsFollowing.uuid,
