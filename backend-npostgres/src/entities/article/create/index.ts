@@ -24,7 +24,6 @@ export async function makeArticle(
 	if (!user && isNewArticle) throw new HTTPError(401, "Unauthorized");
 
 	if (isExistingArticle) {
-		// TODO: Use UUID if available, getting type errors
 		const STATEMENT = `WITH article AS(
 			SELECT 
 				uuid,
@@ -36,7 +35,7 @@ export async function makeArticle(
 				created_at,
 				updated_at 
 			FROM ARTICLES
-			WHERE slug=$1
+			WHERE ${article ? "uuid=$1" : "slug=$1"}
 		), author AS(
 			SELECT 
 				uuid AS "author_uuid",
@@ -75,7 +74,7 @@ export async function makeArticle(
 		INNER JOIN author ON article.author=author.author_uuid`;
 
 		const allResults = await this.pg.query(STATEMENT, [
-			article?.slug ?? slug,
+			article?.uuid ?? slug,
 			user.uuid,
 		]);
 
