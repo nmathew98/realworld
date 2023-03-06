@@ -31,15 +31,27 @@ export default eventHandler(async function createArticle(
 		}),
 	);
 
+	const updates = {
+		title: body.article.title,
+		body: body.article.body,
+		description: body.article.description,
+		tagList: body.article.tagList,
+	};
+
+	if (Object.keys(updates).length === 0)
+		return toArticleResponse(
+			await pipe<typeof makeUser, typeof makeArticle>(
+				makeUser,
+				toPipeable<typeof makeArticle>(makeArticle, params),
+			)({ token: refreshToken }),
+		);
+
 	return toArticleResponse(
 		await pipe<typeof makeUser, typeof makeArticle>(
 			makeUser,
 			toPipeable<typeof updateArticle>(updateArticle, {
 				slug: params.slug,
-				title: body.article.title,
-				body: body.article.body,
-				description: body.article.description,
-				tagList: body.article.tagList,
+				...updates,
 			}),
 			makeArticle,
 		)({ token: refreshToken }),

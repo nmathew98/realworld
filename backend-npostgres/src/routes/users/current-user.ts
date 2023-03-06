@@ -4,7 +4,7 @@ import { getCookie } from "h3";
 import { makeUser } from "../../entities/user/create";
 import { getProfile } from "../../entities/user/read";
 
-export default eventHandler(async function profile(
+export default eventHandler(async function currentUser(
 	this: Context,
 	event: H3Event,
 ) {
@@ -13,7 +13,7 @@ export default eventHandler(async function profile(
 		AUTHENTICATION_COOKIE_KEYS.RefreshToken,
 	);
 
-	return toProfileResponse(
+	return toUserResponse(
 		await pipe<typeof makeUser, typeof getProfile>(
 			makeUser,
 			getProfile,

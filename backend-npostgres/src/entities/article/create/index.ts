@@ -152,8 +152,9 @@ export async function makeArticle(
 					bio,
 					image 
 				FROM USERS 
-				WHERE uuid=(SELECT author FROM article)) AS PROFILE
-				ON article.author=PROFILE.author_uuid`;
+				WHERE uuid=(SELECT author FROM article)
+				) AS PROFILE
+			ON article.author=PROFILE.author_uuid`;
 
 		const STATEMENT_WITHOUT_TAGS = `WITH article AS (${ARTICLES_STATEMENT})
 			SELECT
@@ -177,8 +178,9 @@ export async function makeArticle(
 					bio,
 					image 
 				FROM USERS 
-				WHERE uuid=(SELECT author FROM article)) AS PROFILE
-				ON article.author=PROFILE.author_uuid`;
+				WHERE uuid=(SELECT author FROM article)
+				) AS PROFILE
+			ON article.author=PROFILE.author_uuid`;
 
 		const STATEMENT =
 			tagList.length > 0 ? STATEMENT_WITH_TAGS : STATEMENT_WITHOUT_TAGS;
