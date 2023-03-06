@@ -16,9 +16,11 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 		destination UUID NOT NULL,
 		is_active BOOLEAN NOT NULL,
 		FOREIGN KEY (origin)
-			REFERENCES USERS(uuid),
+			REFERENCES USERS(uuid)
+			ON DELETE CASCADE,
 		FOREIGN KEY(destination)
-			REFERENCES USERS(uuid),
+			REFERENCES USERS(uuid)
+			ON DELETE CASCADE,
 		UNIQUE(origin, destination)
 	);
 
@@ -33,6 +35,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 		author UUID NOT NULL,
 		FOREIGN KEY(author)
 			REFERENCES USERS(uuid)
+			ON DELETE CASCADE
 	);
 
 	CREATE TABLE IF NOT EXISTS ARTICLES_FAVORITES(
@@ -41,9 +44,11 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 		favorited_by UUID NOT NULL,
 		is_active BOOLEAN NOT NULL,
 		FOREIGN KEY(article)
-			REFERENCES ARTICLES(uuid),
+			REFERENCES ARTICLES(uuid)
+			ON DELETE CASCADE,
 		FOREIGN KEY(favorited_by)
-			REFERENCES USERS(uuid),
+			REFERENCES USERS(uuid)
+			ON DELETE CASCADE,
 		UNIQUE(article, favorited_by)
 	);
 
@@ -55,17 +60,20 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 		created_at BIGINT NOT NULL,
 		updated_at BIGINT NOT NULL,
 		FOREIGN KEY(author)
-			REFERENCES USERS(uuid),
+			REFERENCES USERS(uuid)
+			ON DELETE CASCADE,
 		FOREIGN KEY(author)
 			REFERENCES ARTICLES(uuid)
+			ON DELETE CASCADE
 	);
 
 	CREATE TABLE IF NOT EXISTS ARTICLES_TAGS(
 		uuid UUID NOT NULL UNIQUE PRIMARY KEY,
 		tag VARCHAR(20) NOT NULL,
-		article UUID NOT NULL UNIQUE,
+		article UUID NOT NULL,
 		FOREIGN KEY(article)
 			REFERENCES ARTICLES(uuid)
+			ON DELETE CASCADE
 	);
 
 	\d USERS

@@ -1,3 +1,5 @@
+import type { Collection } from "../records";
+
 const makePipe = (context: Context) => {
 	const toFnWithContext = (fn, index) => {
 		if (index === 0) return fn.bind(context);
@@ -36,5 +38,3 @@ export type FnWithContext = (
 	args?: any,
 	...records: Collection[]
 ) => Promise<Collection | Collection[] | void>;
-
-export type Collection<T = any> = Record<string, any>;

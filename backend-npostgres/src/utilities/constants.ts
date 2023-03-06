@@ -14,6 +14,7 @@ export const USER_SCHEMA = {
 };
 
 export const ARTICLE_SCHEMA = {
+	slug: z.string(),
 	title: z.string(),
 	description: z.string(),
 	body: z.string(),
