@@ -5,7 +5,7 @@ export class User {
 	public image: string | null = null;
 	public bio: string | null = null;
 	public tokens: UserTokens | null = null;
-	public isFollowing: boolean | null = null;
+	public isFollowing: boolean = false;
 
 	constructor(data: UserDBSchema & AdditionalData) {
 		this.uuid = data.uuid;
@@ -14,7 +14,7 @@ export class User {
 		this.image = data.image || null;
 		this.bio = data.bio || null;
 		this.tokens = data.tokens || null;
-		this.isFollowing = data.isFollowing || null;
+		this.isFollowing = !!data.isFollowing;
 	}
 }
 

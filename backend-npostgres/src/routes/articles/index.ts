@@ -1,6 +1,8 @@
-import { createRouter, eventHandler } from "h3";
+import { createRouter } from "h3";
 
-export const Articles = createRouter().get(
-	"/articles",
-	eventHandler(() => "Hi from articles"),
-);
+import createArticle from "./create-article";
+import getArticle from "./get-article";
+
+export const Articles = createRouter()
+	.get("/articles/:slug", getArticle)
+	.post("/articles", createArticle);
