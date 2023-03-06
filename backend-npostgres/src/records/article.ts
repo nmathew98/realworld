@@ -1,6 +1,8 @@
 import { formatISO } from "date-fns";
 
-export class Article {
+import { Collection } from ".";
+
+export class Article extends Collection {
 	public slug: string;
 	public uuid: string | null = null;
 	public author: string | null = null;
@@ -18,6 +20,8 @@ export class Article {
 	public image: string | null = null;
 
 	constructor(data: ArticleDBSchema & AdditionalData) {
+		super();
+
 		this.slug = data.slug;
 		this.uuid = data.uuid || null;
 		this.author = data.author || null;

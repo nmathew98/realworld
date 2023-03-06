@@ -1,11 +1,11 @@
-import type { Collection } from "../../../utilities/pipe";
-
 export async function getProfile(
 	this: Context,
 	{ username }: GetProfileArgs = DEFAULT_VALUES,
-	...records: Collection[]
+	...records: InstanceType<typeof Collection>[]
 ) {
-	const user = records.find(user => user instanceof User);
+	const user = records.find(user => user instanceof User) as InstanceType<
+		typeof User
+	>;
 
 	if (!user && !username) throw new Error("No user specified");
 

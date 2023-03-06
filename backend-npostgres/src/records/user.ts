@@ -1,4 +1,6 @@
-export class User {
+import { Collection } from ".";
+
+export class User extends Collection {
 	public uuid: string;
 	public username: string | null = null;
 	public email: string | null = null;
@@ -8,6 +10,8 @@ export class User {
 	public isFollowing: boolean = false;
 
 	constructor(data: UserDBSchema & AdditionalData) {
+		super();
+
 		this.uuid = data.uuid;
 		this.username = data.username || null;
 		this.email = data.email || null;

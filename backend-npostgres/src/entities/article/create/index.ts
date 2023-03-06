@@ -1,22 +1,30 @@
 import { v6 } from "uuid-v6";
 
-import type { Collection } from "../../../utilities/pipe";
-
 export async function makeArticle(
 	this: Context,
-	{ slug, title, description, body, tagList }: Partial<MakeArticleArgs>,
-	...records: Collection[]
+	{
+		slug,
+		title,
+		description,
+		body,
+		tagList,
+	}: Partial<MakeArticleArgs> = Object.create(null),
+	...records: InstanceType<typeof Collection>[]
 ) {
 	const user = records.find(user => user instanceof User) as InstanceType<
 		typeof User
 	>;
+	const article = records.find(
+		article => article instanceof Article,
+	) as InstanceType<typeof Article>;
 
-	const isExistingArticle = !!slug;
+	const isExistingArticle = !!slug || !!article;
 	const isNewArticle = !slug && title && description && body && tagList;
 
 	if (!user && isNewArticle) throw new HTTPError(401, "Unauthorized");
 
 	if (isExistingArticle) {
+		// TODO: Use UUID if available, getting type errors
 		const STATEMENT = `WITH article AS(
 			SELECT 
 				uuid,
@@ -66,7 +74,10 @@ export async function makeArticle(
 		FROM article
 		INNER JOIN author ON article.author=author.author_uuid`;
 
-		const allResults = await this.pg.query(STATEMENT, [slug, user.uuid]);
+		const allResults = await this.pg.query(STATEMENT, [
+			article?.slug ?? slug,
+			user.uuid,
+		]);
 
 		if (allResults.rows.length === 0)
 			throw new HTTPError(404, "Invalid article");
