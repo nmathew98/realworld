@@ -12,8 +12,13 @@ import { makeUser } from "../entities/user/create";
 // Setup passport
 use(verify);
 
-export const usePassport = (e: H3Event, body: Record<string, any>) =>
-	authenticate(e, body) as Promise<InstanceType<typeof User>>;
+export const usePassport = ({
+	event,
+	body,
+}: {
+	event: H3Event;
+	body: Record<string, any>;
+}) => authenticate(event, body) as Promise<InstanceType<typeof User>>;
 
 function use(verify: VerifyFunctionWithRequest) {
 	const strategyOptions: IStrategyOptionsWithRequest = {

@@ -1,6 +1,8 @@
 import type { H3Event } from "h3";
 import { zh, z } from "h3-zod";
 
+import getProfile from "../profiles/get-profile";
+
 export default eventHandler(async function registration(
 	this: Context,
 	event: H3Event,
@@ -16,7 +18,13 @@ export default eventHandler(async function registration(
 		}),
 	);
 
-	const user = await usePassport(event, body);
-
-	return toUserResponse(user);
+	return toUserResponse(
+		await pipe<typeof usePassport, typeof getProfile>(
+			usePassport,
+			getProfile,
+		)({
+			event,
+			body,
+		}),
+	);
 });
