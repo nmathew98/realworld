@@ -1,7 +1,7 @@
 export class Counter {
 	private _counter: ReturnType<typeof makeCounter>;
 
-	constructor(start?) {
+	constructor(start?: number) {
 		this._counter = makeCounter(start);
 	}
 

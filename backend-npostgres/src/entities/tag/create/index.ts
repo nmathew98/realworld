@@ -53,7 +53,7 @@ export async function makeTag(
 		WHERE (
 			article=$${deleteTagsCounter.next}
 			AND
-			${DELETE_STATEMENT}
+			(${DELETE_STATEMENT})
 		)`;
 	const TAGS_TO_INSERT_STATEMENT = `INSERT INTO ARTICLES_TAGS(uuid, tag, article) 
 		VALUES ${INSERT_STATEMENT}
