@@ -3,11 +3,11 @@ import { getCookie } from "h3";
 import { z, zh } from "h3-zod";
 
 import { makeArticle } from "../../entities/article/create";
-import { updateArticle } from "../../entities/article/update";
+import { updateArticle as _updateArticle } from "../../entities/article/update";
 import { makeTag } from "../../entities/tag/create";
 import { makeUser } from "../../entities/user/create";
 
-export default eventHandler(async function createArticle(
+export default eventHandler(async function updateArticle(
 	this: Context,
 	event: H3Event,
 ) {
@@ -50,7 +50,7 @@ export default eventHandler(async function createArticle(
 	return toArticleResponse(
 		await pipe<typeof makeUser, typeof makeArticle>(
 			makeUser,
-			toPipeable<typeof updateArticle>(updateArticle, {
+			toPipeable<typeof _updateArticle>(_updateArticle, {
 				slug: params.slug,
 				...updates,
 			}),
