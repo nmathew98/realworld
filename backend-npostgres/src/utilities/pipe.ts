@@ -16,7 +16,7 @@ const makePipe = (context: Context) => {
 		) =>
 		(initial: Parameters<I>[0]) =>
 			fns.reduce(
-				async (runningResult: any, fn, index) =>
+				async (runningResult: unknown, fn, index) =>
 					toFnWithContext(fn, index).call(undefined, await runningResult),
 				initial,
 			) as unknown as Promise<ReturnType<F>>;

@@ -1,6 +1,6 @@
 export async function makeTag(
 	this: Context,
-	_: any,
+	_: undefined,
 	...records: InstanceType<typeof Collection>[]
 ) {
 	const user = records.find(user => user instanceof User) as InstanceType<
