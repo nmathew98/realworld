@@ -11,6 +11,6 @@ export const Router = createRouter()
 	.add("/profiles", Profiles.handler)
 	.add("/profiles/**", Profiles.handler)
 	.add("/tags", Tags.handler)
-	.add("/tags/*", Tags.handler)
+	.add("/tags/**", Tags.handler)
 	.add("/articles", Articles.handler)
-	.add("/articles/*", Articles.handler);
+	.add("/articles/**", Articles.handler);

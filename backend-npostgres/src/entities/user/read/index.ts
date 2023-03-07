@@ -1,6 +1,6 @@
 export async function getProfile(
 	this: Context,
-	{ username }: GetProfileArgs = DEFAULT_VALUES,
+	{ username }: Partial<GetProfileArgs>,
 	...records: InstanceType<typeof Collection>[]
 ) {
 	const user = records.find(user => user instanceof User) as InstanceType<
@@ -9,7 +9,17 @@ export async function getProfile(
 
 	if (!user && !username) throw new Error("No user specified");
 
-	const STATEMENT = `SELECT uuid, username, bio, image FROM USERS WHERE (uuid=$1 OR username=$2)`;
+	const FIELDS_TO_SELECT = [
+		"uuid",
+		"bio",
+		"image",
+		user?.username ? "" : "username",
+		user?.email ? "" : "email",
+	]
+		.filter(Boolean)
+		.join(", ");
+
+	const STATEMENT = `SELECT ${FIELDS_TO_SELECT} FROM USERS WHERE (uuid=$1 OR username=$2)`;
 
 	const allResults = await this.pg.query(STATEMENT, [user?.uuid, username]);
 
@@ -44,15 +54,12 @@ export async function getProfile(
 	}
 
 	return new User({
+		...user,
 		...currentUserProfile,
 		isFollowing: false,
 	});
 }
 
-const DEFAULT_VALUES = {
-	username: null,
-};
-
 interface GetProfileArgs {
-	username?: string | null;
+	username: string | null;
 }

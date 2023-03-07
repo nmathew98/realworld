@@ -1,7 +1,7 @@
 import type { H3Event } from "h3";
 import { zh, z } from "h3-zod";
 
-import getProfile from "../profiles/get-profile";
+import { getProfile } from "../../entities/user/read";
 
 export default eventHandler(async function registration(
 	this: Context,
@@ -21,7 +21,9 @@ export default eventHandler(async function registration(
 	return toUserResponse(
 		await pipe<typeof usePassport, typeof getProfile>(
 			usePassport,
-			getProfile,
+			toPipeable<typeof getProfile>(getProfile, {
+				username: null,
+			}),
 		)({
 			event,
 			body,

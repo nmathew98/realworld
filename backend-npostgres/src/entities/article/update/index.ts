@@ -1,3 +1,5 @@
+import { v6 } from "uuid-v6";
+
 export async function updateArticle(
 	this: Context,
 	updates: UpdateArticleArgs,
@@ -11,31 +13,34 @@ export async function updateArticle(
 
 	const filteredUpdates = Object.entries({
 		...updates,
-	})
-		.filter(([, value]) => !!value)
-		// TODO
-		.filter(([key]) => key !== "tagList" && key !== "slug");
+	}).filter(([key, value]) => !!value && key !== "tagList" && key !== "slug");
 
+	const counter = new Counter();
 	const [SET, parameters] = filteredUpdates.reduce(
 		([SET, parameters], [key, value], index, array) => [
-			SET + `${key}=$${index + 1}` + delimit(index, array),
-			[...parameters, value],
+			SET + `${key}=$${counter.next}` + delimit(index, array),
+			[...parameters, value] as string[],
 		],
-		["SET ", [] as any[]],
+		["SET ", [] as string[]],
 	);
 
+	const hasSlugChanged = !!updates.title;
+
 	const STATEMENT = `UPDATE ARTICLES 
-		${SET}, slug=$${filteredUpdates.length + 1}
-		WHERE slug=$${filteredUpdates.length + 2}
+		${SET}, 
+			updated_at=$${filteredUpdates.length + 1}
+			${hasSlugChanged ? `, slug=$${filteredUpdates.length + 2}` : ""}
+		WHERE slug=$${filteredUpdates.length + (hasSlugChanged ? 3 : 2)}
 		RETURNING slug, uuid`;
 
+	const currentSlug = updates.slug;
 	const newSlug = updates.title ? toSlug(updates.title) : updates.slug;
 
-	const allResults = await this.pg.query(STATEMENT, [
-		...parameters,
-		newSlug,
-		updates.slug,
-	]);
+	const _parameters = hasSlugChanged
+		? [...parameters, Date.now(), newSlug, currentSlug]
+		: [...parameters, Date.now(), currentSlug];
+
+	const allResults = await this.pg.query(STATEMENT, _parameters);
 
 	if (allResults.rows.length !== 1)
 		throw new HTTPError(
@@ -44,9 +49,23 @@ export async function updateArticle(
 			"Unexpected error occurred",
 		);
 
-	const result = { ...allResults.rows[0] };
+	const result = allResults.rows[0];
 
-	return [user, new Article(result)];
+	const article = new Article(result);
+
+	if (!updates.tagList) return [user, article];
+
+	if (updates.tagList.length === 0) return [user, article, Tag.null];
+
+	const tags = updates.tagList.map(
+		tag =>
+			new Tag({
+				uuid: v6(),
+				tag,
+			}),
+	);
+
+	return [user, article, ...tags];
 }
 
 const toSlug = (title: string) => title.toLowerCase().replace(/\s+/g, "-");

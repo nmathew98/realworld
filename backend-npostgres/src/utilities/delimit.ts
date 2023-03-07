@@ -1,2 +1,2 @@
-export const delimit = (index, array) =>
-	index === array.length - 1 ? "" : ", ";
+export const delimit = (index: number, array: any[], delimiter = ", ") =>
+	index === array.length - 1 ? "" : delimiter;
