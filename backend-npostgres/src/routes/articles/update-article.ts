@@ -55,7 +55,7 @@ export default eventHandler(async function createArticle(
 				...updates,
 			}),
 			toPipeable<typeof makeTag>(makeTag),
-			toPipeable<typeof makeArticle>(makeArticle, undefined),
+			toPipeable<typeof makeArticle>(makeArticle),
 		)({ token: refreshToken }),
 	);
 });
