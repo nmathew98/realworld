@@ -23,12 +23,14 @@ export async function updateUser(
 			}),
 	);
 
+	const counter = new Counter();
 	const [SET, parameters] = filteredUpdates.reduce(
-		([SET, parameters], [key, value], index, array) => [
-			SET + `${key}=$${index + 1}` + delimit(index, array),
-			[...parameters, value],
-		],
-		["SET ", [] as any[]],
+		([SET, parameters], [key, value], index, array) =>
+			[
+				SET + `${key}=$${counter.next}` + delimit(index, array),
+				[...parameters, value],
+			] as [string, string[]],
+		["SET ", []] as [string, string[]],
 	);
 
 	const STATEMENT = `UPDATE USERS 
@@ -45,7 +47,7 @@ export async function updateUser(
 			"Unexpected error occurred",
 		);
 
-	const result = { ...allResults.rows[0] };
+	const result = allResults.rows[0];
 
 	return new User(result);
 }

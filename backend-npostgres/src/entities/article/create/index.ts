@@ -19,7 +19,7 @@ export async function makeArticle(
 	) as InstanceType<typeof Article>;
 
 	const isExistingArticle = !!slug || !!article;
-	const isNewArticle = !slug && title && description && body && tagList;
+	const isNewArticle = !slug && !!title && !!description && !!body && !!tagList;
 
 	if (!user && isNewArticle) throw new HTTPError(401, "Unauthorized");
 
@@ -73,6 +73,8 @@ export async function makeArticle(
 		FROM article
 		INNER JOIN author ON article.author=author.author_uuid`;
 
+		if (!user) throw new Error("User not specified");
+
 		const allResults = await this.pg.query(STATEMENT, [
 			article?.uuid ?? slug,
 			user.uuid,
@@ -100,24 +102,17 @@ export async function makeArticle(
 			["updated_at", Date.now()],
 			["author", user.uuid],
 		]);
+		const counter = new Counter(article.size);
 
 		const [TAG_VALUES, tags] = tagList.reduce(
 			([VALUES, tags], tag, index, array) => [
 				VALUES +
-					`($${article.size + tags.length + 1}, $${
-						article.size + tags.length + 2
-					}, (SELECT uuid::UUID FROM article))` +
+					`($${counter.next}, $${counter.next}, (SELECT uuid::UUID FROM article))` +
 					delimit(index, array),
 				[...tags, v6(), tag.toLowerCase()],
 			],
 			["", [] as string[]],
 		);
-		const TAGS_STATEMENT = `INSERT INTO ARTICLES_TAGS(
-				uuid,
-				tag,
-				article
-			) VALUES ${TAG_VALUES}
-			RETURNING uuid, tag, article`;
 		const ARTICLES_STATEMENT = `INSERT INTO ARTICLES(
 				uuid, 
 				slug,
@@ -129,6 +124,12 @@ export async function makeArticle(
 				author
 			) VALUES($1, $2, $3, $4, $5, $6, $7, $8)
 			RETURNING uuid, slug, title, description, body, created_at, updated_at, author`;
+		const TAGS_STATEMENT = `INSERT INTO ARTICLES_TAGS(
+				uuid,
+				tag,
+				article
+			) VALUES ${TAG_VALUES}
+			RETURNING uuid, tag, article`;
 
 		const STATEMENT_WITH_TAGS = `WITH article AS (${ARTICLES_STATEMENT}), tags AS (${TAGS_STATEMENT})
 			SELECT

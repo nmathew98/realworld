@@ -19,7 +19,7 @@ export class Article extends Collection {
 	public bio: string | null = null;
 	public image: string | null = null;
 
-	constructor(data: ArticleDBSchema & AdditionalData) {
+	constructor(data: ArticleDBSchema) {
 		super();
 
 		this.slug = data.slug;
@@ -80,13 +80,4 @@ interface ArticleDBSchema {
 	username?: string;
 	bio?: string;
 	image?: null;
-}
-
-interface AdditionalData {
-	authorProfile?: {
-		username?: string;
-		bio?: string;
-		image?: string;
-		following?: boolean;
-	};
 }

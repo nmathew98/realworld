@@ -3,12 +3,13 @@ set -e
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
 	CREATE TABLE IF NOT EXISTS USERS(
-		uuid UUID NOT NULL UNIQUE PRIMARY KEY,
+		uuid UUID NOT NULL UNIQUE,
 		username VARCHAR(20) NOT NULL UNIQUE,
 		email VARCHAR(320) NOT NULL UNIQUE,
 		password VARCHAR(80) NOT NULL UNIQUE,
 		bio TEXT,
-		image VARCHAR(2048)
+		image VARCHAR(2048),
+		PRIMARY KEY(uuid, email)
 	);
 
 	CREATE TABLE IF NOT EXISTS USERS_FOLLOWS(
@@ -21,11 +22,12 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 		FOREIGN KEY(destination)
 			REFERENCES USERS(uuid)
 			ON DELETE CASCADE,
-		UNIQUE(origin, destination)
+		UNIQUE(origin, destination),
+		PRIMARY KEY(origin, destination)
 	);
 
 	CREATE TABLE IF NOT EXISTS ARTICLES(
-		uuid UUID NOT NULL UNIQUE PRIMARY KEY,
+		uuid UUID NOT NULL UNIQUE,
 		slug VARCHAR(200) NOT NULL UNIQUE,
 		title VARCHAR(200) NOT NULL UNIQUE,
 		description VARCHAR(400) NOT NULL,
@@ -33,16 +35,18 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 		created_at BIGINT NOT NULL,
 		updated_at BIGINT NOT NULL,
 		author UUID NOT NULL,
+		PRIMARY KEY(uuid, slug),
 		FOREIGN KEY(author)
 			REFERENCES USERS(uuid)
 			ON DELETE CASCADE
 	);
 
 	CREATE TABLE IF NOT EXISTS ARTICLES_FAVORITES(
-		uuid UUID NOT NULL UNIQUE PRIMARY KEY,
+		uuid UUID NOT NULL UNIQUE,
 		article UUID NOT NULL,
 		favorited_by UUID NOT NULL,
 		is_active BOOLEAN NOT NULL,
+		PRIMARY KEY(uuid, article),
 		FOREIGN KEY(article)
 			REFERENCES ARTICLES(uuid)
 			ON DELETE CASCADE,
@@ -53,12 +57,13 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 	);
 
 	CREATE TABLE IF NOT EXISTS ARTICLES_COMMENTS(
-		uuid UUID NOT NULL UNIQUE PRIMARY KEY,
+		uuid UUID NOT NULL UNIQUE,
 		author UUID NOT NULL,
 		article UUID NOT NULL,
 		body TEXT NOT NULL,
 		created_at BIGINT NOT NULL,
 		updated_at BIGINT NOT NULL,
+		PRIMARY KEY(uuid, article),
 		FOREIGN KEY(author)
 			REFERENCES USERS(uuid)
 			ON DELETE CASCADE,
@@ -68,12 +73,14 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 	);
 
 	CREATE TABLE IF NOT EXISTS ARTICLES_TAGS(
-		uuid UUID NOT NULL UNIQUE PRIMARY KEY,
+		uuid UUID NOT NULL UNIQUE,
 		tag VARCHAR(20) NOT NULL,
 		article UUID NOT NULL,
+		PRIMARY KEY(uuid, article),
 		FOREIGN KEY(article)
 			REFERENCES ARTICLES(uuid)
-			ON DELETE CASCADE
+			ON DELETE CASCADE,
+		UNIQUE(article, tag)
 	);
 
 	\d USERS

@@ -16,7 +16,9 @@ export default eventHandler(async function currentUser(
 	return toUserResponse(
 		await pipe<typeof makeUser, typeof getProfile>(
 			makeUser,
-			getProfile,
+			toPipeable<typeof getProfile>(getProfile, {
+				username: null,
+			}),
 		)({ token: refreshToken }),
 	);
 });

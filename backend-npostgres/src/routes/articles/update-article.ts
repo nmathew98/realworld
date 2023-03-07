@@ -4,6 +4,7 @@ import { z, zh } from "h3-zod";
 
 import { makeArticle } from "../../entities/article/create";
 import { updateArticle } from "../../entities/article/update";
+import { makeTag } from "../../entities/tag/create";
 import { makeUser } from "../../entities/user/create";
 
 export default eventHandler(async function createArticle(
@@ -53,7 +54,8 @@ export default eventHandler(async function createArticle(
 				slug: params.slug,
 				...updates,
 			}),
-			makeArticle,
+			toPipeable<typeof makeTag>(makeTag),
+			toPipeable<typeof makeArticle>(makeArticle, undefined),
 		)({ token: refreshToken }),
 	);
 });
