@@ -18,6 +18,7 @@ export class Article extends Collection {
 	public username: string | null = null;
 	public bio: string | null = null;
 	public image: string | null = null;
+	public articles_count: number | null;
 
 	constructor(data: ArticleDBSchema) {
 		super();
@@ -35,6 +36,7 @@ export class Article extends Collection {
 		this.bio = data.bio || null;
 		this.image = data.image || null;
 		this.isFollowing = data.is_following || null;
+		this.articles_count = Number(data.articles_count) || null;
 
 		const createdAt = Number(data.created_at);
 		const updatedAt = Number(data.updated_at);
@@ -64,6 +66,12 @@ export const toArticleResponse = (article: InstanceType<typeof Article>) => ({
 	},
 });
 
+export const toFeedResponse = (articles: InstanceType<typeof Article>[]) => ({
+	articles: articles.map(article => toArticleResponse(article).article),
+	articlesCount: (articles.at(0) as InstanceType<typeof Article>)
+		.articles_count,
+});
+
 interface ArticleDBSchema {
 	slug: string;
 	uuid?: string;
@@ -80,4 +88,5 @@ interface ArticleDBSchema {
 	username?: string;
 	bio?: string;
 	image?: null;
+	articles_count?: number;
 }

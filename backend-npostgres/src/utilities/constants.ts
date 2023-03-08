@@ -19,6 +19,8 @@ export const ARTICLE_SCHEMA = {
 	description: z.string(),
 	body: z.string(),
 	tagList: z.array(z.string()),
+	limit: z.number(),
+	offset: z.number(),
 };
 
 export const COMMENTS_SCHEMA = {
