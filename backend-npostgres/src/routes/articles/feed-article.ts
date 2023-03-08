@@ -19,6 +19,9 @@ export default eventHandler(async function feedArticle(
 		offset: ARTICLE_SCHEMA.offset.optional(),
 	})) as { limit?: number; offset?: number };
 
+	if (!refreshToken)
+		return toFeedResponse(await getArticles.call(this, Object.create(null)));
+
 	return toFeedResponse(
 		await pipe<typeof makeUser, typeof getArticles>(
 			makeUser,

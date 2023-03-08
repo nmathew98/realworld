@@ -18,6 +18,9 @@ export default eventHandler(async function getProfile(
 		username: USER_SCHEMA.username,
 	})) as { username: string };
 
+	if (!refreshToken)
+		return toProfileResponse(await _getProfile.call(this, params));
+
 	return toProfileResponse(
 		await pipe<typeof makeUser, typeof _getProfile>(
 			makeUser,
