@@ -27,6 +27,13 @@ export async function getArticles(
 				bio,
 				image
 			FROM USERS
+		), articles_count AS (
+			SELECT
+				COALESCE(
+					(SELECT reltuples FROM PG_CLASS WHERE relname='ARTICLES'),
+					(SELECT COUNT(uuid) FROM ARTICLES)
+				)
+			AS "count"
 		)
 		SELECT
 			uuid,
@@ -53,10 +60,9 @@ export async function getArticles(
 			username,
 			bio,
 			image,
-			(COALESCE(
-				(SELECT reltuples FROM PG_CLASS WHERE relname='ARTICLES'),
-				(SELECT COUNT(*) FROM ARTICLES)
-			)) AS "articles_count"
+			(SELECT
+				count AS "articles_count"
+			FROM articles_count)
 		FROM article
 		INNER JOIN author ON article.author=author.author_uuid`;
 
