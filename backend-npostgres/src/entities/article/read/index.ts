@@ -3,9 +3,9 @@ export async function getArticles(
 	{ limit = 20, offset = 0 }: GetArticlesArgs,
 	...records: InstanceType<typeof Collection>[]
 ) {
-	const user = records.find(user => user instanceof User) as InstanceType<
-		typeof User
-	>;
+	const user = records.find(user => user instanceof User) as
+		| InstanceType<typeof User>
+		| undefined;
 
 	const STATEMENT = `WITH article AS(
 			SELECT 
@@ -60,9 +60,11 @@ export async function getArticles(
 		FROM article
 		INNER JOIN author ON article.author=author.author_uuid`;
 
-	if (!user) throw new Error("User not specified");
-
-	const allResults = await this.pg.query(STATEMENT, [limit, offset, user.uuid]);
+	const allResults = await this.pg.query(STATEMENT, [
+		limit,
+		offset,
+		user?.uuid,
+	]);
 
 	return allResults.rows.map(result => new Article(result));
 }
