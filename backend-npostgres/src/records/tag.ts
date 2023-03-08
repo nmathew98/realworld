@@ -2,14 +2,14 @@ import { Collection } from ".";
 
 export class Tag extends Collection {
 	private static _null?: EmptyTag;
-	public uuid: string;
 	public value: string;
+	public uuid: string | null = null;
 
 	constructor(data: TagDBSchema) {
 		super();
 
-		this.uuid = data.uuid;
 		this.value = data.tag;
+		this.uuid = data.uuid || null;
 	}
 
 	static get null() {
@@ -18,6 +18,10 @@ export class Tag extends Collection {
 		return Tag._null;
 	}
 }
+
+export const toTagsResponse = (tags: InstanceType<typeof Tag>[]) => ({
+	tags: tags.map(tag => tag.value),
+});
 
 class EmptyTag extends Tag {
 	constructor() {
@@ -29,6 +33,6 @@ class EmptyTag extends Tag {
 }
 
 interface TagDBSchema {
-	uuid: string;
 	tag: string;
+	uuid?: string;
 }

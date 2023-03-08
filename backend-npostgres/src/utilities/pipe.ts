@@ -14,7 +14,7 @@ const makePipe = (context: Context) => {
 		<I extends FnWithContext, F extends FnWithContext>(
 			...fns: FnWithContext[]
 		) =>
-		(initial: Parameters<I>[0]) =>
+		(initial?: Parameters<I>[0]) =>
 			fns.reduce(
 				async (runningResult: unknown, fn, index) =>
 					toFnWithContext(fn, index).call(undefined, await runningResult),
