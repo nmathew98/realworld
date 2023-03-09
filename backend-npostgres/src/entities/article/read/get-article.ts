@@ -10,12 +10,13 @@ export async function getArticle(
 	if (allResults.rows.length > 1)
 		throw new HTTPError(500, "Unexpected error occurred");
 
-	return records.concat(
+	return [
+		...records,
 		new Article({
 			...allResults.rows[0],
 			slug,
 		}),
-	);
+	];
 }
 
 interface GetArticleArgs {
