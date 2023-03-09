@@ -35,7 +35,7 @@ export async function updateUser(
 
 	const STATEMENT = `UPDATE USERS 
 		${SET}
-		WHERE uuid=$${filteredUpdates.length + 1}
+		WHERE uuid=$${counter.next}
 		RETURNING uuid, username, email, password, image, bio`;
 
 	const allResults = await this.pg.query(STATEMENT, [...parameters, user.uuid]);

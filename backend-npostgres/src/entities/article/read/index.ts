@@ -1,6 +1,6 @@
 export async function getArticles(
 	this: Context,
-	{ limit = 20, offset = 0 }: GetArticlesArgs,
+	{ limit, offset }: Partial<GetArticlesArgs> = { limit: 20, offset: 0 },
 	...records: InstanceType<typeof Collection>[]
 ) {
 	const user = records.find(user => user instanceof User) as

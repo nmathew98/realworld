@@ -28,7 +28,7 @@ specifiers:
   unplugin-auto-import: ^0.15.0
   uuid-v6: ^1.1.2
   vitest: ^0.29.1
-  zod: ^3.20.6
+  zod: ^3.21.4
 
 devDependencies:
   "@nozomuikuta/h3-cors": 0.2.1_defu@6.1.2+h3@1.5.0
@@ -46,7 +46,7 @@ devDependencies:
   eslint-config-prettier: 8.6.0_eslint@8.35.0
   eslint-plugin-prettier: 4.2.1_u2zha4kiojzs42thzpgwygphmy
   h3: 1.5.0
-  h3-zod: 0.3.10_h3@1.5.0+zod@3.20.6
+  h3-zod: 0.3.10_h3@1.5.0+zod@3.21.4
   jsonwebtoken: 9.0.0
   morgan: 1.10.0
   passport: 0.6.0
@@ -58,7 +58,7 @@ devDependencies:
   unplugin-auto-import: 0.15.0
   uuid-v6: 1.1.2
   vitest: 0.29.1
-  zod: 3.20.6
+  zod: 3.21.4
 
 packages:
   /@ampproject/remapping/2.2.0:
@@ -2701,7 +2701,7 @@ packages:
       }
     dev: true
 
-  /h3-zod/0.3.10_h3@1.5.0+zod@3.20.6:
+  /h3-zod/0.3.10_h3@1.5.0+zod@3.21.4:
     resolution:
       {
         integrity: sha512-siOFg9RSm6/YpueQJTK8Wts09IoPoljB370u2CAR5BxW33KFNnfD3vztt/T7/HXQzoZ053rZqXVHtbef/oh3uA==,
@@ -2711,7 +2711,7 @@ packages:
       zod: 3.x
     dependencies:
       h3: 1.5.0
-      zod: 3.20.6
+      zod: 3.21.4
     dev: true
 
   /h3/1.5.0:
@@ -4863,9 +4863,9 @@ packages:
     engines: { node: ">=12.20" }
     dev: true
 
-  /zod/3.20.6:
+  /zod/3.21.4:
     resolution:
       {
-        integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==,
+        integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==,
       }
     dev: true

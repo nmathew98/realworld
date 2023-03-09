@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
-import { getCookie } from "h3";
-import { zh } from "h3-zod";
+import { getRouterParams, getCookie } from "h3";
+import { z } from "h3-zod";
 
 import { makeArticle } from "../../entities/article/create";
 import { makeUser } from "../../entities/user/create";
@@ -14,9 +14,7 @@ export default eventHandler(async function getArticle(
 		AUTHENTICATION_COOKIE_KEYS.RefreshToken,
 	);
 
-	const params = (await zh.useValidatedParams(event, {
-		slug: ARTICLE_SCHEMA.slug,
-	})) as { slug: string };
+	const params = PARAMS_SCHEMA.parse(getRouterParams(event));
 
 	if (!refreshToken)
 		return toArticleResponse(await makeArticle.call(this, params));
@@ -27,4 +25,8 @@ export default eventHandler(async function getArticle(
 			toPipeable<typeof makeArticle>(makeArticle, params),
 		)({ token: refreshToken }),
 	);
+});
+
+const PARAMS_SCHEMA = z.object({
+	slug: ARTICLE_SCHEMA.slug,
 });

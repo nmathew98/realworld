@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
-import { getCookie } from "h3";
-import { zh } from "h3-zod";
+import { getRouterParams, getCookie } from "h3";
+import { z } from "h3-zod";
 
 import { makeUser } from "../../entities/user/create";
 import { getProfile as _getProfile } from "../../entities/user/read";
@@ -14,9 +14,7 @@ export default eventHandler(async function getProfile(
 		AUTHENTICATION_COOKIE_KEYS.RefreshToken,
 	);
 
-	const params = (await zh.useValidatedParams(event, {
-		username: USER_SCHEMA.username,
-	})) as { username: string };
+	const params = PARAMS_SCHEMA.parse(getRouterParams(event));
 
 	if (!refreshToken)
 		return toProfileResponse(await _getProfile.call(this, params));
@@ -27,4 +25,8 @@ export default eventHandler(async function getProfile(
 			toPipeable<typeof _getProfile>(_getProfile, params),
 		)({ token: refreshToken }),
 	);
+});
+
+const PARAMS_SCHEMA = z.object({
+	username: USER_SCHEMA.username,
 });
