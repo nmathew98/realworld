@@ -18,7 +18,7 @@ export class Article extends Collection {
 	public username: string | null = null;
 	public bio: string | null = null;
 	public image: string | null = null;
-	public articles_count: number | null;
+	public articles_count: number | null = null;
 
 	constructor(data: ArticleDBSchema) {
 		super();

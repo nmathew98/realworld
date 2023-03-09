@@ -28,9 +28,9 @@ export async function updateArticle(
 
 	const STATEMENT = `UPDATE ARTICLES 
 		${SET}, 
-			updated_at=$${filteredUpdates.length + 1}
-			${hasSlugChanged ? `, slug=$${filteredUpdates.length + 2}` : ""}
-		WHERE slug=$${filteredUpdates.length + (hasSlugChanged ? 3 : 2)}
+			updated_at=$${counter.next}
+			${hasSlugChanged ? `, slug=$${counter.next}` : ""}
+		WHERE slug=$${counter.next}
 		RETURNING slug, uuid`;
 
 	const currentSlug = updates.slug;

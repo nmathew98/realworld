@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
-import { getCookie } from "h3";
-import { zh, z } from "h3-zod";
+import { getCookie, readBody } from "h3";
+import { z } from "h3-zod";
 
 import { makeUser } from "../../entities/user/create";
 import { updateUser as _updateUser } from "../../entities/user/update";
@@ -10,18 +10,7 @@ export default eventHandler(async function update(
 	this: Context,
 	event: H3Event,
 ) {
-	const body = await zh.useValidatedBody(
-		event,
-		z.object({
-			user: z.object({
-				username: USER_SCHEMA.username.optional(),
-				email: USER_SCHEMA.email.optional(),
-				password: USER_SCHEMA.password.optional(),
-				image: USER_SCHEMA.image.optional(),
-				bio: USER_SCHEMA.bio.optional(),
-			}),
-		}),
-	);
+	const body = BODY_SCHEMA.parse(await readBody(event));
 
 	const refreshToken = getCookie(
 		event,
@@ -56,4 +45,14 @@ export default eventHandler(async function update(
 			}),
 		)({ token: refreshToken }),
 	);
+});
+
+const BODY_SCHEMA = z.object({
+	user: z.object({
+		username: USER_SCHEMA.username.optional(),
+		email: USER_SCHEMA.email.optional(),
+		password: USER_SCHEMA.password.optional(),
+		image: USER_SCHEMA.image.optional(),
+		bio: USER_SCHEMA.bio.optional(),
+	}),
 });

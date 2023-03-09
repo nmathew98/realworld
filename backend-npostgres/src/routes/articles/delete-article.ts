@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
-import { getCookie, send } from "h3";
-import { zh } from "h3-zod";
+import { getRouterParams, getCookie, send } from "h3";
+import { z } from "h3-zod";
 
 import { makeArticle } from "../../entities/article/create";
 import { makeUser } from "../../entities/user/create";
@@ -15,9 +15,7 @@ export default eventHandler(async function deleteArticle(
 		AUTHENTICATION_COOKIE_KEYS.RefreshToken,
 	);
 
-	const params = (await zh.useValidatedParams(event, {
-		slug: ARTICLE_SCHEMA.slug,
-	})) as { slug: string };
+	const params = PARAMS_SCHEMA.parse(getRouterParams(event));
 
 	await pipe<typeof makeUser, typeof makeArticle>(
 		makeUser,
@@ -25,4 +23,8 @@ export default eventHandler(async function deleteArticle(
 	)({ token: refreshToken });
 
 	return send(event, null);
+});
+
+const PARAMS_SCHEMA = z.object({
+	slug: ARTICLE_SCHEMA.slug,
 });

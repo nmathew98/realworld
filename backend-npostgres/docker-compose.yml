@@ -32,6 +32,8 @@ services:
       - "${PORT}:${PORT}"
     volumes:
       - "./src:/srv/api/src"
+      - "./tsconfig.json:/srv/api/tsconfig.json"
+      - "./tsup.config.ts:/srv/api/tsup.config.ts"
     secrets:
       - "jwt_access_secret"
       - "jwt_refresh_secret"

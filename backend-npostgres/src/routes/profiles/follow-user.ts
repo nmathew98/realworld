@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
-import { getCookie, send } from "h3";
-import { zh } from "h3-zod";
+import { getRouterParams, getCookie, send } from "h3";
+import { z } from "h3-zod";
 
 import { followUser as _followUser } from "../../entities/user/update";
 import { makeUser } from "../../entities/user/create";
@@ -14,9 +14,7 @@ export default eventHandler(async function followUser(
 		AUTHENTICATION_COOKIE_KEYS.RefreshToken,
 	);
 
-	const params = (await zh.useValidatedParams(event, {
-		username: USER_SCHEMA.username,
-	})) as { username: string };
+	const params = PARAMS_SCHEMA.parse(getRouterParams(event));
 
 	await pipe<typeof makeUser, typeof _followUser>(
 		makeUser,
@@ -24,4 +22,8 @@ export default eventHandler(async function followUser(
 	)({ token: refreshToken });
 
 	return send(event, null);
+});
+
+const PARAMS_SCHEMA = z.object({
+	username: USER_SCHEMA.username,
 });

@@ -12,5 +12,8 @@ export default defineConfig({
 		}),
 	],
 	clean: true,
-	minify: true,
+	minifyIdentifiers: false,
+	minifyWhitespace: true,
+	minifySyntax: true,
+	keepNames: true,
 });

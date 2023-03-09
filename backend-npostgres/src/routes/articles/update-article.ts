@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
-import { getCookie } from "h3";
-import { z, zh } from "h3-zod";
+import { getCookie, getRouterParams, readBody } from "h3";
+import { z } from "h3-zod";
 
 import { makeArticle } from "../../entities/article/create";
 import { updateArticle as _updateArticle } from "../../entities/article/update";
@@ -16,21 +16,8 @@ export default eventHandler(async function updateArticle(
 		AUTHENTICATION_COOKIE_KEYS.RefreshToken,
 	);
 
-	const params = (await zh.useValidatedParams(event, {
-		slug: ARTICLE_SCHEMA.slug,
-	})) as { slug: string };
-
-	const body = await zh.useValidatedBody(
-		event,
-		z.object({
-			article: z.object({
-				title: ARTICLE_SCHEMA.title.optional(),
-				description: ARTICLE_SCHEMA.description.optional(),
-				body: ARTICLE_SCHEMA.body.optional(),
-				tagList: ARTICLE_SCHEMA.tagList.optional(),
-			}),
-		}),
-	);
+	const params = PARAMS_SCHEMA.parse(getRouterParams(event));
+	const body = BODY_SCHEMA.parse(await readBody(event));
 
 	const updates = {
 		title: body.article.title,
@@ -58,4 +45,17 @@ export default eventHandler(async function updateArticle(
 			toPipeable<typeof makeArticle>(makeArticle),
 		)({ token: refreshToken }),
 	);
+});
+
+const PARAMS_SCHEMA = z.object({
+	slug: ARTICLE_SCHEMA.slug,
+});
+
+const BODY_SCHEMA = z.object({
+	article: z.object({
+		title: ARTICLE_SCHEMA.title.optional(),
+		description: ARTICLE_SCHEMA.description.optional(),
+		body: ARTICLE_SCHEMA.body.optional(),
+		tagList: ARTICLE_SCHEMA.tagList.optional(),
+	}),
 });
