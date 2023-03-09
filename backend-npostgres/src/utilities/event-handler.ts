@@ -10,11 +10,12 @@ export const eventHandler = (f: HandlerWithContext) =>
 		try {
 			return await f.call(CONTEXT, event);
 		} catch (error: any) {
+			setHeaders(event, {
+				"Content-Type": "application/json",
+			});
+
 			if (error instanceof z.ZodError) {
 				setResponseStatus(event, 400);
-				setHeaders(event, {
-					"Content-Type": "application/json",
-				});
 
 				return toErrorResponse(error, f);
 			}
@@ -22,10 +23,6 @@ export const eventHandler = (f: HandlerWithContext) =>
 			if (error instanceof HTTPError)
 				setResponseStatus(event, error.status, error.statusText);
 			else setResponseStatus(event, 500);
-
-			setHeaders(event, {
-				"Content-Type": "application/json",
-			});
 
 			return toErrorResponse(error, f);
 		}

@@ -17,7 +17,7 @@ export class HTTPError extends Error {
 	}
 }
 
-export const toErrorResponse = (error: any, f: Function) => {
+export const toErrorResponse = (error: Error, f: Function) => {
 	const standardError = (
 		debugInformation?: Record<string, any>,
 		other?: Record<string, any>,
@@ -39,9 +39,19 @@ export const toErrorResponse = (error: any, f: Function) => {
 		};
 	};
 
+	const source =
+		[...(error.stack?.match(/[\w\d-./:@]+:\d+:\d+/) ?? [])]
+			.flat()
+			.at(0)
+			?.trim()
+			?.split(":") ?? [];
+	const file = source.slice(0, -2).join(":");
+	const line = Number(source.at(-2)) || -1;
+	const column = Number(source.at(-1)) || -1;
+
 	if (error instanceof z.ZodError) {
 		const issues = Object.fromEntries(
-			error.issues.map(issue => [issue.path.pop(), issue.message]),
+			error.issues.map(issue => [[...issue.path].pop(), issue.message]),
 		);
 
 		const debugInformation = {
@@ -51,6 +61,9 @@ export const toErrorResponse = (error: any, f: Function) => {
 			},
 			stack: error.stack,
 			message: error.message,
+			file,
+			line,
+			column,
 		};
 
 		return standardError(debugInformation, issues);
@@ -63,8 +76,9 @@ export const toErrorResponse = (error: any, f: Function) => {
 		},
 		stack: error.stack,
 		message: error.message,
-		line: error.line,
-		column: error.column,
+		file,
+		line,
+		column,
 	};
 
 	return standardError(debugInformation, { message: error.message });
