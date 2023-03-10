@@ -33,11 +33,11 @@ app.use(
 	eventHandler(async event => {
 		const token = getCookie(event, "internal");
 
-		await Jwt.verify(token, process.env.JWT_INTERNAL_SECRET);
+		await (Jwt.verify as any)(token, process.env.JWT_INTERNAL_SECRET as string);
 
 		const query = getQuery(event);
 
-		if (query.uri) allowedOrigins.push(query.uri);
+		if (query.uri) allowedOrigins.push(query.uri as string);
 
 		send(event, null);
 	}),
