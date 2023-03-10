@@ -18,7 +18,9 @@ export default eventHandler(async function unfollowUser(
 
 	await pipe<typeof makeUser, typeof _unfollowUser>(
 		makeUser,
-		toPipeable<typeof _unfollowUser>(_unfollowUser, params),
+		toPipeable<typeof _unfollowUser>(_unfollowUser, {
+			username: params.username,
+		}),
 	)({ token: refreshToken });
 
 	return send(event, null);

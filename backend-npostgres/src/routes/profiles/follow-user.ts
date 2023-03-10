@@ -18,7 +18,9 @@ export default eventHandler(async function followUser(
 
 	await pipe<typeof makeUser, typeof _followUser>(
 		makeUser,
-		toPipeable<typeof _followUser>(_followUser, params),
+		toPipeable<typeof _followUser>(_followUser, {
+			username: params.username,
+		}),
 	)({ token: refreshToken });
 
 	return send(event, null);

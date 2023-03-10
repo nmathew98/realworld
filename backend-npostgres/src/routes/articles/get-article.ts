@@ -22,7 +22,9 @@ export default eventHandler(async function getArticle(
 	return toArticleResponse(
 		await pipe<typeof makeUser, typeof makeArticle>(
 			makeUser,
-			toPipeable<typeof makeArticle>(makeArticle, params),
+			toPipeable<typeof makeArticle>(makeArticle, {
+				slug: params.slug,
+			}),
 		)({ token: refreshToken }),
 	);
 });

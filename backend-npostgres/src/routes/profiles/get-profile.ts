@@ -22,7 +22,9 @@ export default eventHandler(async function getProfile(
 	return toProfileResponse(
 		await pipe<typeof makeUser, typeof _getProfile>(
 			makeUser,
-			toPipeable<typeof _getProfile>(_getProfile, params),
+			toPipeable<typeof _getProfile>(_getProfile, {
+				username: params.username,
+			}),
 		)({ token: refreshToken }),
 	);
 });

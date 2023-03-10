@@ -19,7 +19,9 @@ export default eventHandler(async function deleteArticle(
 
 	await pipe<typeof makeUser, typeof makeArticle>(
 		makeUser,
-		toPipeable<typeof _deleteArticle>(_deleteArticle, params),
+		toPipeable<typeof _deleteArticle>(_deleteArticle, {
+			slug: params.slug,
+		}),
 	)({ token: refreshToken });
 
 	return send(event, null);

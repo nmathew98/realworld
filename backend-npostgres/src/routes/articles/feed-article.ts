@@ -24,7 +24,10 @@ export default eventHandler(async function feedArticle(
 	return toFeedResponse(
 		await pipe<typeof makeUser, typeof getArticles>(
 			makeUser,
-			toPipeable<typeof getArticles>(getArticles, params),
+			toPipeable<typeof getArticles>(getArticles, {
+				limit: params.limit,
+				offset: params.offset,
+			}),
 		)({ token: refreshToken }),
 	);
 });

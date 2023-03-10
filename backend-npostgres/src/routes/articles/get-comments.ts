@@ -20,7 +20,9 @@ export default eventHandler(async function getComments(
 	return toCommentsResponse(
 		await pipe<typeof makeUser, typeof _getComments>(
 			makeUser,
-			toPipeable<typeof getArticle>(getArticle, params),
+			toPipeable<typeof getArticle>(getArticle, {
+				slug: params.slug,
+			}),
 			toPipeable<typeof _getComments>(_getComments),
 		)({ token: refreshToken }),
 	);
