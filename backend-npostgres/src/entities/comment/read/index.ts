@@ -1,8 +1,6 @@
-import { v6 } from "uuid-v6";
-
-export async function makeComment(
+export async function getComments(
 	this: Context,
-	{ body }: MakeCommentArgs,
+	_: any,
 	...records: InstanceType<typeof Collection>[]
 ) {
 	const user = records.find(user => user instanceof User) as InstanceType<
@@ -12,22 +10,18 @@ export async function makeComment(
 		article => article instanceof Article,
 	) as InstanceType<typeof Article>;
 
-	if (!user) throw new HTTPError(401, "Unauthorized");
 	if (!article) throw new Error("Article not specified");
 
-	const comment = new Map([
-		["uuid", v6()],
-		["author", user.uuid],
-		["article", article.uuid],
-		["body", body],
-		["createdAt", Date.now()],
-		["updatedAt", Date.now()],
-	]);
-
 	const STATEMENT = `WITH comment AS(
-		INSERT INTO ARTICLES_COMMENTS(uuid, author, article, body, created_at, updated_at)
-		VALUES($1, $2, $3, $4, $5, $6)
-		RETURNING uuid, author, body, created_at, updated_at
+		SELECT
+			uuid,
+			author,
+			article,
+			body,
+			created_at,
+			updated_at
+		FROM ARTICLES_COMMENTS
+		WHERE article=$1
 	), author AS(
 		SELECT 
 			uuid AS "author_uuid",
@@ -35,7 +29,6 @@ export async function makeComment(
 			bio,
 			image
 		FROM USERS
-		WHERE uuid=(SELECT author FROM comment)
 	)
 	SELECT
 		uuid,
@@ -53,11 +46,7 @@ export async function makeComment(
 	FROM comment
 	INNER JOIN author ON comment.author=author.author_uuid`;
 
-	const allResults = await this.pg.query(STATEMENT, [...comment.values()]);
+	const allResults = await this.pg.query(STATEMENT, [article.uuid, user?.uuid]);
 
-	return new Comment(allResults.rows[0]);
-}
-
-interface MakeCommentArgs {
-	body: string;
+	return allResults.rows.map(row => new Comment(row));
 }

@@ -24,5 +24,7 @@ export const ARTICLE_SCHEMA = {
 };
 
 export const COMMENTS_SCHEMA = {
+	uuid: z.string(),
+	slug: z.string(),
 	body: z.string(),
 };

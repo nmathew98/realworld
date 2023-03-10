@@ -67,7 +67,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 		FOREIGN KEY(author)
 			REFERENCES USERS(uuid)
 			ON DELETE CASCADE,
-		FOREIGN KEY(author)
+		FOREIGN KEY(article)
 			REFERENCES ARTICLES(uuid)
 			ON DELETE CASCADE
 	);
