@@ -46,6 +46,12 @@ export const toCommentResponse = (comment: InstanceType<typeof Comment>) => ({
 	},
 });
 
+export const toCommentsResponse = (
+	comments: InstanceType<typeof Comment>[],
+) => ({
+	comments: comments.map(comment => toCommentResponse(comment).comment),
+});
+
 interface CommentDBSchema {
 	uuid: string;
 	created_at?: number;
