@@ -25,6 +25,7 @@ services:
       JWT_REFRESH_EXPIRES: "${JWT_REFRESH_EXPIRES}"
       JWT_ACCESS_SECRET_FILE: "/run/secrets/jwt_access_secret"
       JWT_REFRESH_SECRET_FILE: "/run/secrets/jwt_refresh_secret"
+      JWT_INTERNAL_SECRET_FILE: "/run/secrets/jwt_internal_secret"
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_DB: "${POSTGRES_DB}"
@@ -43,3 +44,5 @@ secrets:
     file: ".jwt_access_secret"
   jwt_refresh_secret:
     file: ".jwt_refresh_secret"
+  jwt_internal_secret:
+    file: ".jwt_internal_secret"
