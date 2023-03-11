@@ -38,6 +38,7 @@ services:
     secrets:
       - "jwt_access_secret"
       - "jwt_refresh_secret"
+      - "jwt_internal_secret"
 
 secrets:
   jwt_access_secret:

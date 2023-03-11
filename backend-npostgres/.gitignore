@@ -6,4 +6,5 @@ auto-imports.d.ts
 .eslintrc-auto-import.json
 .jwt_access_secret
 .jwt_refresh_secret
+.jwt_internal_secret
 .env
