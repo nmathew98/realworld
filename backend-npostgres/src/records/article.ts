@@ -68,8 +68,8 @@ export const toArticleResponse = (article: InstanceType<typeof Article>) => ({
 
 export const toFeedResponse = (articles: InstanceType<typeof Article>[]) => ({
 	articles: articles.map(article => toArticleResponse(article).article),
-	articlesCount: (articles.at(0) as InstanceType<typeof Article>)
-		.articles_count,
+	articlesCount:
+		(articles.at(0) as InstanceType<typeof Article>)?.articles_count ?? 0,
 });
 
 interface ArticleDBSchema {
