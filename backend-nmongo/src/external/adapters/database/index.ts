@@ -44,7 +44,8 @@ export const makeDatabase = async () => {
 	const subParameters = (parsed: Record<string, any>, parameters: any[]) =>
 		Object.fromEntries(
 			Object.entries(parsed).map(([key, value]) => {
-				if (typeof value === "object") return subParameters(value, parameters);
+				if (typeof value === "object")
+					return [key, subParameters(value, parameters)];
 
 				const parameterRegex = /\$\d+/;
 				if (typeof value === "string" && parameterRegex.test(value)) {
