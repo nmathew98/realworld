@@ -66,7 +66,7 @@ export async function makeArticle(
 			(SELECT 
 				COUNT(is_active) AS "favorites_count"
 			FROM ARTICLES_FAVORITES
-			WHERE (is_active=TRUE AND article=article.author)),
+			WHERE (is_active=TRUE AND article=article.uuid)),
 			username,
 			bio,
 			image
