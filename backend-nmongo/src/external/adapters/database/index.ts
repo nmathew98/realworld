@@ -1,7 +1,7 @@
 import SQLParser from "@synatic/noql";
 import consola from "consola";
 import { MongoClient } from "mongodb";
-import { createHash } from "crypto";
+import { createHash } from "node:crypto";
 
 interface Database {
 	query: <T = Record<string, any>>(
@@ -52,16 +52,20 @@ export const makeDatabase = async () => {
 					const index = Number(value.replaceAll("$", ""));
 
 					if (!Number.isInteger(index))
-						throw new Error("[mongo] could not determine parameter index");
+						throw new Error(
+							`[mongo] could not determine parameter index for value \`${value}\``,
+						);
 
 					if (parameters.at(index) === undefined)
-						throw new Error("[mongo] parameter not specified");
+						throw new Error(`[mongo] parameter \`${value}\` not specified`);
 
 					if (
 						typeof parameters.at(index) === "object" &&
 						parameters.at(index)?.then
 					)
-						throw new Error("[mongo] parameter cannot be a Promise");
+						throw new Error(
+							`[mongo] parameter \`${value}\` cannot be a Promise`,
+						);
 
 					return [key, parameters.at(index)];
 				}
