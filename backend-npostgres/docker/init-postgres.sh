@@ -53,7 +53,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 		FOREIGN KEY(favorited_by)
 			REFERENCES USERS(uuid)
 			ON DELETE CASCADE,
-		UNIQUE(article, favorited_by)
+		UNIQUE(article, favorited_by, is_active)
 	);
 
 	CREATE TABLE IF NOT EXISTS ARTICLES_COMMENTS(
