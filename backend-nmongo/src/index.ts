@@ -10,7 +10,7 @@ import {
 import consola from "consola";
 import morgan from "morgan";
 
-import { Router } from "./routes";
+import { Router } from "./external/routes";
 
 consola.wrapAll();
 
