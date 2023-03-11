@@ -11,16 +11,6 @@ services:
       - "${PORT}:80"
     volumes:
       - "./nginx/default.conf:/etc/nginx/conf.d/default.conf"
-  postgres:
-    container_name: "postgres"
-    image: "postgres:alpine"
-    restart: "always"
-    environment:
-      - "POSTGRES_USER"
-      - "POSTGRES_PASSWORD"
-      - "POSTGRES_DB"
-    volumes:
-      - "./docker/init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh"
   api:
     container_name: "api"
     build:
@@ -46,6 +36,18 @@ services:
       - "jwt_access_secret"
       - "jwt_refresh_secret"
       - "jwt_internal_secret"
+    depends_on:
+      - "postgres"
+  postgres:
+    container_name: "postgres"
+    image: "postgres:alpine"
+    restart: "always"
+    environment:
+      - "POSTGRES_USER"
+      - "POSTGRES_PASSWORD"
+      - "POSTGRES_DB"
+    volumes:
+      - "./docker/init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh"
 
 secrets:
   jwt_access_secret:
