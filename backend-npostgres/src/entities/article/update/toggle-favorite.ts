@@ -37,5 +37,5 @@ export async function toggleFavorite(
 }
 
 interface ToggleFavoriteArgs {
-	isFavorited?: boolean;
+	isFavorited: boolean | null;
 }
