@@ -1,3 +1,4 @@
+import type { TransactionOptions, ClientSession } from "mongodb";
 import SQLParser from "@synatic/noql";
 import consola from "consola";
 import { MongoClient } from "mongodb";
@@ -9,9 +10,25 @@ interface Database {
 		parameters: any[],
 	) => Promise<T>;
 	collection: Pick<
-		ReturnType<Pick<InstanceType<typeof MongoClient>, "db">["db"]>,
+		ReturnType<Pick<MongoClient, "db">["db"]>,
 		"collection"
 	>["collection"];
+	transaction: {
+		<T = void>(
+			{
+				session,
+				client,
+			}: {
+				session: ClientSession;
+				client: MongoClient;
+			},
+			options?: TransactionOptions,
+		): Promise<T>;
+		<T = void>(
+			{ session }: { session: ClientSession },
+			options?: TransactionOptions,
+		): Promise<T>;
+	};
 }
 
 export const makeDatabase = async () => {
@@ -101,8 +118,27 @@ export const makeDatabase = async () => {
 		throw new Error("Unexpected error occurred");
 	};
 
+	const transaction: Database["transaction"] = async (f, options) => {
+		const session = client.startSession();
+
+		const promisifiedTransaction = () =>
+			new Promise((resolve, reject) =>
+				session.withTransaction(
+					session => f({ session, client }).then(resolve).catch(reject),
+					options,
+				),
+			);
+
+		try {
+			return await promisifiedTransaction();
+		} finally {
+			session.endSession();
+		}
+	};
+
 	return Object.freeze({
 		query,
+		transaction,
 		collection: database.collection,
-	}) as Database;
+	} as Database);
 };
