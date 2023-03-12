@@ -4,11 +4,11 @@ import type { Article } from "./article";
 
 export type Tag = ReturnType<typeof toTagDocument>;
 export const toTagDocument = (
-	doc: WithId<Document> & { article: Article },
+	doc: WithId<Document> & { article: Article | string },
 ) => ({
 	_id: doc._id?.toString() || null,
 	tag: doc.tag || null,
-	article: (doc.article._id ?? doc.article) || null,
+	article: ((doc.article as Article)._id ?? doc.article) || null,
 });
 
 export const toTagsResponse = (tags: Tag[]) => ({

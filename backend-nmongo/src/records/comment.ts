@@ -6,11 +6,11 @@ import type { Article } from "./article";
 
 export type Comment = ReturnType<typeof toCommentDocument>;
 export const toCommentDocument = (
-	doc: WithId<Document> & { author: User; article: Article },
+	doc: WithId<Document> & { author: User | string; article: Article | string },
 ) => ({
 	_id: doc._id?.toString() || null,
-	author: (doc.author._id ?? doc.author) || null,
-	article: (doc.article._id ?? doc.article) || null,
+	author: ((doc.author as User)._id ?? doc.author) || null,
+	article: ((doc.article as Article)._id ?? doc.article) || null,
 	body: doc.body || null,
 	createdAt: doc.createdAt ?? Date.now(),
 	updatedAt: Date.now(),
@@ -30,9 +30,7 @@ export const toCommentResponse = (
 			username: author.username,
 			bio: author.bio,
 			image: author.image,
-			following: !!currentUser.follows.some(
-				follows => follows._id === author._id,
-			),
+			following: !!currentUser.follows.some(follows => follows === author._id),
 		},
 	},
 });

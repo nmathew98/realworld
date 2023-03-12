@@ -6,11 +6,11 @@ import type { User } from "./user";
 
 export type Article = ReturnType<typeof toArticleDocument>;
 export const toArticleDocument = (
-	doc: WithId<Document> & { author: User },
+	doc: WithId<Document> & { author: User | string },
 ) => ({
 	_id: doc._id?.toString() || null,
 	slug: doc.slug ?? toSlug(doc.title),
-	author: (doc.author._id ?? doc.author) || null,
+	author: ((doc.author as User)._id ?? doc.author) || null,
 	title: doc.title || null,
 	description: doc.description || null,
 	favorites: doc.favorites || 0,
@@ -41,9 +41,7 @@ export const toArticleResponse = (
 			username: author.username,
 			bio: author.bio,
 			image: author.image,
-			following: !!currentUser.follows.some(
-				follows => follows._id === author._id,
-			),
+			following: !!currentUser.follows.some(follows => follows === author._id),
 		},
 	},
 });
