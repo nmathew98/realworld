@@ -8,7 +8,7 @@ import { toUserDocument } from "./user";
 export type Article = ReturnType<typeof toArticleDocument>;
 export const toArticleDocument = (doc: Record<string, any>) => ({
 	_id: doc._id || null,
-	slug: toSlug(doc.title) || null,
+	slug: doc.slug ?? toSlug(doc.title),
 	author: (doc.author?._id ?? doc.author) || null,
 	title: doc.title || null,
 	description: doc.description || null,
