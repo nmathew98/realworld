@@ -8,6 +8,10 @@ interface Database {
 		query: string,
 		parameters: any[],
 	) => Promise<T>;
+	collection: Pick<
+		ReturnType<Pick<InstanceType<typeof MongoClient>, "db">["db"]>,
+		"collection"
+	>["collection"];
 }
 
 export const makeDatabase = async () => {
@@ -18,7 +22,7 @@ export const makeDatabase = async () => {
 
 	const client = new MongoClient(process.env.MONGO_URI);
 	await client.connect();
-	const database = await client.db(process.env.MONGO_DB);
+	const database = client.db(process.env.MONGO_DB);
 
 	consola.success(
 		`[mongo] connected to ${process.env.MONGO_URI} using database ${process.env.MONGO_DB}`,
@@ -75,9 +79,9 @@ export const makeDatabase = async () => {
 		);
 
 	const query = (query: string, parameters?: any[]) => {
-		const parsed = compileQuery(query);
+		const parsed: Record<string, any> = compileQuery(query);
 
-		const subbed = subParameters(parsed, parameters ?? []);
+		const subbed: Record<string, any> = subParameters(parsed, parameters ?? []);
 
 		if (subbed.type === "query")
 			return database
@@ -99,5 +103,6 @@ export const makeDatabase = async () => {
 
 	return Object.freeze({
 		query,
+		collection: database.collection,
 	}) as Database;
 };
