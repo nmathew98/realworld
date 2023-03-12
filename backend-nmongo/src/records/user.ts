@@ -1,13 +1,15 @@
+import type { Document, WithId } from "mongodb";
+
 export type User = ReturnType<typeof toUserDocument>;
-export const toUserDocument = (doc: Record<string, any>) => ({
-	_id: doc._id || null,
+export const toUserDocument = (doc: WithId<Document>) => ({
+	_id: doc._id?.toString() || null,
 	username: doc.username || null,
 	email: doc.email || null,
 	password: doc.password || null,
 	bio: doc.password || null,
 	image: doc.image || null,
-	follows: doc.follows?.map(doc => doc._id ?? doc) || null,
-	favorites: doc.favorites?.map(doc => doc._id ?? doc) || null,
+	follows: doc.follows?.map(follows => follows._id ?? follows) || null,
+	favorites: doc.favorites?.map(article => article._id ?? article) || null,
 });
 
 export const toUserResponse = (user: User, tokens?: UserTokens) => ({

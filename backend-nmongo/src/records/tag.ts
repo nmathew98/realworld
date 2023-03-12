@@ -1,8 +1,10 @@
+import { Document, WithId } from "mongodb";
+
 export type Tag = ReturnType<typeof toTagDocument>;
-export const toTagDocument = (doc: Record<string, any>) => ({
-	_id: doc._id || null,
+export const toTagDocument = (doc: WithId<Document>) => ({
+	_id: doc._id?.toString() || null,
 	tag: doc.tag || null,
-	article: (doc.article?._id ?? doc.article) || null,
+	article: (doc.article._id ?? doc.article) || null,
 });
 
 export const toTagsResponse = (tags: Tag[]) => ({

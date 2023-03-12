@@ -1,12 +1,13 @@
+import type { Document, WithId } from "mongodb";
 import { formatISO } from "date-fns";
 
 import type { User } from "./user";
 
 export type Comment = ReturnType<typeof toCommentDocument>;
-export const toCommentDocument = (doc: Record<string, any>) => ({
-	_id: doc._id || null,
-	author: (doc.author?._id ?? doc.author) || null,
-	article: (doc.article?._id ?? doc.article) || null,
+export const toCommentDocument = (doc: WithId<Document>) => ({
+	_id: doc._id?.toString() || null,
+	author: (doc.author._id ?? doc.author) || null,
+	article: (doc.article._id ?? doc.article) || null,
 	body: doc.body || null,
 	createdAt: doc.createdAt ?? Date.now(),
 	updatedAt: Date.now(),
@@ -27,7 +28,7 @@ export const toCommentResponse = (
 			bio: author.bio,
 			image: author.image,
 			following: !!currentUser.follows.some(
-				followedUser => followedUser._id === author._id,
+				follows => follows._id === author._id,
 			),
 		},
 	},
