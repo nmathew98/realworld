@@ -2,9 +2,12 @@ import type { Document, WithId } from "mongodb";
 import { formatISO } from "date-fns";
 
 import type { User } from "./user";
+import type { Article } from "./article";
 
 export type Comment = ReturnType<typeof toCommentDocument>;
-export const toCommentDocument = (doc: WithId<Document>) => ({
+export const toCommentDocument = (
+	doc: WithId<Document> & { author: User; article: Article },
+) => ({
 	_id: doc._id?.toString() || null,
 	author: (doc.author._id ?? doc.author) || null,
 	article: (doc.article._id ?? doc.article) || null,

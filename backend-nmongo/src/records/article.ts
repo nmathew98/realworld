@@ -5,7 +5,9 @@ import type { Tag } from "./tag";
 import type { User } from "./user";
 
 export type Article = ReturnType<typeof toArticleDocument>;
-export const toArticleDocument = (doc: WithId<Document>) => ({
+export const toArticleDocument = (
+	doc: WithId<Document> & { author: User },
+) => ({
 	_id: doc._id?.toString() || null,
 	slug: doc.slug ?? toSlug(doc.title),
 	author: (doc.author._id ?? doc.author) || null,
